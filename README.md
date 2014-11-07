@@ -12,10 +12,10 @@ Gulp plugin that assembles components including JavaScript, Templates and Locali
 ## Usage
 
 ```js
-var compasm = require('gulp-component-assembler');
 var gulp   = require('gulp');
+var compasm = require('gulp-component-assembler');
 
-gulp.task('lint', function() {
+gulp.task('assemble', function() {
   return gulp.src('./lib/*.js')
     .pipe(compasm())
     . put more here
