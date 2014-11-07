@@ -16,9 +16,18 @@ var gulp   = require('gulp');
 var compasm = require('gulp-component-assembler');
 
 gulp.task('assemble', function() {
-  return gulp.src('./lib/*.js')
-    .pipe(compasm())
-    . put more here
+  return gulp.src('./**/assembly.json')
+    .pipe(compasm.assemble({
+          "defaultLocale": 'en',
+          "minTemplateWS": true,
+          "useExternalLib": true
+        })
+    .pipe(gulp.dest('./prod'))
+    .pipe(uglify())
+    .pipe(rename(function (path) {
+      path.basename += "-min";
+      }))
+    .pipe(gulp.dest('./prod'))
 });
 ```
 
