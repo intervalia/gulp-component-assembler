@@ -1,0 +1,10 @@
+{
+  "files": [
+    "file1.js",
+    "file2.js"
+  ],
+  "assemblies": [
+    "sub1",
+    "sub2"
+  ]
+}
