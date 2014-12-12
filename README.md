@@ -34,8 +34,9 @@ gulp.task('assemble', function() {
 ```
 
 ## Options
-||key||Example||Use||
-|defaultLocale|defaultLocale: "en"|Set the locale that your project will use as the default. This is also the locale that will get used if the user attempts to specify a non-supported locale.|
+| key | Example | Use |
+| --- | ------- | --- |
+| defaultLocale | defaultLocale: "en" | Set the locale that your project will use as the default. This is also the locale that will get used if the user attempts to specify a non-supported locale. |
 
 ## LICENSE
 
