@@ -3,11 +3,15 @@
 gulp-component-assembler
 ========================
 
-Gulp plugin that assembles components including JavaScript, Templates and Localization strings
+Gulp plugin that assembles components including JavaScript, Templates and
+Localization strings
 
 ## Install
 
     npm install gulp-component-assembler --save-dev
+    or
+    npm install -g gulp-component-assembler
+
 
 ## Usage
 
@@ -24,14 +28,14 @@ gulp.task('assemble', function() {
         })
     .pipe(gulp.dest('./prod'))
     .pipe(uglify())
-    .pipe(rename(function (path) {
-      path.basename += "-min";
-      }))
+    .pipe(rename(function (path) {path.basename += "-min";}))
     .pipe(gulp.dest('./prod'))
 });
 ```
 
 ## Options
+||key||Example||Use||
+|defaultLocale|defaultLocale: "en"|Set the locale that your project will use as the default. This is also the locale that will get used if the user attempts to specify a non-supported locale.|
 
 ## LICENSE
 

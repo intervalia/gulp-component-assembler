@@ -76,13 +76,19 @@ function processLocales(baseLocalePath, localeFileName, assemblyName, options) {
       contents += " return lang;\n"+
                   "}\n\n"+
       // set the lang variable
-                  "var lang = getLang(window.locale);\n";
+                  "var lang = getLang(window.locale || '"+options.locale+"');\n";
     }
     else {
       contents += "function getLang(locale) {\n"+
                   " return __getLangObj(locale, langKeys, validLocales, langs);\n"+
                   "}\n\n"+
-                  "var lang = getLang(window.locale);\n";
+                  "var lang = getLang(window.locale || '"+options.locale+"');\n";
+    }
+
+    if (options.exposeLang) {
+      contents += "window.sommus = window.sommus || {};\n";
+      contents += "window.sommus."+assemblyName+" = window.sommus."+assemblyName+" || {};\n";
+      contents += "window.sommus."+assemblyName+".lang = lang;\n";
     }
   }
 
