@@ -36,7 +36,9 @@ gulp.task('assemble', function() {
 ## Options
 | key | Example | Use |
 | --- | ------- | --- |
-| defaultLocale | defaultLocale: "en" | Set the locale that your project will use as the default. This is also the locale that will get used if the user attempts to specify a non-supported locale. |
+| **defaultLocale** | `defaultLocale: "en"` | Set the locale that your project will use as the default. This is also the locale that will get used if the user attempts to specify a non-supported locale. |
+| **minTemplateWS** | `minTemplateWS: true|false` | If set to `true` then each set of whitespace is reduced to a single space to reduce the overall size of the templates while maintaining separaton of tags. |
+| **defaultLocale** | `defaultLocale: "en"` | Set the locale that your project will use as the default. This is also the locale that will get used if the user attempts to specify a non-supported locale. |
 
 ## LICENSE
 
