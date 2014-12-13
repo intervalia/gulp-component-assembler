@@ -2,7 +2,10 @@ var fs = require('fs');
 var path = require('path');
 
 function processOneScript(scriptPath, includeName) {
-  // TODO: Add code to complain if a file does not exist.
+  if (!fs.existsSync(scriptPath)) {
+    throw new PluginError(PLUGIN_NAME, 'Script file not found: '+scriptPath+'.');
+  }
+
   var contents = "/*\n * Included File: " + includeName + "\n */\n";
   contents += fs.readFileSync(scriptPath, {"encoding": "utf-8"});
   contents += "\n";
