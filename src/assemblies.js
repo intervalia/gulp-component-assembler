@@ -37,6 +37,7 @@ function processAssembly(assembly, projectPath, options, isSub) {
   }
 
   // OPEN IIFE
+  // TODO: Allow iifeParams to either be a string, or an object {"use": "window, $, _a", "pass", "window, jQuery, angular"}
   iifeParams = options.iifeParams || "window,document";
   contents += '\n(function('+iifeParams+',undefined) {\n';
 
