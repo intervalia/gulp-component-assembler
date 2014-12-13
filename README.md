@@ -45,6 +45,48 @@ gulp.task('assemble', function() {
 | **tagMissingStrings** | `tagMissingStrings:true|false` | If set to `true` then any string that was in the locale file for the default locale that is not found in one of the other locale files is marked so the user can see the lack of translation easily. If set to `false` then the translations are set to the key for that string. |
 | **exposeLang** | `exposeLang:true|false` | If set to `true` then the local strings are placed into a global object for access outside of the iife. The language strings will be added to `window.sommus.[assemblyName].lang` where `assemblyName` is the name of the assembly that is being created. |
 
+## Plugins
+
+`gulp-component-assembler` support plugin in three different locations of the process: `PRE`, `INLINE` and `POST`.
+
+| `PRE` | Pre-plugins are processed just before the iife of the assembly. This makes anything create by the pre-plugin to become global. But nothing from any of the iifes has run at the time the pre-plugin code executes. |
+| `INLINE` | Inline plugins are processed within the iifes of all assemblies after all of the other code, language string and templates of those assemblies are processed. |
+| `POST` | Post-plugins are processed just after ~all~ of the iifes from ~all~ of the assemblies are processed. This makes anything create by the post-plugin to become global and it can access anything made global by code within any of the the iife. |
+
+## Usage
+
+### assembly.json file format
+
+*Coming soon*
+
+#### files
+
+*Coming soon*
+
+#### templates
+
+*Coming soon*
+
+##### templates folder
+
+*Coming soon*
+
+##### templates paramater in assembly.json
+
+*Coming soon*
+
+#### locale files
+
+*Coming soon*
+
+string_en.json
+string_fr.json
+
+##### locale files with comments
+
+*Coming soon*
+
+### Sub-assemblies
 
 ## LICENSE
 
