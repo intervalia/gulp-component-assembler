@@ -84,7 +84,8 @@ string_fr.json
 
 `gulp-component-assembler` support plugin in three different locations of the process: `PRE`, `INLINE` and `POST`.
 
-| --- | --- |
+| Plugin Type | Description |
+| ----------- | ----------- |
 | `PRE` | Pre-plugins are processed just before the iife of the assembly. This makes anything create by the pre-plugin to become global. But nothing from any of the iifes has run at the time the pre-plugin code executes. |
 | `INLINE` | Inline plugins are processed within the iifes of all assemblies after all of the other code, language string and templates of those assemblies are processed. |
 | `POST` | Post-plugins are processed just after ~all~ of the iifes from ~all~ of the assemblies are processed. This makes anything create by the post-plugin to become global and it can access anything made global by code within any of the the iife. |
