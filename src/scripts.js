@@ -1,6 +1,7 @@
 var fs = require('fs');
 var path = require('path');
 var PluginError = require('gulp-util').PluginError;
+var PLUGIN_NAME = require("./pluginName");
 
 function processOneScript(scriptPath, includeName) {
   if (!fs.existsSync(scriptPath)) {

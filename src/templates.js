@@ -1,6 +1,7 @@
 var fs = require('fs');
 var path = require('path');
 var PluginError = require('gulp-util').PluginError;
+var PLUGIN_NAME = require("./pluginName");
 var validKeyTest = /^[a-zA-Z_][0-9a-zA-Z_]*$/;
 
 function processTemplates(templatePath, hasTranslations, options) {

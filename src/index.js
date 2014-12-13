@@ -7,8 +7,7 @@ var stream = require("stream");
 var assemblies = require("./assemblies");
 var externalFuncs = require("./externalFunctions");
 var plugin = require("./plugin");
-
-const PLUGIN_NAME = 'gulp-component-assembler';
+var PLUGIN_NAME = require("./pluginName");
 
 function assemble(options) {
   "use strict";
