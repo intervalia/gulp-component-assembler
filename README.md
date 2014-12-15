@@ -3,8 +3,8 @@
 gulp-component-assembler
 ========================
 
-Gulp plugin that creates assembled components consisting JavaScript, HTML Templates and
-Localization strings.
+Gulp plugin that creates assembled components consisting JavaScript, HTML
+Templates and Localization strings.
 
 ## Install
 
@@ -28,7 +28,10 @@ gulp.task('assemble', function() {
 
 ## Options
 
-The `assemble()` function can take any combination of the following options. These options provide the user a way to customize the output of the components. The options are added through an object passed in to the `assemble()` function. Like this:
+The `assemble()` function can take any combination of the following options.
+These options provide the user a way to customize the output of the components.
+The options are added through an object passed in to the `assemble()` function.
+Like this:
 
 ```js
 compasm.assemble({
@@ -41,7 +44,9 @@ Here is the list of options and their description and useage:
 
 | key | Example | Use |
 | --- | ------- | --- |
-| **defaultLocale** | `defaultLocale:"en"` | Set the locale that your project will use as the default. This is also the locale that will get used if the user attempts to specify a non-supported locale. |
+| **defaultLocale** | `defaultLocale:"en"` | Set the locale that your project
+will use as the default. This is also the locale that will get used if the
+user attempts to specify a non-supported locale. |
 | **minTemplateWS** | `minTemplateWS:true/false` | If set to `true` then each set of whitespace is reduced to a single space to reduce the overall size of the templates while maintaining separaton of tags. If set to `false` then all whitespace is preserved. (Except the whitespace at the beginning and end of the template which is removed.) |
 | **useExternalLib** | `useExternalLib:true/false` | If set to `true` then a single file `assambly-lib.js` is created with the common code used for each assembly. If it is set to `false` then each assembly contains copies of the common code needed for the assembly to work. If you choose to use the external libraries then you must include that file before including your own. |
 | **externalLibName** | `externalLibName:"filename"` | Name for the external lib file. The default is `assembly-lib.js` and `assembly-lib-min.js` |
