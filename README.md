@@ -37,13 +37,13 @@ gulp.task('assemble', function() {
 | key | Example | Use |
 | --- | ------- | --- |
 | **defaultLocale** | `defaultLocale:"en"` | Set the locale that your project will use as the default. This is also the locale that will get used if the user attempts to specify a non-supported locale. |
-| **minTemplateWS** | `minTemplateWS:true&#124;false` | If set to `true` then each set of whitespace is reduced to a single space to reduce the overall size of the templates while maintaining separaton of tags. If set to `false` then all whitespace is preserved. (Except the whitespace at the beginning and end of the template which is removed.) |
-| **useExternalLib** | `useExternalLib:true&#124;false` | If set to `true` then a single file `assambly-lib.js` is created with the common code used for each assembly. If it is set to `false` then each assembly contains copies of the common code needed for the assembly to work. If you choose to use the external libraries then you must include that file before including your own. |
+| **minTemplateWS** | `minTemplateWS:true/false` | If set to `true` then each set of whitespace is reduced to a single space to reduce the overall size of the templates while maintaining separaton of tags. If set to `false` then all whitespace is preserved. (Except the whitespace at the beginning and end of the template which is removed.) |
+| **useExternalLib** | `useExternalLib:true/false` | If set to `true` then a single file `assambly-lib.js` is created with the common code used for each assembly. If it is set to `false` then each assembly contains copies of the common code needed for the assembly to work. If you choose to use the external libraries then you must include that file before including your own. |
 | **externalLibName** | `externalLibName:"filename"` | Name for the external lib file. The default is `assembly-lib.js` and `assembly-lib-min.js` |
 | **iifeParams** | `iifeParams:"params"` | This is a list of parameters that are both used by the iife and passed into the iife. The default values are "window, document". This option allows the user to pass other parameters into the iffe.
-| **supportTransKeys** | `supportTransKeys:true&#124;false` | If set to `true` this creates a set ot translation test values. **More needed here** |
-| **tagMissingStrings** | `tagMissingStrings:true&#124;false` | If set to `true` then any string that was in the locale file for the default locale that is not found in one of the other locale files is marked so the user can see the lack of translation easily. If set to `false` then the translations are set to the key for that string. |
-| **exposeLang** | `exposeLang:true&#124;false` | If set to `true` then the local strings are placed into a global object for access outside of the iife. The language strings will be added to `window.sommus.[assemblyName].lang` where `assemblyName` is the name of the assembly that is being created. |
+| **supportTransKeys** | `supportTransKeys:true/false` | If set to `true` this creates a set ot translation test values. **More needed here** |
+| **tagMissingStrings** | `tagMissingStrings:true/false` | If set to `true` then any string that was in the locale file for the default locale that is not found in one of the other locale files is marked so the user can see the lack of translation easily. If set to `false` then the translations are set to the key for that string. |
+| **exposeLang** | `exposeLang:true/false` | If set to `true` then the local strings are placed into a global object for access outside of the iife. The language strings will be added to `window.sommus.[assemblyName].lang` where `assemblyName` is the name of the assembly that is being created. |
 
 ## Usage
 
