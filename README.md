@@ -90,7 +90,7 @@ The minimum `assembly.json` file must contain the `files` array, which defines t
 }
 ```
 
-* **note:** As of 2014/12/15 I still do not have glob working on files listed in the files array*
+_**note:** As of 2014/12/15 I still do not have glob working on files listed in the files array_
 
 #### files
 
