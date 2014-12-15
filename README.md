@@ -21,15 +21,8 @@ var compasm = require('gulp-component-assembler');
 
 gulp.task('assemble', function() {
   return gulp.src('./**/assembly.json')
-    .pipe(compasm.assemble({
-          "defaultLocale": 'en',
-          "minTemplateWS": true,
-          "useExternalLib": true
-        })
-    .pipe(gulp.dest('./prod'))
-    .pipe(uglify())
-    .pipe(rename(function (path) {path.basename += "-min";}))
-    .pipe(gulp.dest('./prod'))
+    .pipe(compasm.assemble()
+    .pipe(gulp.dest('./dist'))
 });
 ```
 
@@ -44,6 +37,30 @@ gulp.task('assemble', function() {
 | **supportTransKeys** | `supportTransKeys:true/false` | If set to `true` this creates a set ot translation test values. **More needed here** |
 | **tagMissingStrings** | `tagMissingStrings:true/false` | If set to `true` then any string that was in the locale file for the default locale that is not found in one of the other locale files is marked so the user can see the lack of translation easily. If set to `false` then the translations are set to the key for that string. |
 | **exposeLang** | `exposeLang:true/false` | If set to `true` then the local strings are placed into a global object for access outside of the iife. The language strings will be added to `window.sommus.[assemblyName].lang` where `assemblyName` is the name of the assembly that is being created. |
+
+Here is an example of assembling a component with the following options set:
+* Default language set to French
+* Remove extra white-space from templates
+* Use the external version of the helper code
+And the code will be save in non-minified and minified versions
+
+```js
+var gulp   = require('gulp');
+var compasm = require('gulp-component-assembler');
+
+gulp.task('assemble', function() {
+  return gulp.src('./**/assembly.json')
+    .pipe(compasm.assemble({
+          "defaultLocale": 'fr',
+          "minTemplateWS": true,
+          "useExternalLib": true
+        })
+    .pipe(gulp.dest('./dist'))
+    .pipe(uglify())
+    .pipe(rename(function (path) {path.basename += "-min";}))
+    .pipe(gulp.dest('./dist'))
+});
+```
 
 ## Usage
 
