@@ -85,16 +85,33 @@ The minimum `assembly.json` file must contain the `files` array, which defines t
 ```js
 {
   "files": [
-    "**/*.js"
+    "file1.js",
+    "src/file2.js"
   ]
 }
 ```
 
-_**note:** As of 2014/12/15 I still do not have glob working on files listed in the files array_
-
 #### files
 
-*Coming soon*
+The `files` array is a list of JavaScript source files that are to be included
+in this compnent. Each of these files are loaded, in the order provided, and
+written into the output assembly. No modifications are made to these files.
+
+All of the code from the files listed in the `files` array is wrapped inside
+an iife. This iife is to prevent name collisions between this component and
+all other JavaScript that you will load. So if you want anything accessible
+outside of the iife then you must provide the code to make it accessible. The
+simplest, but not best solution, is to create global variable. In the browser
+this is done by attaching parameters to the `window` object. For example:
+
+```js
+var localVar = "This will be a provate varaible, protected inside an iife";
+
+window.globalVar = localVar; // This is now accessible throughout the app/web page
+```
+
+_Depending on your environment you may expose properties, classes and functions
+through things like `module.exports`, `define` or an existing global object or function._
 
 #### templates
 
