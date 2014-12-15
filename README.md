@@ -27,6 +27,18 @@ gulp.task('assemble', function() {
 ```
 
 ## Options
+
+The `assemble()` function can take any combination of the following options. These options provide the user a way to customize the output of the components. The options are added through an object passed in to the `assemble()` function. Like this:
+
+```js
+compasm.assemble({
+  "defaultLocale": "en",
+  "exposeLang"
+})
+```
+
+Here is the list of options and their description and useage:
+
 | key | Example | Use |
 | --- | ------- | --- |
 | **defaultLocale** | `defaultLocale:"en"` | Set the locale that your project will use as the default. This is also the locale that will get used if the user attempts to specify a non-supported locale. |
@@ -38,7 +50,7 @@ gulp.task('assemble', function() {
 | **tagMissingStrings** | `tagMissingStrings:true/false` | If set to `true` then any string that was in the locale file for the default locale that is not found in one of the other locale files is marked so the user can see the lack of translation easily. If set to `false` then the translations are set to the key for that string. |
 | **exposeLang** | `exposeLang:true/false` | If set to `true` then the local strings are placed into a global object for access outside of the iife. The language strings will be added to `window.sommus.[assemblyName].lang` where `assemblyName` is the name of the assembly that is being created. |
 
-Here is an example of assembling a component with the following options set:
+Below is an example of assembling a component with the following options set:
 * Default language set to French
 * Remove extra white-space from templates
 * Use the external version of the helper code
@@ -66,7 +78,19 @@ gulp.task('assemble', function() {
 
 ### assembly.json file format
 
-*Coming soon*
+The `assembly.json` file defines what source files are to be included in the assembled component. It can also define special locations for locale string files, special locations of the template files and which, if any, sub-assemblies are to be included in this component.
+
+The minimum `assembly.json` file must contain the `files` array, which defines the JavaScript source files to include in the assembled component.
+
+```js
+{
+  "files": [
+    "**/*.js"
+  ]
+}
+```
+
+~ ~~note:~~ As of 2014/12/15 I still do not have glob working on files listed in the files array~
 
 #### files
 
