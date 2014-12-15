@@ -3,8 +3,9 @@
 gulp-component-assembler
 ========================
 
-`gulp-component-assembler` is a gulp plugin that creates assembled components
-consisting JavaScript, HTML Templates and Localization strings.
+`gulp-component-assembler` is a gulp plugin that assembles JavaScript components.
+The components are a combination of JavaScript files, HTML Templates and
+Localization strings.
 
 `gulp-component-assembler` uses the file assembly.json to define the list of
 files to assemble into the output component file. The component filename will
