@@ -3,8 +3,8 @@
 gulp-component-assembler
 ========================
 
-Gulp plugin that assembles components including JavaScript, Templates and
-Localization strings
+Gulp plugin that creates assembled components consisting JavaScript, HTML Templates and
+Localization strings.
 
 ## Install
 
