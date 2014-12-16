@@ -5,11 +5,11 @@ var templates = require("./templates");
 //var oldTemplates = require("./oldTemplates");
 var locales = require("./locales");
 var plugin = require("./plugin");
-
+var globArray = require("./globArray");
 
 function processAssembly(assembly, projectPath, options, isSub) {
   "use strict";
-  var files, assemblies, contents, iifeParams, pluginParams,
+  var assemblies, contents, iifeParams, pluginParams,
       locale, localePath, localeFileName, hasTranslations;
   //console.log("processAssembly", projectPath);
 
@@ -42,7 +42,9 @@ function processAssembly(assembly, projectPath, options, isSub) {
   contents += '\n(function('+iifeParams+',undefined) {\n';
 
   // Process 'files' field
-  contents += scripts.process(projectPath, assembly.files, options);
+  if (assembly.files) {
+    contents += scripts.process(projectPath, globArray(assembly.files, {cwd: projectPath}), options);
+  }
 
   // Process locale files
   if (hasTranslations) {
@@ -50,7 +52,7 @@ function processAssembly(assembly, projectPath, options, isSub) {
   }
 
   // Process template files
-  contents += templates.process(path.join(projectPath, (assembly.templatePath || "templates")), hasTranslations, options);
+  contents += templates.process(projectPath, globArray(assembly.templates || ["./templates/*.html"], {cwd: projectPath}), hasTranslations, options);
 
   // Process any inline plugins
   contents += plugin.processInline(pluginParams);

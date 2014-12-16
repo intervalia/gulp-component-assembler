@@ -6,6 +6,7 @@ var path = require('path');
 var stream = require("stream");
 var assemblies = require("./assemblies");
 var externalFuncs = require("./externalFunctions");
+var PluginError = require('gulp-util').PluginError;
 var plugin = require("./plugin");
 var PLUGIN_NAME = require("./pluginName");
 
@@ -17,7 +18,13 @@ function assemble(options) {
   options.locale = options.defaultLocale || "en";
 
   assemblyStream._transform = function(file, unused, callback) {
-    var assembly = JSON.parse(file.contents);
+    var assembly;
+    try {
+      assembly = JSON.parse(file.contents);
+    }
+    catch(ex) {
+      throw new PluginError(PLUGIN_NAME, "Unable to parse .json file: " + file.path);
+    }
 
     file.contents = new Buffer(assemblies.process(assembly, path.dirname(file.path), options));
     file.path = path.dirname(file.path) + '.js';

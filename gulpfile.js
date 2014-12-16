@@ -4,10 +4,9 @@ var Mocha = require('mocha');
 
 gulp.task('lint', function () {
   return gulp.src([
-    'src/**/*',
-    'test/**/*',
-    '!test/fixtures/**/*',
-    '*.js'
+    'src/**/*.js',
+    'test/**/*.js',
+    '!test/fixtures/**/*.js'
   ])
   .pipe(jshint({"esnext": true}))
   .pipe(jshint.reporter('default', { verbose: true }))
