@@ -12,8 +12,8 @@ files to assemble into the output component file. The component filename will
 be the name of the folder that contains the assembly.json file. The extension
 of the component file `.js`. If the folder name was `widget` then the component
 file will be called `widget.js`. A folder named `MyControl` would produce
-an output file named `MyControl.js`. The case of the component filename matches
-the case of the folder name.
+an output file named `MyControl.js`. _The case of the component filename matches
+the case of the folder name._
 
 _The assembled contents of the component file are wrapped inside an
 Immediately-Invoked Function Expression (**IIFE**). This helps to prevent anything
@@ -59,13 +59,14 @@ Here is the list of options and their description and useage:
 | key | Example | Use |
 | --- | ------- | --- |
 | **defaultLocale** | `defaultLocale:"en"` | Set the locale that your project will use as the default. This is also the locale that will get used if the user attempts to specify a non-supported locale. |
-| **minTemplateWS** | `minTemplateWS:true/false` | If set to `true` then each set of whitespace is reduced to a single space to reduce the overall size of the templates while maintaining separaton of tags. If set to `false` then all whitespace is preserved. (Except the whitespace at the beginning and end of the template which is removed.) |
-| **useExternalLib** | `useExternalLib:true/false` | If set to `true` then a single file `assambly-lib.js` is created with the common code used for each assembly. If it is set to `false` then each assembly contains copies of the common code needed for the assembly to work. If you choose to use the external libraries then you must include that file before including your own. |
+| **exposeLang** | `exposeLang:true/false` | If set to `true` then the local strings are placed into a global object for access outside of the IIFE. The language strings will be added to `window.sommus.[assemblyName].lang` where `assemblyName` is the name of the assembly that is being created. |
 | **externalLibName** | `externalLibName:"filename"` | Name for the external lib file. The default is `assembly-lib.js` and `assembly-lib-min.js` |
+| **useStrict** | `useStrict:true/false` | If set to `true` then `"use strict";` is added just inside the IIFE. |
 | **iifeParams** | `iifeParams:"params"` | This is a list of parameters that are both used by the IIFE and passed into the IIFE. The default values are "window, document". This option allows the user to pass other parameters into the iffe.
+| **minTemplateWS** | `minTemplateWS:true/false` | If set to `true` then each set of whitespace is reduced to a single space to reduce the overall size of the templates while maintaining separaton of tags. If set to `false` then all whitespace is preserved. (Except the whitespace at the beginning and end of the template which is removed.) |
 | **supportTransKeys** | `supportTransKeys:true/false` | If set to `true` this creates a set ot translation test values. **More needed here** |
 | **tagMissingStrings** | `tagMissingStrings:true/false` | If set to `true` then any string that was in the locale file for the default locale that is not found in one of the other locale files is marked so the user can see the lack of translation easily. If set to `false` then the translations are set to the key for that string. |
-| **exposeLang** | `exposeLang:true/false` | If set to `true` then the local strings are placed into a global object for access outside of the IIFE. The language strings will be added to `window.sommus.[assemblyName].lang` where `assemblyName` is the name of the assembly that is being created. |
+| **useExternalLib** | `useExternalLib:true/false` | If set to `true` then a single file `assambly-lib.js` is created with the common code used for each assembly. If it is set to `false` then each assembly contains copies of the common code needed for the assembly to work. If you choose to use the external libraries then you must include that file before including your own. |
 
 Below is an example of assembling a component with the following options set:
 * Default language set to French
@@ -157,17 +158,15 @@ through things like `module.exports`, `define` or an existing global object or f
 
 
 
-##### templates folder
+##### templates paramater
 
-The default template folder is `./templates`. gulp-component-assembler will load
-all of the files in that folder that end with `.html` and convert them into
-template string within the assembled component.
+`gulp-component-assembler` will load all of the files specified in the `templates`
+array and convert them into template string within the assembled component.
 
+If you do not provide a `temlates` entry in the `assembly.json` then the default
+is "templates/*.html"
 
-
-##### templates paramater in assembly.json
-
-*Coming soon*
+Each file is appended to the `templateList` object in the output component file.
 
 
 
@@ -254,3 +253,18 @@ process: `PRE`, `INLINE` and `POST`.
 ## LICENSE
 
 GNU GPL v2.0 <a href="LICENSE">License File</a>
+
+
+# UPDATE HISTORY
+
+* 1.0.4 - Added blobby paths for the `files` and `templates` properties. You can now set
+```js
+{
+  "files": [
+    "**/*.js"
+  ],
+  "templates": [
+    "**/*.html"
+  ]
+}
+```

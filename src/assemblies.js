@@ -2,25 +2,35 @@ var fs = require('fs');
 var path = require('path');
 var scripts = require("./scripts");
 var templates = require("./templates");
-//var oldTemplates = require("./oldTemplates");
 var locales = require("./locales");
 var plugin = require("./plugin");
+var PluginError = require('gulp-util').PluginError;
+var PLUGIN_NAME = require("./pluginName");
 var globArray = require("./globArray");
+var DEFAULT_USE_PARAMS = "window,document";
+var DEFAULT_PASS_PARAMS = DEFAULT_USE_PARAMS;
 
-function processAssembly(assembly, projectPath, options, isSub) {
-  "use strict";
-  var assemblies, contents, iifeParams, pluginParams,
-      locale, localePath, localeFileName, hasTranslations;
-  //console.log("processAssembly", projectPath);
-
-  locale = options.locale;
-  localeFileName = assembly.localeFileName || "strings";
-  localePath = path.join(projectPath, (assembly.localePath || "locales"));
+function areTranslationsAvailable(projectPath, locale, localePath, localeFileName) {
   hasTranslations = fs.existsSync(path.join(localePath, localeFileName + '_'+locale+'.json'));
   if (!hasTranslations && localeFileName === "strings") {
     localeFileName  = path.basename(projectPath);
     hasTranslations = fs.existsSync(path.join(localePath, localeFileName + '_'+locale+'.json'));
   }
+}
+
+function processAssembly(assembly, projectPath, options, isSub) {
+  "use strict";
+  var assemblies, contents;
+  var iifeParams, iifeCount;
+  var pluginParams;
+  var localePath, localeFileName;
+  var locale, hasTranslations;
+  var temp;
+
+  locale = options.locale;
+  localeFileName = assembly.localeFileName || "strings";
+  localePath = path.join(projectPath, (assembly.localePath || "locales"));
+  hasTranslations = areTranslationsAvailable(projectPath, locale, localePath, localeFileName);
 
   // Add comment
   contents = (isSub ? '\n\n// Sub-assembly' : '// Assembly') + ': ' + path.basename(projectPath) + "\n";
@@ -37,9 +47,19 @@ function processAssembly(assembly, projectPath, options, isSub) {
   }
 
   // OPEN IIFE
-  // TODO: Allow iifeParams to either be a string, or an object {"use": "window, $, _a", "pass", "window, jQuery, angular"}
-  iifeParams = options.iifeParams || "window,document";
+  iifeParams = options.iifeParams || DEFAULT_USE_PARAMS;
+  if (typeof iifeParams === "object") {
+    iifeParams = iifeParams.use;
+    if (!iifeParams || (typeof iifeParams !== "string")) {
+      throw new PluginError(PLUGIN_NAME, "The option `iifeParams.use` was not defined as a string." );
+    }
+    temp = iifeParams.split(",");
+    iifeCount = temp.length;
+  }
   contents += '\n(function('+iifeParams+',undefined) {\n';
+  if (options.useStrict) {
+    contents += '"use strict";\n';
+  }
 
   // Process 'files' field
   if (assembly.files) {
@@ -58,6 +78,17 @@ function processAssembly(assembly, projectPath, options, isSub) {
   contents += plugin.processInline(pluginParams);
 
   // Close IIFE
+  iifeParams = options.iifeParams || DEFAULT_USE_PARAMS;
+  if (typeof iifeParams === "object") {
+    iifeParams = iifeParams.pass;
+    if (!iifeParams || (typeof iifeParams !== "string")) {
+      throw new PluginError(PLUGIN_NAME, "The option `iifeParams.pass` was not defined as a string." );
+    }
+    temp = iifeParams.split(",");
+    if (iifeCount != temp.length) {
+      throw new PluginError(PLUGIN_NAME, "The options `iifeParams.use` and `iifeParams.pass` do not have the same number of parameters." );
+    }
+  }
   contents += '\n})(' + iifeParams + ');\n';
 
   // Process sub assemblies
@@ -72,7 +103,7 @@ function processAssembly(assembly, projectPath, options, isSub) {
         contents += processAssembly(subAssembly, assemblyPath, options, true);
       }
       else {
-        throw new PluginError(PLUGIN_NAME, "Sub assembly not found: '" + assemblyFileName + "'" );
+        throw new PluginError(PLUGIN_NAME, "Sub-assembly not found: '" + assemblyFileName + "'" );
       }
     });
   }
