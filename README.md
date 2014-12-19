@@ -58,7 +58,7 @@ Here is the list of options and their description and usage:
 | **useExternalLib** | `useExternalLib:true/false` | If set to `true` then a single file `assambly-lib.js` is created with the common code used for each assembly. If it is set to `false` then each assembly contains copies of the common code needed for the assembly to work. If you choose to use the external libraries then you must include that file before including your own. |
 | **useStrict** | `useStrict:true/false` | If set to `true` then `"use strict";` is added just inside the IIFE.<br/><br/>**See *Option: useStrict* below.** |
 
-** *Option names are case sensitive. `defaultLocale` is correct but `DefaultLocale` is not.* **
+_**Option names are case sensitive. `defaultLocale` is correct but `DefaultLocale` is not.**_
 
 
 ### Example using options
@@ -105,6 +105,7 @@ To set these values you create an object that has both a `use` and a `pass` prop
 ``` 
 
 This will produce the following in the component output file:
+
 ```js
 (function(window, document, $, undefined) {
 
@@ -156,14 +157,15 @@ The five properties of the assembly.json file:
 | `localePath` | string | A relative path indicating where to load the locale files. The default path is `./locales`. |
 
 
+-
 #### Property: `files`
-The `files` array is a list of JavaScript source files that are to be included in this component. All file names are relative to the location of the assembly.json file.
+>The `files` array is a list of JavaScript source files that are to be included in this component. All file names are relative to the location of the assembly.json file.
 
-Each of these files are loaded, in the order provided, and written into the component file. No modifications are made to these files.
+>Each of these files are loaded, in the order provided, and written into the component file. No modifications are made to these files.
 
-_Your `assembly.json` file must include the `files` property. It is required. Though, if you include the `assemblies` property the `files` property is no longer required and can be excluded._
+>_Your `assembly.json` file must include the `files` property. It is required. Though, if you include the `assemblies` property the `files` property is no longer required and can be excluded._
 
-All of the code from the files listed in the `files` array is wrapped inside an IIFE. This IIFE is to prevent name collisions between this component and all other JavaScript that you will load. So if you want anything accessible outside of the IIFE then you must provide the code to make it accessible. The simplest, but not best solution, is to create global variable. In the browser this is done by attaching parameters to the `window` object. For example:
+>All of the code from the files listed in the `files` array is wrapped inside an IIFE. This IIFE is to prevent name collisions between this component and all other JavaScript that you will load. So if you want anything accessible outside of the IIFE then you must provide the code to make it accessible. The simplest, but not best solution, is to create global variable. In the browser this is done by attaching parameters to the `window` object. For example:
 
 ```js
 var localVar = "This will be a provate varaible, protected inside an IIFE";
@@ -171,27 +173,27 @@ var localVar = "This will be a provate varaible, protected inside an IIFE";
 window.globalVar = localVar; // This is now accessible throughout the app/web page
 ```
 
-_Depending on your environment you may expose properties, classes and functions through things like `module.exports`, `define` or an existing global object or function._
+>_Depending on your environment you may expose properties, classes and functions through things like `module.exports`, `define` or an existing global object or function._
 
 
-
+-
 #### Property: `templates`
+>`gulp-component-assembler` will load all of the files specified in the `templates` array and convert them into template string within the assembled component.
 
-`gulp-component-assembler` will load all of the files specified in the `templates` array and convert them into template string within the assembled component.
+>If you do not provide a `temlates` entry in the `assembly.json` then the default is "templates/*.html"
 
-If you do not provide a `temlates` entry in the `assembly.json` then the default is "templates/*.html"
+>Each file is appended to the `templateList` object in the output component file.
 
-Each file is appended to the `templateList` object in the output component file.
-
-___TODO: Provide more information here___
+>___TODO: Provide more information here___
 
 
+-
 #### Property: `assemblies`
-One or more assemblies can be incorporated as sub-assemblies in the component output file by using the `assemblies` property to define which assemblies are to be included.
+>One or more assemblies can be incorporated as sub-assemblies in the component output file by using the `assemblies` property to define which assemblies are to be included.
 
-`assemblies` is an array of `assembly.json` files that are assembled into the component output file. Each assembly will be placed in it's own IIFE function and they each have their own templates and locale files. This also provides a unique namespace for each sub-assembly. But this prevents direct access of values and functions contained in the other sub-assemblies without making them available through the global scope or some other mechanism.
+>`assemblies` is an array of `assembly.json` files that are assembled into the component output file. Each assembly will be placed in it's own IIFE function and they each have their own templates and locale files. This also provides a unique namespace for each sub-assembly. But this prevents direct access of values and functions contained in the other sub-assemblies without making them available through the global scope or some other mechanism.
 
-```
+```js
 {
   "assemblies": [
     "sub1/assembly.json",
@@ -202,7 +204,8 @@ One or more assemblies can be incorporated as sub-assemblies in the component ou
 }
 ```
 
-This assembly would work on a file structure like this:
+>This assembly would work on a file structure like this:
+
 ```
 componentFolder
 │
@@ -231,26 +234,65 @@ componentFolder
 ```
 
 
-
+-
 ##### Property: `localeFileName`
 
-If the user does not provide a value for `localeFileName` then  `gulp-component-assembler`  attempts to use the value of `strings`. If files using that value do not exist then it attempts to use the value of the containing folder. ___TODO: Provide more information here___ 
+>If the user does not provide a value for `localeFileName` then  `gulp-component-assembler`  attempts to use the value of `strings`. If files using that value do not exist then it attempts to use the value of the containing folder.
 
-If the user sets the `localeFileName` value in the `assembly.json` file then the default values are not used.
+>One locale file is needed per language. At this time `2014-12-19` we only support the two letter ([ISO-639-1](http://en.wikipedia.org/wiki/List_of_ISO_639-1_codes)) locale names, like `'en'`, `'fr'`, `'de'`, etc.
 
-A value of `strings` would indicate files named like: `strings_en.json`, `strings_fr.json`, `strings_zh.json` etc.
+>___TODO: Provide more information here___ 
+
+>A value of `strings` would indicate files named like: `strings_en.json`, `strings_fr.json`, `strings_zh.json` etc.
+
+>* *If the user sets the `localeFileName` value in the `assembly.json` file then the default values are not used.*
 
 
 <!--
 ##### locale files with comments
 
-___TODO: Provide more information here___
+>___TODO: Provide more information here___
 -->
 
 
+-
 ### Locale File format
-Locale files are JSON files. They
+>Locale files are JSON files. They contain a single object that uses keys and values.
 
+>The default
+
+>* strings_en.json:
+
+```js
+{
+  "BUTTON_OK": "OK",
+  "BUTTON_CANCEL": "Cancel",
+  "BUTTON_CLOSE": "Close",
+  "NO_CHANGES": "No Recent Changes"
+}
+```
+
+>* strings_fr.json:
+
+```js
+{
+  "BUTTON_OK": "OK",
+  "BUTTON_CANCEL": "Annuler",
+  "BUTTON_CLOSE": "Fermer",
+  "NO_CHANGES": "Aucunes modifications récentes"
+}
+```
+
+>* strings_es.json:
+
+```js
+{
+  "BUTTON_OK": "OK",
+  "BUTTON_CANCEL": "Cancelar",
+  "BUTTON_CLOSE": "Cerrar",
+  "NO_CHANGES": "No hay cambios recientes"
+}
+```
 
 ## Plugins
 
