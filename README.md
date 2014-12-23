@@ -2,12 +2,17 @@
 
 gulp-component-assembler
 ========================
+#### Always reference the documents on the git repo since they are updated more often then the NPM package website. I only update NPM when there is a code change but I may add to the documentation without a code change and, at that time, I will not update NPM.  
+---
 
-`gulp-component-assembler` is a gulp plugin that assembles JavaScript components. The components are a combination of JavaScript files, HTML Templates and Localization strings.
+`gulp-component-assembler` is a gulp plug-in that assembles JavaScript components. The components are a combination of JavaScript files, HTML Templates and Localization strings.
 
 `gulp-component-assembler` uses the file `assembly.json` to define the list of files to assemble into the component output file. The filename of the component will be the name of the folder that contains the `assembly.json` file. The extension of the component file `.js`. If the folder name was `widget` then the component file will be called `widget.js`. A folder named `MyControl` would produce an output file named `MyControl.js`. _The case of the component filename matches the case of the folder name._
 
 _The assembled contents of the component file are wrapped inside an **[Immediately-Invoked Function Expression](http://en.wikipedia.org/wiki/Immediately-invoked_function_expression)** (**IIFE**). This helps to prevent anything within the component from having a name collision with other code on the page._
+se either create a PR on the plug-in page or email me your info.
+
+
 
 ## Install
 ```shell
@@ -18,7 +23,13 @@ npm install -g gulp-component-assembler
 
 
 
-## Usage of gulp-component-assembler
+## Pull Requests and Issues
+Please submit **[pull requests](https://github.com/intervalia/gulp-component-assembler/pulls)** and **[issues](https://github.com/intervalia/gulp-component-assembler/issues)**. I want to make this into a tool that is useful to everyone. I will do my best to review and take care of PRs and issues quickly. If you have suggestions, I would love to hear them.
+
+Almost anything can be done in a plug-ins for `gulp-component-assembler`. If you create a plug-in, plea
+
+
+## Usage of `gulp-component-assembler`
 The primary function of the component assembler is `assemble()`. This function will use the information in the `assembly.json` file assemble the component output file.
 
 Here is an example of how to use the `assemble()` function:
@@ -146,18 +157,19 @@ The minimum `assembly.json` file must contain the `files` array, which defines t
 }
 ```
 
-The five properties of the assembly.json file:
+The built-in properties of the assembly.json file:
 
 | Property | Type | Description |
 | --- | --- | --- |
 | `files` | globby array of files | The list of one or more files, normally JavaScript files, to combine into the component file. |
 | `templates` | globby array of files | The list of one or more files, normally HTML files, to combine as template strings into the component file. |
-| `assemblies` | globby array of files | A list of one or more `assembly.json` files that are assembled into the component output file. |
+| `subs` | globby array of files | A list of one or more `assembly.json` files that are assembled into the component output file.<br><br>*__As of 2014/12/20 this is not yet supported but should be added soon!__*|
+| `assemblies` | List of folders | A list of one or more folders that contain as `assembly.json` files that is to be assembled into the component output file. *This is supplied for backwards compatibility only.<br><br>__If `subs` is provided then `assemblies` is not processed!__* |
 | `localeFileName` | string | The root of the locale file names. The default is `strings` or the name of the containing folder. |
 | `localePath` | string | A relative path indicating where to load the locale files. The default path is `./locales`. |
 
 
--
+---
 #### Property: `files`
 >The `files` array is a list of JavaScript source files that are to be included in this component. All file names are relative to the location of the assembly.json file.
 
@@ -176,7 +188,7 @@ window.globalVar = localVar; // This is now accessible throughout the app/web pa
 >_Depending on your environment you may expose properties, classes and functions through things like `module.exports`, `define` or an existing global object or function._
 
 
--
+---
 #### Property: `templates`
 >`gulp-component-assembler` will load all of the files specified in the `templates` array and convert them into template string within the assembled component.
 
@@ -187,19 +199,33 @@ window.globalVar = localVar; // This is now accessible throughout the app/web pa
 >___TODO: Provide more information here___
 
 
--
-#### Property: `assemblies`
->One or more assemblies can be incorporated as sub-assemblies in the component output file by using the `assemblies` property to define which assemblies are to be included.
+---
+#### Property: `subs` and `assemblies`
+>One or more `assembly.json` files can be assembled and incorporated as sub-assemblies in the component output file by using the `subs` or `assemblies` property to define which assemblies are to be included.
 
->`assemblies` is an array of `assembly.json` files that are assembled into the component output file. Each assembly will be placed in it's own IIFE function and they each have their own templates and locale files. This also provides a unique namespace for each sub-assembly. But this prevents direct access of values and functions contained in the other sub-assemblies without making them available through the global scope or some other mechanism.
+>`subs` is a globby array of JSON files to assemble and `assemblies` is an array of folders that contain `assembly.json` files that are assembled into the component output file. **If `subs` is defined then `assemblies` is ignored.
+
+>__*`assemblies` is depreciated and will be removed in a future release.*__
+
+>Each assembly will be placed in it's own IIFE function and they each have their own templates and locale files. This also provides a unique name-space for each sub-assembly. But this prevents direct access of values and functions contained in the other sub-assemblies without making them available through the global scope or some other mechanism.
+
+```js
+{
+  "subs": [
+    "./**/assembly.json"
+  ]
+}
+```
+
+or
 
 ```js
 {
   "assemblies": [
-    "sub1/assembly.json",
-    "sub2/assembly.json",
-    "thingy/item1/assembly.json",
-    "thingy/item2/assembly.json"
+    "sub1",
+    "sub2",
+    "thingy/item1",
+    "thingy/item2"
   ]
 }
 ```
@@ -234,7 +260,7 @@ componentFolder
 ```
 
 
--
+---
 ##### Property: `localeFileName`
 
 >If the user does not provide a value for `localeFileName` then  `gulp-component-assembler`  attempts to use the value of `strings`. If files using that value do not exist then it attempts to use the value of the containing folder.
@@ -255,7 +281,7 @@ componentFolder
 -->
 
 
--
+---
 ### Locale File format
 >Locale files are JSON files. They contain a single object that uses keys and values.
 
@@ -294,28 +320,33 @@ componentFolder
 }
 ```
 
-## Plugins
+## Plug-ins
 
-`gulp-component-assembler` support plugin in three different locations of the process: `PRE`, `INLINE` and `POST`.
+`gulp-component-assembler` support third-party plug-ins.
 
-___TODO: Provide more information here___
+For a list of available plug-ins go to the [PLUGINLIST.md file](https://github.com/intervalia/gulp-component-assembler/tree/master/plugins/PLUGINLIST.MD).
 
-| Plugin Type | Description |
-| ----------- | ----------- |
-| `PRE` | Pre-plugins are processed just before the iife of the assembly. This makes anything create by the pre-plugin to become global. But nothing from any of the iifes has run at the time the pre-plugin code executes. |
-| `INLINE` | Inline plugins are processed within the iifes of all assemblies after all of the other code, language string and templates of those assemblies are processed. |
-| `POST` | Post-plugins are processed just after *all* of the iifes from *all* of the assemblies are processed. This makes anything create by the post-plugin to become global and it can access anything made global by code within any of the the iife. |
+For information on how to create your own plug-ins go to the [plug-ins README.md file](https://github.com/intervalia/gulp-component-assembler/tree/master/plugins/README.md).
 
 
 
 ## LICENSE
 
-GNU GPL v2.0 <a href="LICENSE">License File</a>
+MIT - <a href="LICENSE.md">License File</a>
 
 
 # UPDATE HISTORY
 
-* 1.0.4 - Added blobby paths for the `files` and `templates` properties. You can now set
+###1.0.5
+* Changed license to MIT
+* Updated main README.md
+* Added README.md in the plugins folder to describe plug-ins, how to write them, and what plug-ins are currently available.  
+
+###1.0.4
+* Updated main README.md
+* Added assemble option `useStrict`.
+* Changed `iifeParams` from a string to an object with `use` and `pass` parameters.
+* Added globby paths for the `files` and `templates` properties.
 ```js
 {
   "files": [
