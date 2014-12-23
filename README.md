@@ -144,7 +144,7 @@ The `assembly.json` file defines a list of JavaScript source files, HTML templat
 
 
 ### assembly.json file format
-The `assembly.json` files supports the following peroperties: `files`, `templates`, `localePath`, `localFileName`, and `assemblies`.
+The `assembly.json` files supports the following peroperties: `files`, `templates`, `localePath`, `localFileName`, and `subs`.
 
 The minimum `assembly.json` file must contain the `files` array, which defines the JavaScript source files to include in the assembled component.
 
@@ -163,8 +163,7 @@ The built-in properties of the assembly.json file:
 | --- | --- | --- |
 | `files` | globby array of files | The list of one or more files, normally JavaScript files, to combine into the component file. |
 | `templates` | globby array of files | The list of one or more files, normally HTML files, to combine as template strings into the component file. |
-| `subs` | globby array of files | A list of one or more `assembly.json` files that are assembled into the component output file.<br><br>*__As of 2014/12/20 this is not yet supported but should be added soon!__*|
-| `assemblies` | List of folders | A list of one or more folders that contain as `assembly.json` files that is to be assembled into the component output file. *This is supplied for backwards compatibility only.<br><br>__If `subs` is provided then `assemblies` is not processed!__* |
+| `subs` | globby array of files | A list of one or more `assembly.json` files that are assembled into the component output file. |
 | `localeFileName` | string | The root of the locale file names. The default is `strings` or the name of the containing folder. |
 | `localePath` | string | A relative path indicating where to load the locale files. The default path is `./locales`. |
 
@@ -175,7 +174,7 @@ The built-in properties of the assembly.json file:
 
 >Each of these files are loaded, in the order provided, and written into the component file. No modifications are made to these files.
 
->_Your `assembly.json` file must include the `files` property. It is required. Though, if you include the `assemblies` property the `files` property is no longer required and can be excluded._
+>_Your `assembly.json` file must include the `files` property. It is required. Though, if you include the `subs` property the `files` property is no longer required and can be excluded._
 
 >All of the code from the files listed in the `files` array is wrapped inside an IIFE. This IIFE is to prevent name collisions between this component and all other JavaScript that you will load. So if you want anything accessible outside of the IIFE then you must provide the code to make it accessible. The simplest, but not best solution, is to create global variable. In the browser this is done by attaching parameters to the `window` object. For example:
 
@@ -200,32 +199,17 @@ window.globalVar = localVar; // This is now accessible throughout the app/web pa
 
 
 ---
-#### Property: `subs` and `assemblies`
->One or more `assembly.json` files can be assembled and incorporated as sub-assemblies in the component output file by using the `subs` or `assemblies` property to define which assemblies are to be included.
+#### Property: `subs`
+>One or more `assembly.json` files can be assembled and incorporated as sub-assemblies in the component output file by using the `subs` property to define which assemblies are to be included.
 
->`subs` is a globby array of JSON files to assemble and `assemblies` is an array of folders that contain `assembly.json` files that are assembled into the component output file. **If `subs` is defined then `assemblies` is ignored.
-
->__*`assemblies` is depreciated and will be removed in a future release.*__
+>`subs` is a globby array of JSON files that are assembled into the component output file.
 
 >Each assembly will be placed in it's own IIFE function and they each have their own templates and locale files. This also provides a unique name-space for each sub-assembly. But this prevents direct access of values and functions contained in the other sub-assemblies without making them available through the global scope or some other mechanism.
 
 ```js
 {
   "subs": [
-    "./**/assembly.json"
-  ]
-}
-```
-
-or
-
-```js
-{
-  "assemblies": [
-    "sub1",
-    "sub2",
-    "thingy/item1",
-    "thingy/item2"
+    "**/assembly.json"
   ]
 }
 ```
@@ -265,7 +249,7 @@ componentFolder
 
 >If the user does not provide a value for `localeFileName` then  `gulp-component-assembler`  attempts to use the value of `strings`. If files using that value do not exist then it attempts to use the value of the containing folder.
 
->One locale file is needed per language. At this time `2014-12-19` we only support the two letter ([ISO-639-1](http://en.wikipedia.org/wiki/List_of_ISO_639-1_codes)) locale names, like `'en'`, `'fr'`, `'de'`, etc.
+>One locale file is needed per language. At this time, `2014-12-19`, we only support the two letter ([ISO-639-1](http://en.wikipedia.org/wiki/List_of_ISO_639-1_codes)) locale names, like `'en'`, `'fr'`, `'de'`, etc.
 
 >___TODO: Provide more information here___ 
 

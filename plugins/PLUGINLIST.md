@@ -13,6 +13,7 @@ I have written one plug-in to provide a different mechanism for loading template
 
 | Plug-in | Ver | Date | Description |
 | --- | --- | --- | --- |
+| fileNameProvider.js | 1.0.0 | 22 Nov, 2014 | A plug-in to provide the variable __FILE__ before each file from the `files` array is included in the assembly. Resolution for [Issue #2](https://github.com/intervalia/gulp-component-assembler/issues/2) | 
 | oldTemplates.js | 1.0.0 | 13 Nov, 2014 | The `oldTemplates.js` plug-in allows the FamilySearch team to load a single template file called `template.html` from the assembly folder. It also uses a different mechanism for loading the templates into the JavaScript code. |
 
 

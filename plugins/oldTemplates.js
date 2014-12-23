@@ -1,6 +1,5 @@
 var fs = require('fs');
 var path = require('path');
-var PluginError = require('gulp-util').PluginError;
 
 function extractBody(html) {
   return html.replace(/\r*\n/g, "\x1f").replace(/(.*)<body[^>]*>(.*)<\/body>(.*)/gi, "$2").replace(/\x1f/g, "\n").trim();

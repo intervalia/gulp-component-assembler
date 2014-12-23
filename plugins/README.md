@@ -9,11 +9,26 @@ There are three different locations where plugins can be processed: `PRE`, `INLI
 
 | Plug-in Type | Description |
 | ----------- | ----------- |
-| `PRE` | Pre-plug-ins are processed just before the iife of the component. This makes anything create by the pre-plug-in to become global. But nothing from any of the iifes has run at the time the pre-plug-in code executes. |
-| `INLINE` | Inline plug-ins are processed within the iifes of the component after all of the other code, language string and templates of that component are processed. |
-| `POST` | Post-plug-ins are processed just after *all* of the iifes from *all* of the assemblies are processed. This makes anything create by the post-plug-in to become global and it can access anything made global by code within any of the the iife. |
+| `PRE` | PRE plug-ins are processed *before* each of the IIFEs of the component are processed. |
+| `POST` | POST plug-ins are processed *after* each of the IIFEs of the component are processed. |
+| `INLINE_PRE` | INLINE_PRE plug-ins are processed within each of the IIFEs of the component before any code, language string and templates of that component are processed. |
+| `INLINE_POST` | INLINE_POST plug-ins are processed within each of the IIFEs of the component after all of the other code, language string and templates of that component are processed. |
+| `FILE_PRE` | FILE_PRE plug-ins are processed just before each file of the component are processed. |
+| `FILE_POST` | FILE_POST plug-ins are processed just after each file of the component are processed. |
 
-When you create add your plug-in you indicate when the plugin should be processed.
+When you create add your plug-in you indicate when the plug-in should be processed.
+
+An example of a plug-in that runs before each IIFE is created.
+
+```JS
+  compasm.addPlugin(compasm.pluginType.PRE, myPlugins.preAssembly);
+```
+
+An example of a plug-in that runs before each source file is included.
+
+```JS
+  compasm.addPlugin(compasm.pluginType.FILE_PRE, myPlugins.preFile);
+```
 
 **TODO: Provide more information here**
 
@@ -43,7 +58,7 @@ Then, to use your plug-in you need to include your plug-in in your project and a
 
 ```js
 var gulp   = require('gulp');
-var myPlugIn  = require('path to your plug-in');
+var myPlugin  = require('path to your plug-in');
 var compasm = require('gulp-component-assembler');
 
 gulp.task('assemble', function() {
@@ -51,8 +66,8 @@ gulp.task('assemble', function() {
   compasm.addPlugin(compasm.pluginType.PRE, myPlugin);
 
   return gulp.src('./assembly.json')
-    .pipe(compasm.assemble()
-    .pipe(gulp.dest('./dist'))
+    .pipe(compasm.assemble())
+    .pipe(gulp.dest('./dist'));
 });
 ```
 
@@ -74,7 +89,7 @@ The `params` object is passed into your plug-in function and includes the follow
 >The `options` object passed into the `assemble` function in your file `gulpfile.js`.
 
 ##### Property: assembly - *{object}*
->The JSON assembly object that is being processed at this time. This is the object that contains the properties `files`, `templates`, `assemblies`, etc.
+>The JSON assembly object that is being processed at this time. This is the object that contains the properties `files`, `templates`, `subs`, etc.
 
 
 #### Your own properties in the `assembly.json` file
