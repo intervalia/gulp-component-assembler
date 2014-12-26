@@ -4,11 +4,14 @@ var PluginError = require('gulp-util').PluginError;
 var preAssemblyCalled = false;
 
 function preAssembly(params) {
+  var output = "";
   if (!preAssemblyCalled) {
     preAssemblyCalled = true;
-    return "var __ASSEMBLY__ = '"+path.basename(params.projectPath)+"';\nvar __FILE__;\n";
+    output += "var __FILE__;\nvar ";
   }
-  return "__ASSEMBLY__ = '"+path.basename(params.projectPath)+"';\n";
+
+  output += "__ASSEMBLY__ = '"+path.basename(params.projectPath)+"';\n";
+  return output;
 }
 
 

@@ -1,4 +1,3 @@
-// through2 is a thin wrapper around node transform streams
 var through = require('through2');
 var gutil = require('gulp-util');
 var fs = require('fs');
@@ -27,7 +26,7 @@ function assemble(options) {
     }
 
     file.contents = new Buffer(assemblies.process(assembly, file.path, options));
-    temp = path.dirname(file.path)
+    temp = path.dirname(file.path);
     file.path = path.join(temp, path.basename(temp)+'.js');
     this.push(file);
 
