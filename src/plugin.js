@@ -1,10 +1,10 @@
-var inlinePrePluginList = [];
-var inlinePostPluginList = [];
-var filePrePluginList = [];
-var filePostPluginList = [];
-var prePluginList = [];
-var postPluginList = [];
-
+var inlinePrePluginList;
+var inlinePostPluginList;
+var filePrePluginList;
+var filePostPluginList;
+var prePluginList;
+var postPluginList;
+var pluginListByType;
 var pluginTypes = {
       "INLINE_PRE": "INLINE_PRE",
       "INLINE_POST": "INLINE_POST",
@@ -12,14 +12,6 @@ var pluginTypes = {
       "POST": "POST",
       "FILE_PRE": "FILE_PRE",
       "FILE_POST": "FILE_POST"
-    };
-var pluginListByType = {
-      "INLINE_PRE": inlinePrePluginList,
-      "INLINE_POST": inlinePostPluginList,
-      "FILE_PRE": filePrePluginList,
-      "FILE_POST": filePostPluginList,
-      "PRE": prePluginList,
-      "POST": postPluginList
     };
 
 
@@ -35,13 +27,33 @@ function addPlugin(pluginType, process) {
   }
 }
 
+function clear() {
+  inlinePrePluginList = [];
+  inlinePostPluginList = [];
+  filePrePluginList = [];
+  filePostPluginList = [];
+  prePluginList = [];
+  postPluginList = [];
+  pluginListByType = {
+    "INLINE_PRE": inlinePrePluginList,
+    "INLINE_POST": inlinePostPluginList,
+    "FILE_PRE": filePrePluginList,
+    "FILE_POST": filePostPluginList,
+    "PRE": prePluginList,
+    "POST": postPluginList
+  };
+}
+
 function processPlugin(pluginList, params) {
-  var content = "";
+  var content = "", temp;
 
   if (pluginList.length > 0) {
     pluginList.forEach(function(plugin, index) {
       if (typeof plugin.process === "function") {
-        content += plugin.process(params);
+        temp = plugin.process(params);
+        //if (temp !== undefined) {
+          content += temp;
+        //}
       }
     });
   }
@@ -73,8 +85,11 @@ function processPostPlugins(params) {
   return processPlugin(postPluginList, params);
 }
 
+clear();
+
 module.exports = {
   "addPlugin": addPlugin,
+  "clear": clear,
   "processInlinePre": processInlinePrePlugins,
   "processInlinePost": processInlinePostPlugins,
   "processFilePre": processFilePrePlugins,

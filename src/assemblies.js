@@ -11,11 +11,15 @@ var DEFAULT_USE_PARAMS = "window,document";
 var DEFAULT_PASS_PARAMS = DEFAULT_USE_PARAMS;
 
 function areTranslationsAvailable(projectPath, locale, localePath, localeFileName) {
-  hasTranslations = fs.existsSync(path.join(localePath, localeFileName + '_'+locale+'.json'));
+  "use strict";
+  var filePath = path.join(localePath, localeFileName + '_'+locale+'.json');
+  var hasTranslations = fs.existsSync(filePath);
   if (!hasTranslations && localeFileName === "strings") {
     localeFileName  = path.basename(projectPath);
     hasTranslations = fs.existsSync(path.join(localePath, localeFileName + '_'+locale+'.json'));
   }
+
+  return hasTranslations;
 }
 
 function processAssembly(assembly, assemblyName, options, isSub) {
@@ -42,6 +46,7 @@ function processAssembly(assembly, assemblyName, options, isSub) {
     "options": options,
     "assembly": assembly,
     "assemblyName": assemblyName,
+    "assemblyFileName": path.basename(projectPath),
     "isSub": isSub
   };
 
@@ -122,5 +127,6 @@ function processAssembly(assembly, assemblyName, options, isSub) {
 
 
 module.exports = {
-  "process": processAssembly
+  "process": processAssembly,
+  "areTranslationsAvailable": areTranslationsAvailable
 };

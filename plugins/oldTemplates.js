@@ -72,3 +72,4 @@ function pluginProcess(params) {
 }
 
 module.exports = pluginProcess;
+module.exports.version = "1.0.0";

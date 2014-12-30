@@ -24,6 +24,7 @@ function preFile(params) {
 }
 
 module.exports = {
+  version: "1.0.0",
   preAssembly: preAssembly,
   preFile: preFile
 };

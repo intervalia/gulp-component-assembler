@@ -57,12 +57,12 @@ function processLocales(baseLocalePath, localeFileName, assemblyName, options) {
                     "   for(i = 0; i < len; i++) {\n"+
                     "    temp = (locale==='ke'?'['+langKeys[i]+']':'["+assemblyName+".'+langKeys[i]+']');\n"+
                     "    lang[langKeys[i]] = temp;\n"+
-                    "   };\n"+
+                    "   }\n"+
                     "   break;\n"+
                     "  default:\n"+
                     "   for(i = 0; i < len; i++) {\n"+
                     "    lang[langKeys[i]] = langs[locale][i];\n"+
-                    "   };\n"+
+                    "   }\n"+
                     "   break;\n"+
                     " }\n";
       }
@@ -70,7 +70,7 @@ function processLocales(baseLocalePath, localeFileName, assemblyName, options) {
         // We don't support the two special locales.
         contents += " for(i = 0; i < len; i++) {\n"+
                     "  lang[langKeys[i]] = langs[locale][i];\n"+
-                    " };\n";
+                    " }\n";
       }
 
       // Return the correct lang object
