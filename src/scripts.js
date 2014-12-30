@@ -31,6 +31,7 @@ function processScripts(projectPath, files, options, hasTranslations, assembly, 
         "options": options,
         "assembly": assembly,
         "assemblyName": assemblyName,
+        "assemblyFileName": path.basename(projectPath),
         "isSub": isSub,
         "fileName": fileName,
         "filePath": filePath
