@@ -91,6 +91,8 @@ The `params` object is passed into your plug-in function and includes the follow
 ##### Property: assembly - *{object}*
 >The JSON assembly object that is being processed at this time. This is the object that contains the properties `files`, `templates`, `subs`, etc.
 
+##### Property: assemblyFileName - *{string}*
+>This is the name of the assembly that is being built minus the `.js` extension. Normally this is the name of the folder that contains the `assembly.json` file.
 
 #### Your own properties in the `assembly.json` file
 You can add your own properties into the `assembly.json` file but *please*, in order to reduce the likelihood of name collisions, preface your object names with a name that defines your plug-in.

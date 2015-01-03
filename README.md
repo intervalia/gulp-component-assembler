@@ -322,23 +322,4 @@ MIT - <a href="LICENSE.md">License File</a>
 
 # UPDATE HISTORY
 
-###1.0.5
-* Changed license to MIT
-* Updated main README.md
-* Added README.md in the plugins folder to describe plug-ins, how to write them, and what plug-ins are currently available.  
-
-###1.0.4
-* Updated main README.md
-* Added assemble option `useStrict`.
-* Changed `iifeParams` from a string to an object with `use` and `pass` parameters.
-* Added globby paths for the `files` and `templates` properties.
-```js
-{
-  "files": [
-    "**/*.js"
-  ],
-  "templates": [
-    "**/*.html"
-  ]
-}
-```
+<a href="UPDATE_HISTORY.md">Update History File</a>
