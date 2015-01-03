@@ -11,15 +11,20 @@ var DEFAULT_USE_PARAMS = "window,document";
 var DEFAULT_PASS_PARAMS = DEFAULT_USE_PARAMS;
 
 function areTranslationsAvailable(projectPath, locale, localePath, localeFileName) {
-  hasTranslations = fs.existsSync(path.join(localePath, localeFileName + '_'+locale+'.json'));
+  "use strict";
+  var filePath = path.join(localePath, localeFileName + '_'+locale+'.json');
+  var hasTranslations = fs.existsSync(filePath);
   if (!hasTranslations && localeFileName === "strings") {
     localeFileName  = path.basename(projectPath);
     hasTranslations = fs.existsSync(path.join(localePath, localeFileName + '_'+locale+'.json'));
   }
+
+  return hasTranslations;
 }
 
-function processAssembly(assembly, projectPath, options, isSub) {
+function processAssembly(assembly, assemblyName, options, isSub) {
   "use strict";
+  var projectPath = path.dirname(assemblyName);
   var assemblies, contents;
   var iifeParams, iifeCount;
   var pluginParams;
@@ -35,16 +40,18 @@ function processAssembly(assembly, projectPath, options, isSub) {
   // Add comment
   contents = (isSub ? '\n\n// Sub-assembly' : '// Assembly') + ': ' + path.basename(projectPath) + "\n";
 
-  if (!isSub) {
-    pluginParams = {
-      "projectPath": projectPath,
-      "hasTranslations": hasTranslations,
-      "options": options,
-      "assembly": assembly
-    };
+  pluginParams = {
+    "projectPath": projectPath,
+    "hasTranslations": hasTranslations,
+    "options": options,
+    "assembly": assembly,
+    "assemblyName": assemblyName,
+    "assemblyFileName": path.basename(projectPath),
+    "isSub": isSub
+  };
 
-    contents += plugin.processPre(pluginParams);
-  }
+  // Process any PRE plug-ins
+  contents += plugin.processPre(pluginParams);
 
   // OPEN IIFE
   iifeParams = options.iifeParams || DEFAULT_USE_PARAMS;
@@ -61,9 +68,12 @@ function processAssembly(assembly, projectPath, options, isSub) {
     contents += '"use strict";\n';
   }
 
+  // Process any INLINE_PRE plug-ins
+  contents += plugin.processInlinePre(pluginParams);
+
   // Process 'files' field
   if (assembly.files) {
-    contents += scripts.process(projectPath, globArray(assembly.files, {cwd: projectPath}), options);
+    contents += scripts.process(projectPath, globArray(assembly.files, {cwd: projectPath}), options, hasTranslations, assembly, assemblyName, isSub);
   }
 
   // Process locale files
@@ -74,8 +84,8 @@ function processAssembly(assembly, projectPath, options, isSub) {
   // Process template files
   contents += templates.process(projectPath, globArray(assembly.templates || ["./templates/*.html"], {cwd: projectPath}), hasTranslations, options);
 
-  // Process any inline plugins
-  contents += plugin.processInline(pluginParams);
+  // Process any INLINE_POST plug-ins
+  contents += plugin.processInlinePost(pluginParams);
 
   // Close IIFE
   iifeParams = options.iifeParams || DEFAULT_USE_PARAMS;
@@ -91,25 +101,27 @@ function processAssembly(assembly, projectPath, options, isSub) {
   }
   contents += '\n})(' + iifeParams + ');\n';
 
+  // Process any POST plug-ins
+  contents += plugin.processPost(pluginParams);
+
   // Process sub assemblies
-  if (assembly.assemblies) {
-    assembly.assemblies.forEach(function(assemblyName, index) {
-      var assemblyPath, subAssembly, assemblyFileName;
+  if (assembly.subs) {
+    var subs = globArray(assembly.subs, {cwd: projectPath});
+    if (subs && subs.length > 0) {
+      subs.forEach(function(assemblyName, index) {
+        var assemblyPath, subAssembly, assemblyFileName;
 
-      assemblyPath = path.join(projectPath, assemblyName);
-      assemblyFileName = path.join(assemblyPath, "assembly.json");
-      if (fs.existsSync(assemblyFileName)) {
-        subAssembly = JSON.parse(fs.readFileSync(assemblyFileName, {"encoding": "utf-8"}));
-        contents += processAssembly(subAssembly, assemblyPath, options, true);
-      }
-      else {
-        throw new PluginError(PLUGIN_NAME, "Sub-assembly not found: '" + assemblyFileName + "'" );
-      }
-    });
-  }
+        assemblyFileName = path.join(projectPath, assemblyName);
 
-  if (!isSub) {
-    contents += plugin.processPost(pluginParams);
+        if (fs.existsSync(assemblyFileName)) {
+          subAssembly = JSON.parse(fs.readFileSync(assemblyFileName, {"encoding": "utf-8"}));
+          contents += processAssembly(subAssembly, assemblyFileName, options, true);
+        }
+        else {
+          throw new PluginError(PLUGIN_NAME, "Sub-assembly not found: '" + assemblyName + "'" );
+        }
+      });
+    }
   }
 
   return contents;
@@ -117,5 +129,6 @@ function processAssembly(assembly, projectPath, options, isSub) {
 
 
 module.exports = {
-  "process": processAssembly
+  "process": processAssembly,
+  "areTranslationsAvailable": areTranslationsAvailable
 };

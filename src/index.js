@@ -1,4 +1,3 @@
-// through2 is a thin wrapper around node transform streams
 var through = require('through2');
 var gutil = require('gulp-util');
 var fs = require('fs');
@@ -18,7 +17,7 @@ function assemble(options) {
   options.locale = options.defaultLocale || "en";
 
   assemblyStream._transform = function(file, unused, callback) {
-    var assembly;
+    var assembly, temp;
     try {
       assembly = JSON.parse(file.contents);
     }
@@ -26,9 +25,9 @@ function assemble(options) {
       throw new PluginError(PLUGIN_NAME, "Unable to parse .json file: " + file.path);
     }
 
-    file.contents = new Buffer(assemblies.process(assembly, path.dirname(file.path), options));
-    file.path = path.dirname(file.path) + '.js';
-
+    file.contents = new Buffer(assemblies.process(assembly, file.path, options));
+    temp = path.dirname(file.path);
+    file.path = path.join(temp, path.basename(temp)+'.js');
     this.push(file);
 
     if (firstTime && options.useExternalLib) {
