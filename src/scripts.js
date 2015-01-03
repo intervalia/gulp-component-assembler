@@ -11,7 +11,7 @@ function processOneScript(scriptPath, includeName, options, newPluginParams) {
 
   var contents = "/*\n * Included File: " + includeName + "\n */\n";
   contents += plugin.processFilePre(newPluginParams);
-  contents += fs.readFileSync(scriptPath, {"encoding": "utf-8"});
+  contents += fs.readFileSync(scriptPath, {"encoding": "utf-8"}).replace(/\r\n/g, "\n");
   contents += "\n";
   contents += plugin.processFilePost(newPluginParams);
 

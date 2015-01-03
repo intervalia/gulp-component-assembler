@@ -5,6 +5,10 @@ var fs = require('fs');
 var gutil = require('gulp-util');
 var should = require('should');
 
+function readDataFile(path) {
+  return fs.readFileSync(path, {"encoding": "utf-8"}).replace(/\r/g, "");
+}
+
 describe('\n    Testing the file assemblies.js', function () {
   var rootPath;
 
@@ -84,7 +88,7 @@ describe('\n    Testing the file assemblies.js', function () {
         };
         var val = assemblies.process(assembly, assemblyFileName, options);
         //fs.writeFileSync("./test/data/sub1.no-options.js", val);
-        temp = fs.readFileSync("./test/data/sub1.no-options.js", {"encoding": "utf-8"});
+        temp = readDataFile("./test/data/sub1.no-options.js");
         val.should.equal(temp);
         done();
       });
@@ -95,7 +99,7 @@ describe('\n    Testing the file assemblies.js', function () {
         };
         var val = assemblies.process(assembly, assemblyFileName, options);
         //fs.writeFileSync("./test/data/sub1.locale-fr.js", val);
-        temp = fs.readFileSync("./test/data/sub1.locale-fr.js", {"encoding": "utf-8"});
+        temp = readDataFile("./test/data/sub1.locale-fr.js");
         val.should.equal(temp);
         done();
       });
@@ -107,7 +111,7 @@ describe('\n    Testing the file assemblies.js', function () {
         };
         var val = assemblies.process(assembly, assemblyFileName, options);
         //fs.writeFileSync("./test/data/sub1.exposeLang.js", val);
-        temp = fs.readFileSync("./test/data/sub1.exposeLang.js", {"encoding": "utf-8"});
+        temp = readDataFile("./test/data/sub1.exposeLang.js");
         val.should.equal(temp);
         done();
       });
@@ -119,7 +123,7 @@ describe('\n    Testing the file assemblies.js', function () {
         };
         var val = assemblies.process(assembly, assemblyFileName, options);
         //fs.writeFileSync("./test/data/sub1.supportTransKeys.js", val);
-        temp = fs.readFileSync("./test/data/sub1.supportTransKeys.js", {"encoding": "utf-8"});
+        temp = readDataFile("./test/data/sub1.supportTransKeys.js");
         val.should.equal(temp);
         done();
       });
@@ -131,7 +135,7 @@ describe('\n    Testing the file assemblies.js', function () {
         };
         var val = assemblies.process(assembly, assemblyFileName, options);
         //fs.writeFileSync("./test/data/sub1.tagMissingStrings.js", val);
-        temp = fs.readFileSync("./test/data/sub1.tagMissingStrings.js", {"encoding": "utf-8"});
+        temp = readDataFile("./test/data/sub1.tagMissingStrings.js");
         val.should.equal(temp);
         done();
       });
@@ -151,7 +155,7 @@ describe('\n    Testing the file assemblies.js', function () {
       beforeEach(function() {
         projectPath = path.join(rootPath, "testdata/main/sub2");
         assemblyFileName = path.join(projectPath, "assembly.json");
-        temp = fs.readFileSync(assemblyFileName, {"encoding": "utf-8"});
+        temp = readDataFile(assemblyFileName);
         assembly = JSON.parse(temp);
       });
 
@@ -161,7 +165,7 @@ describe('\n    Testing the file assemblies.js', function () {
         };
         var val = assemblies.process(assembly, assemblyFileName, options);
         //fs.writeFileSync("./test/data/sub2.no-options.js", val);
-        temp = fs.readFileSync("./test/data/sub2.no-options.js", {"encoding": "utf-8"});
+        temp = readDataFile("./test/data/sub2.no-options.js");
         val.should.equal(temp);
         done();
       });
@@ -173,7 +177,7 @@ describe('\n    Testing the file assemblies.js', function () {
         };
         var val = assemblies.process(assembly, assemblyFileName, options);
         //fs.writeFileSync("./test/data/sub2.min-ws.js", val);
-        temp = fs.readFileSync("./test/data/sub2.min-ws.js", {"encoding": "utf-8"});
+        temp = readDataFile("./test/data/sub2.min-ws.js");
         val.should.equal(temp);
         done();
       });
@@ -185,7 +189,7 @@ describe('\n    Testing the file assemblies.js', function () {
         };
         var val = assemblies.process(assembly, assemblyFileName, options);
         //fs.writeFileSync("./test/data/sub2.useStrict.js", val);
-        temp = fs.readFileSync("./test/data/sub2.useStrict.js", {"encoding": "utf-8"});
+        temp = readDataFile("./test/data/sub2.useStrict.js");
         val.should.equal(temp);
         done();
       });
@@ -200,7 +204,7 @@ describe('\n    Testing the file assemblies.js', function () {
         };
         var val = assemblies.process(assembly, assemblyFileName, options);
         //fs.writeFileSync("./test/data/sub2.iifeParams.js", val);
-        temp = fs.readFileSync("./test/data/sub2.iifeParams.js", {"encoding": "utf-8"});
+        temp = readDataFile("./test/data/sub2.iifeParams.js");
         val.should.equal(temp);
         done();
       });

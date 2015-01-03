@@ -6,6 +6,10 @@ var fs = require('fs');
 var gutil = require('gulp-util');
 var should = require('should');
 
+function readDataFile(path) {
+  return fs.readFileSync(path, {"encoding": "utf-8"}).replace(/\r/g, "");
+}
+
 describe('\n    Testing the file plugin.js', function () {
   var rootPath;
 
@@ -200,7 +204,7 @@ describe('\n    Testing the file plugin.js', function () {
       };
       var val = assemblies.process(assembly, assemblyFileName, options);
       //fs.writeFileSync("./test/data/sub1.with-plugins.js", val);
-      temp = fs.readFileSync("./test/data/sub1.with-plugins.js", {"encoding": "utf-8"});
+      temp = readDataFile("./test/data/sub1.with-plugins.js");
       val.should.equal(temp);
 
       done();
@@ -208,9 +212,3 @@ describe('\n    Testing the file plugin.js', function () {
 
   });
 });
-
-
-/*
- * processPre
- * processPost
- */
