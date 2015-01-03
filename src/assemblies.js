@@ -50,6 +50,7 @@ function processAssembly(assembly, assemblyName, options, isSub) {
     "isSub": isSub
   };
 
+  // Process any PRE plug-ins
   contents += plugin.processPre(pluginParams);
 
   // OPEN IIFE
@@ -100,6 +101,9 @@ function processAssembly(assembly, assemblyName, options, isSub) {
   }
   contents += '\n})(' + iifeParams + ');\n';
 
+  // Process any POST plug-ins
+  contents += plugin.processPost(pluginParams);
+
   // Process sub assemblies
   if (assembly.subs) {
     var subs = globArray(assembly.subs, {cwd: projectPath});
@@ -119,8 +123,6 @@ function processAssembly(assembly, assemblyName, options, isSub) {
       });
     }
   }
-
-  contents += plugin.processPost(pluginParams);
 
   return contents;
 }

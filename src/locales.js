@@ -87,9 +87,10 @@ function processLocales(baseLocalePath, localeFileName, assemblyName, options) {
     }
 
     if (options.exposeLang) {
-      contents += "window.sommus = window.sommus || {};\n";
-      contents += "window.sommus."+assemblyName+" = window.sommus."+assemblyName+" || {};\n";
-      contents += "window.sommus."+assemblyName+".lang = lang;\n";
+      var globalObj = options.globalObj || "components";
+      contents += "window."+globalObj+" = window."+globalObj+" || {};\n";
+      contents += "window."+globalObj+"."+assemblyName+" = window."+globalObj+"."+assemblyName+" || {};\n";
+      contents += "window."+globalObj+"."+assemblyName+".lang = lang;\n";
     }
   }
 

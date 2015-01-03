@@ -71,8 +71,8 @@ function getLang(locale) {
 }
 
 var lang = getLang(window.locale || 'en');
-window.sommus = window.sommus || {};
-window.sommus.sub1 = window.sommus.sub1 || {};
-window.sommus.sub1.lang = lang;
+window.components = window.components || {};
+window.components.sub1 = window.components.sub1 || {};
+window.components.sub1.lang = lang;
 
 })(window,document);
