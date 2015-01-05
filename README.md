@@ -9,7 +9,10 @@ gulp-component-assembler
 [![Coveralls Status](https://img.shields.io/coveralls/intervalia/gulp-component-assembler.svg)](https://coveralls.io/r/intervalia/gulp-component-assembler)
 -->
 
-<div style="font: italic 16px/1.5em Georgia, Times, Serif;border:1px solid #333;border-radius:6px;padding:7px;box-shadow:4px 4px 4px rgba(0,0,0,.25);background-color:#DFD">Always reference the documents on the git repo since they are updated more often then the NPM package website. I update NPM when there is a code change. I might add to the documentation without a code change and, at that time, I would not update ther version number or NPM release.</div>
+---
+>Always reference the documents on the git repo since they are updated more often then the NPM package website. I update NPM when there is a code change. I might add to the documentation without a code change and, at that time, I would not update ther version number or NPM release.
+
+---
 
 `gulp-component-assembler` is a gulp plug-in that assembles JavaScript components. The source for the components are a combination of JavaScript files, HTML Templates and Localization strings.
 
@@ -23,8 +26,7 @@ gulp-component-assembler
 _The assembled contents of the component file are wrapped inside an **[Immediately-Invoked Function Expression](http://en.wikipedia.org/wiki/Immediately-invoked_function_expression)** (**IIFE**). This helps prevent anything within the component from having a name collision with other code on the page._
 
 
-
-<div style="border-bottom:solid 3px #669;padding-top:55px"></div>
+---
 #Install
 ```shell
 npm install gulp-component-assembler --save-dev
@@ -33,7 +35,7 @@ npm install -g gulp-component-assembler
 ```
 
 
-<div style="border-bottom:solid 3px #669;padding-top:55px"></div>
+---
 #Pull Requests and Issues
 Please submit **[pull requests](https://github.com/intervalia/gulp-component-assembler/pulls)** and **[issues](https://github.com/intervalia/gulp-component-assembler/issues)**. I want to make this into a tool that is useful to everyone. I will do my best to review and take care of PRs and issues quickly. If you have suggestions, I would love to hear them.
 
@@ -41,7 +43,7 @@ Please submit **[pull requests](https://github.com/intervalia/gulp-component-ass
 `gulp-component-assembler` supports plug-ins to be run at various times during the assembly process. Plug-ins allow special manipulation of the component output file. If you create a plug-in, please either create a PR on the plug-in page or email me your info. I will add it to the list of third-party plug-ins in the [PLUGINLIST.md file](https://github.com/intervalia/gulp-component-assembler/blob/master/plugins/PLUGINLIST.md)
 
 
-<div style="border-bottom:solid 3px #669;padding-top:55px"></div>
+---
 #Usage of `gulp-component-assembler`
 The primary usage of the `gulp-component-assembler` is to assemble the component output files. This is done when gulp calles the `assemble()` function. This function uses the information in the `assembly.json` file to assemble the component output file. *The source files does not __need__ to be called `assembly.json`, but it must be a `JSON` file and it must conform to the correct structure of the `assembly.json` file. For simplicity, throughout all documentation, I will call this file `assembly.json`*
 
@@ -63,7 +65,7 @@ gulp.task('assemble', function() {
 
 
 
-<div style="border-bottom:solid 3px #669;padding-top:55px"></div>
+---
 ##Options for `assemble()` function
 The `assemble()` function takes an optional object which contains any combination of the options defined below. These options allow the user to customize the assembly process and the output file for the component. The options are defined in the object passed to the `assemble()` function. Like this:
 
@@ -168,7 +170,7 @@ If the option `useStrict` is set to `true` then the expression `"use strict";` i
 })(window, window.document);
 ```
 
-<div style="border-bottom:solid 3px #669;padding-top:55px"></div>
+---
 #Usage of `assembly.json` file
 The `assembly.json` file defines a list of JavaScript source files, HTML template files and sub-assemblies to be included in the component output file. It can also define special locations for locale string files.
 
@@ -384,7 +386,7 @@ In the example above, `NAME` and `YOUR_NAME` would be locale strings and not rel
 
 
 
-<div style="border-bottom:solid 3px #669;padding-top:55px"></div>
+---
 #Plug-ins
 `gulp-component-assembler` support third-party plug-ins.
 
@@ -395,13 +397,13 @@ For information on how to create your own plug-ins go to the [plug-ins README.md
 
 
 
-<div style="border-bottom:solid 3px #669;padding-top:55px"></div>
+---
 #License
 MIT - [License File](https://github.com/intervalia/gulp-component-assembler/tree/master/LICENSE.md)
 
 
 
 
-<div style="border-bottom:solid 3px #669;padding-top:55px"></div>
+---
 #Update History
 [Update History File](https://github.com/intervalia/gulp-component-assembler/tree/master/UPDATE_HISTORY.md)
