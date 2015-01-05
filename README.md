@@ -1,8 +1,13 @@
-[![Build Status](https://travis-ci.org/intervalia/gulp-component-assembler.svg?branch=master)](https://travis-ci.org/intervalia/gulp-component-assembler.svg)
+[![NPM version](http://img.shields.io/npm/v/gulp-component-assembler.svg)](https://npmjs.org/package/gulp-component-assembler)
+[![Downloads](http://img.shields.io/npm/dm/gulp-component-assembler.svg)](https://npmjs.org/package/gulp-component-assembler)
+[![Support us](http://img.shields.io/gittip/intervalia.svg)](https://www.gittip.com/intervalia/)
+[![Build Status](https://travis-ci.org/intervalia/gulp-component-assembler.svg?branch=master)](https://travis-ci.org/intervalia/gulp-component-assembler)
+[![Coveralls Status](https://img.shields.io/coveralls/intervalia/gulp-component-assembler.svg)](https://coveralls.io/r/intervalia/gulp-component-assembler)
+
 
 gulp-component-assembler
 ========================
-#### Always reference the documents on the git repo since they are updated more often then the NPM package website. I only update NPM when there is a code change but I may add to the documentation without a code change and, at that time, I will not update NPM.  
+#### Always reference the documents on the git repo since they are updated more often then the NPM package website. I only update NPM when there is a code change but I may add to the documentation without a code change and, at that time, I will not update NPM.
 ---
 
 `gulp-component-assembler` is a gulp plug-in that assembles JavaScript components. The components are a combination of JavaScript files, HTML Templates and Localization strings.
@@ -114,7 +119,7 @@ To set these values you create an object that has both a `use` and a `pass` prop
   "use": "window, document, $",
   "pass": "window, window.document, window.jQuery"
 }
-``` 
+```
 
 This will produce the following in the component output file:
 
@@ -122,7 +127,7 @@ This will produce the following in the component output file:
 (function(window, document, $, undefined) {
 
   // Your code would be here.
- 
+
 })(window, window.documet, window.jQuery);
 ```
 
@@ -252,7 +257,7 @@ componentFolder
 
 >One locale file is needed per language. At this time, `2014-12-19`, we only support the two letter ([ISO-639-1](http://en.wikipedia.org/wiki/List_of_ISO_639-1_codes)) locale names, like `'en'`, `'fr'`, `'de'`, etc.
 
->___TODO: Provide more information here___ 
+>___TODO: Provide more information here___
 
 >A value of `strings` would indicate files named like: `strings_en.json`, `strings_fr.json`, `strings_zh.json` etc.
 
