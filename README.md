@@ -1,4 +1,4 @@
-white spacegulp-component-assembler
+gulp-component-assembler
 ========================
 
 [![NPM version](http://img.shields.io/npm/v/gulp-component-assembler.svg)](https://npmjs.org/package/gulp-component-assembler)
