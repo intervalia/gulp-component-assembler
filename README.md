@@ -5,7 +5,9 @@ white spacegulp-component-assembler
 [![Downloads](http://img.shields.io/npm/dm/gulp-component-assembler.svg)](https://npmjs.org/package/gulp-component-assembler)
 [![Support us](http://img.shields.io/gittip/intervalia.svg)](https://www.gittip.com/intervalia/)
 [![Build Status](https://travis-ci.org/intervalia/gulp-component-assembler.svg?branch=master)](https://travis-ci.org/intervalia/gulp-component-assembler)
+<!--
 [![Coveralls Status](https://img.shields.io/coveralls/intervalia/gulp-component-assembler.svg)](https://coveralls.io/r/intervalia/gulp-component-assembler)
+-->
 
 <div style="font: italic 16px/1.5em Georgia, Times, Serif;border:1px solid #333;border-radius:6px;padding:7px;box-shadow:4px 4px 4px rgba(0,0,0,.25);background-color:#DFD">Always reference the documents on the git repo since they are updated more often then the NPM package website. I update NPM when there is a code change. I might add to the documentation without a code change and, at that time, I would not update ther version number or NPM release.</div>
 
@@ -226,7 +228,7 @@ window.globalVar = localVar; // This is now accessible throughout the app/web pa
 
 >The templates are loaded by your script by accessing the `templateList` object, or by calling the `loadTemplate()` function or the `loadTemplateStr()` function.
 
->If there are both templates and locale files then calling `getTemplate()` or `getTemplateStr()` will auto-populate translations in the data returned from those functions. 
+>If there are both templates and locale files then calling `getTemplate()` or `getTemplateStr()` will auto-populate translations in the data returned from those functions.
 
 >___TODO: Provide more information here___
 
@@ -278,7 +280,7 @@ myComponent
         └── file.js
 ```
 
-Then the component output file `myComponent.js` would include the contents of the sub-assemblies `sub1.js`, `sub2.js`, `thingy/item1.js` and `thingy/item2.js`. 
+Then the component output file `myComponent.js` would include the contents of the sub-assemblies `sub1.js`, `sub2.js`, `thingy/item1.js` and `thingy/item2.js`.
 
 ---
 ##### Property: `localeFileName`
@@ -339,7 +341,9 @@ Then the component output file `myComponent.js` would include the contents of th
 ```
 
 ####How to select the locale to be used
-To set the selected locale in the browser you would set the global `window.locale` to the 
+To set the selected locale in the browser you would set the global `window.locale` to the locale you want to use.
+
+_The value for `window.locale` must be set before loading any component output file._
 
 >___TODO: Provide more information here___
 
