@@ -7,7 +7,7 @@
 
 gulp-component-assembler
 ========================
-#### Always reference the documents on the git repo since they are updated more often then the NPM package website. I only update NPM when there is a code change but I may add to the documentation without a code change and, at that time, I will not update NPM.
+#### Always reference the documents on the git repo since they are updated more often then the NPM package website. I only update NPM when there is a code change but I may add to the documentation without a code change and, at that time, I would not update ther version number or NPM release.
 ---
 
 `gulp-component-assembler` is a gulp plug-in that assembles JavaScript components. The components are a combination of JavaScript files, HTML Templates and Localization strings.
