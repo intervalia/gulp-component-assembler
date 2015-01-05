@@ -10,7 +10,7 @@ gulp-component-assembler
 -->
 
 ---
->Always reference the documents on the git repo since they are updated more often then the NPM package website. I update NPM when there is a code change. I might add to the documentation without a code change and, at that time, I would not update ther version number or NPM release.
+>Always reference the documents on the git repo since they are updated more often then the NPM package website. I update NPM when there is a code change. I might change documentation without a code change and, at that time, I would not update the version number or NPM release.
 
 ---
 
