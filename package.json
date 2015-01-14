@@ -1,6 +1,6 @@
 {
   "name": "gulp-component-assembler",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "author": "Michael G Collins <intervalia@gmail.com>",
   "license": "MIT",
   "description": "gulp-component-assembler is a gulp plug-in that assembles JavaScript components. The components are a combination of JavaScript files, HTML Templates and Localization strings.",
@@ -30,6 +30,7 @@
   "homepage": "https://github.com/intervalia/gulp-component-assembler",
   "dependencies": {
     "glob": "^4.0.6",
+    "gulp-util": "^3.0.1",
     "minimatch": "^1.0.0",
     "through2": "^0.6.2"
   },
@@ -39,7 +40,6 @@
   "devDependencies": {
     "gulp": "^3.8.8",
     "gulp-jshint": "~1.9.0",
-    "gulp-util": "^3.0.1",
     "mocha": "^1.21.4",
     "should": "^4.0.4"
   }
