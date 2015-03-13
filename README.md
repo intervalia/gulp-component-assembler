@@ -27,7 +27,7 @@ _The assembled contents of the component file are wrapped inside an **[Immediate
 
 
 ---
-#Install
+# Install
 ```shell
 npm install gulp-component-assembler --save-dev
 or
@@ -36,20 +36,20 @@ npm install -g gulp-component-assembler
 
 
 ---
-#Pull Requests and Issues
+# Pull Requests and Issues
 Please submit **[pull requests](https://github.com/intervalia/gulp-component-assembler/pulls)** and **[issues](https://github.com/intervalia/gulp-component-assembler/issues)**. I want to make this into a tool that is useful to everyone. I will do my best to review and take care of PRs and issues quickly. If you have suggestions, I would love to hear them.
 
-####PRs for Third-Party Plug-ins
+#### PRs for Third-Party Plug-ins
 `gulp-component-assembler` supports plug-ins to be run at various times during the assembly process. Plug-ins allow special manipulation of the component output file. If you create a plug-in, please either create a PR on the plug-in page or email me your info. I will add it to the list of third-party plug-ins in the [PLUGINLIST.md file](https://github.com/intervalia/gulp-component-assembler/blob/master/plugins/PLUGINLIST.md)
 
 
 ---
-#Usage of `gulp-component-assembler`
+# Usage of `gulp-component-assembler`
 The primary usage of the `gulp-component-assembler` is to assemble the component output files. This is done when gulp calles the `assemble()` function. This function uses the information in the `assembly.json` file to assemble the component output file. *The source files does not __need__ to be called `assembly.json`, but it must be a `JSON` file and it must conform to the correct structure of the `assembly.json` file. For simplicity, throughout all documentation, I will call this file `assembly.json`*
 
 You can also call the function `addPlugin()` to add plug-ins into the assmebly process. Plug-ins, how to use them and how to write them are defined in the [plug-ins README.md file](https://github.com/intervalia/gulp-component-assembler/tree/master/plugins/README.md)
 
-###Example of the `assemble()` function
+### Example of the `assemble()` function
 Here is an example of how to use the `assemble()` function:
 
 ```js
@@ -66,7 +66,7 @@ gulp.task('assemble', function() {
 
 
 ---
-##Options for `assemble()` function
+## Options for `assemble()` function
 The `assemble()` function takes an optional object which contains any combination of the options defined below. These options allow the user to customize the assembly process and the output file for the component. The options are defined in the object passed to the `assemble()` function. Like this:
 
 ```js
@@ -76,7 +76,7 @@ compasm.assemble({
 })
 ```
 
-####List of Options
+#### List of Options
 Here is the list of options and their description and usage:
 
 | Key | Example | Use |
@@ -153,8 +153,7 @@ This will produce the following in the component output file:
 
 <br/>
 #### Option: `supportTransKeys `
-**TODO: Provide more information here**
-
+When `supportTransKeys` is on the `gulp-component-assembler` auto generates two special locales, `ke` and `zz`. When these locales are used the strings returned in the `lang` object include the key names instead of the translated strings. More information about this is found in the section `Accessing locale strings in your JavaScript` below.
 
 
 <br/>
@@ -171,7 +170,7 @@ If the option `useStrict` is set to `true` then the expression `"use strict";` i
 ```
 
 ---
-#Usage of `assembly.json` file
+# Usage of `assembly.json` file
 The `assembly.json` file defines a list of JavaScript source files, HTML template files and sub-assemblies to be included in the component output file. It can also define special locations for locale string files.
 
 
@@ -342,20 +341,20 @@ Then the component output file `myComponent.js` would include the contents of th
 }
 ```
 
-####How to select the locale to be used
+#### How to select the locale to be used
 To set the selected locale in the browser you would set the global `window.locale` to the locale you want to use.
 
 _The value for `window.locale` must be set before loading any component output file._
 
 >___TODO: Provide more information here___
 
-####Accessing locale strings in your JavaScript
+#### Accessing locale strings in your JavaScript
 Within a component output file, each assembly and sub-assembly would contain it's own locale strings. These are accesed through the property `lang`. In the examples JSON files above you would acces the strings as `lang.BUTTON_OK`, `lang.BUTTON_CANCEL`, `lang.BUTTON_CLOSE` and `lang.NO_CHANGES`.
 
 >___TODO: Provide more information here___
 
 
-####Accessing locale strings in your templates
+#### Accessing locale strings in your templates
 Within a template file you access the locale strings by wrapping them within curly braces.
 
 ```html
@@ -367,7 +366,7 @@ Within a template file you access the locale strings by wrapping them within cur
 
 >___TODO: Provide more information here___
 
-#####Avoiding Conflict with Angular.JS or other systems
+##### Avoiding Conflict with Angular.JS or other systems
 If you are using a system, like Angular.js, that uses double curly-braces then you need to be careful in how you name your locale strings and your Angular scope variables, etc. I recommend that, for example, you use all caps for locale strings and intra-caps for your angular variables. Like this:
 
 ```html
@@ -387,7 +386,7 @@ In the example above, `NAME` and `YOUR_NAME` would be locale strings and not rel
 
 
 ---
-#Plug-ins
+# Plug-ins
 `gulp-component-assembler` support third-party plug-ins.
 
 For a list of available plug-ins go to the [PLUGINLIST.md file](https://github.com/intervalia/gulp-component-assembler/blob/master/plugins/PLUGINLIST.md).
@@ -398,12 +397,12 @@ For information on how to create your own plug-ins go to the [plug-ins README.md
 
 
 ---
-#License
+# License
 MIT - [License File](https://github.com/intervalia/gulp-component-assembler/tree/master/LICENSE.md)
 
 
 
 
 ---
-#Update History
+# Update History
 [Update History File](https://github.com/intervalia/gulp-component-assembler/tree/master/UPDATE_HISTORY.md)

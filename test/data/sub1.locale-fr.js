@@ -1,30 +1,6 @@
 // Assembly: sub1
 
 (function(window,document,undefined) {
-/*
- * Included File: file_sub1.js
- */
-function fn1() {
-  return {
-    "name": "file_sub1",
-    "location": "main/sub1"
-  };
-}
-
-console.log(fn1().name);
-
-/*
- * Included File: file_sub2.js
- */
-function fn2() {
-  return {
-    "name": "file_sub2",
-    "location": "main/sub2"
-  };
-}
-
-console.log(fn2().name);
-
 var langKeys = ["TEST","YES","NO"];
 var langs = {
  // Included locale file: strings_de.json
@@ -71,5 +47,29 @@ function getLang(locale) {
 }
 
 var lang = getLang(window.locale || 'fr');
+/*
+ * Included File: file_sub1.js
+ */
+function fn1() {
+  return {
+    "name": "file_sub1",
+    "location": "main/sub1"
+  };
+}
+
+console.log(fn1().name);
+
+/*
+ * Included File: file_sub2.js
+ */
+function fn2() {
+  return {
+    "name": "file_sub2",
+    "location": "main/sub2"
+  };
+}
+
+console.log(fn2().name);
+
 
 })(window,document);

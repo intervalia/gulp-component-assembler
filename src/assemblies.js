@@ -71,11 +71,6 @@ function processAssembly(assembly, assemblyName, options, isSub) {
   // Process any INLINE_PRE plug-ins
   contents += plugin.processInlinePre(pluginParams);
 
-  // Process 'files' field
-  if (assembly.files) {
-    contents += scripts.process(projectPath, globArray(assembly.files, {cwd: projectPath}), options, hasTranslations, assembly, assemblyName, isSub);
-  }
-
   // Process locale files
   if (hasTranslations) {
     contents += locales.process(localePath, localeFileName, path.basename(projectPath), options);
@@ -83,6 +78,11 @@ function processAssembly(assembly, assemblyName, options, isSub) {
 
   // Process template files
   contents += templates.process(projectPath, globArray(assembly.templates || ["./templates/*.html"], {cwd: projectPath}), hasTranslations, options);
+
+  // Process 'files' field
+  if (assembly.files) {
+    contents += scripts.process(projectPath, globArray(assembly.files, {cwd: projectPath}), options, hasTranslations, assembly, assemblyName, isSub);
+  }
 
   // Process any INLINE_POST plug-ins
   contents += plugin.processInlinePost(pluginParams);

@@ -3,34 +3,6 @@
 
 (function(window,document,undefined) {
 // --==**==-- inlinePre (sub1)
-/*
- * Included File: file_sub1.js
- */
-// --==**==-- filePre (file_sub1.js)
-function fn1() {
-  return {
-    "name": "file_sub1",
-    "location": "main/sub1"
-  };
-}
-
-console.log(fn1().name);
-
-// --==**==-- filePost (file_sub1.js)
-/*
- * Included File: file_sub2.js
- */
-// --==**==-- filePre (file_sub2.js)
-function fn2() {
-  return {
-    "name": "file_sub2",
-    "location": "main/sub2"
-  };
-}
-
-console.log(fn2().name);
-
-// --==**==-- filePost (file_sub2.js)
 var langKeys = ["TEST","YES","NO","WHY"];
 var langs = {
  // Included locale file: strings_de.json
@@ -77,6 +49,34 @@ function getLang(locale) {
 }
 
 var lang = getLang(window.locale || 'en');
+/*
+ * Included File: file_sub1.js
+ */
+// --==**==-- filePre (file_sub1.js)
+function fn1() {
+  return {
+    "name": "file_sub1",
+    "location": "main/sub1"
+  };
+}
+
+console.log(fn1().name);
+
+// --==**==-- filePost (file_sub1.js)
+/*
+ * Included File: file_sub2.js
+ */
+// --==**==-- filePre (file_sub2.js)
+function fn2() {
+  return {
+    "name": "file_sub2",
+    "location": "main/sub2"
+  };
+}
+
+console.log(fn2().name);
+
+// --==**==-- filePost (file_sub2.js)
 // --==**==-- inlinePost (sub1)
 
 })(window,document);

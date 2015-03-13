@@ -1,7 +1,17 @@
 Update History
 ==============
 
-###1.1.0 - Jan 2, 2015
+### 1.1.2 - Mar 12, 2015
+* Moved the locale and template output to before the code output to make sure code had access to locale and template data.
+* Adjusted tests to match output movement
+* Readme changes to look better on npmjs.org (I hope)
+
+### 1.1.1 - Jan 14, 2015
+* Spelling and grammar fixes to documents.
+* Corrected MD code to work better on github
+* More updated to documentation
+
+### 1.1.0 - Jan 2, 2015
 Some changes were breaking so I updated the minor number. 
 * Changed license to MIT
 * Updated main README.md
@@ -30,7 +40,7 @@ Some changes were breaking so I updated the minor number.
 * Fixed test data to match what is correctly generated.
 
 
-###1.0.4
+### 1.0.4
 * Updated main README.md
 * Added assemble option `useStrict`.
 * Changed `iifeParams` from a string to an object with `use` and `pass` parameters.

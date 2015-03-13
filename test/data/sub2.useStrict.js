@@ -2,11 +2,6 @@
 
 (function(window,document,undefined) {
 "use strict";
-/*
- * Included File: f1.js
- */
-console.log("main/sub2/f1.js");
-
 
 var templateList = {
  // Included template file: border.html
@@ -34,5 +29,10 @@ function getTemplate(key) {
  $(snip).html(getTemplateStr(key));
  return snip;
 }
+/*
+ * Included File: f1.js
+ */
+console.log("main/sub2/f1.js");
+
 
 })(window,document);
