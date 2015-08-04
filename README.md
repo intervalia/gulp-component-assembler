@@ -1,6 +1,6 @@
 gulp-component-assembler
 ========================
-
+	
 [![NPM version](http://img.shields.io/npm/v/gulp-component-assembler.svg)](https://npmjs.org/package/gulp-component-assembler)
 [![Downloads](http://img.shields.io/npm/dm/gulp-component-assembler.svg)](https://npmjs.org/package/gulp-component-assembler)
 [![Support us](http://img.shields.io/gittip/intervalia.svg)](https://www.gittip.com/intervalia/)
@@ -8,7 +8,7 @@ gulp-component-assembler
 <!--
 [![Coveralls Status](https://img.shields.io/coveralls/intervalia/gulp-component-assembler.svg)](https://coveralls.io/r/intervalia/gulp-component-assembler)
 -->
-
+	
 ---
 >Always reference the documents on the git repo since they are updated more often then the NPM package website. I update NPM when there is a code change. I might change documentation without a code change and, at that time, I would not update the version number or NPM release.
 
@@ -23,16 +23,30 @@ gulp-component-assembler
 >For a folder named `MyControl` the component output file will be `MyControl.js`.  
 >_The case of the component filename matches the case of the folder name._
 
-_The assembled contents of the component file are wrapped inside an **[Immediately-Invoked Function Expression](http://en.wikipedia.org/wiki/Immediately-invoked_function_expression)** (**IIFE**). This helps prevent anything within the component from having a name collision with other code on the page._
+### Output file location
 
+Prior to version 2.0.0 the component output file would be placed in a folder of the same name as the output file itself.
+
+As of version 2.0.0 the additional folder name is removed and component output file is placed one folder higher than it had been in previous versions.
+
+>**Example**
+>For the path `.../testing/widget/assembly.json` the old, version 1.x, component output file would have been `_outputPath_/widget/widget.js` and the new, version 2.0, component output file will be `_outputPath_/widget.js`
+
+With version 2.x you can continue to use the old output path by including the `useOldDest` option in the `assemble()` command. *See the* `useOldDest` *option below.*
+
+
+>_The assembled contents of the component file are wrapped inside an **[Immediately-Invoked Function Expression](http://en.wikipedia.org/wiki/Immediately-invoked_function_expression)** (**IIFE**). This helps prevent anything within the component from having a negative effect, like name collisions, with any other script files loaded on the page._
+
+<br/><br/>
 
 ---
 # Install
-```shell
-npm install gulp-component-assembler --save-dev
+`npm install gulp-component-assembler --save-dev`
+
 or
-npm install -g gulp-component-assembler
-```
+
+`npm install -g gulp-component-assembler`
+
 
 
 ---
@@ -45,9 +59,9 @@ Please submit **[pull requests](https://github.com/intervalia/gulp-component-ass
 
 ---
 # Usage of `gulp-component-assembler`
-The primary usage of the `gulp-component-assembler` is to assemble the component output files. This is done when gulp calles the `assemble()` function. This function uses the information in the `assembly.json` file to assemble the component output file. *The source files does not __need__ to be called `assembly.json`, but it must be a `JSON` file and it must conform to the correct structure of the `assembly.json` file. For simplicity, throughout all documentation, I will call this file `assembly.json`*
+The primary usage of the `gulp-component-assembler` is to assemble the component output files. This is done when gulp calls the `assemble()` function. This function uses the information in the `assembly.json` file to assemble the component output file. *The source files does not __need__ to be called `assembly.json`, but it must be a `JSON` file and it must conform to the correct structure of the `assembly.json` file. For simplicity, throughout all documentation, I will call this file `assembly.json`*
 
-You can also call the function `addPlugin()` to add plug-ins into the assmebly process. Plug-ins, how to use them and how to write them are defined in the [plug-ins README.md file](https://github.com/intervalia/gulp-component-assembler/tree/master/plugins/README.md)
+You can also call the function `addPlugin()` to add plug-ins into the assembly process. Plug-ins, how to use them and how to write them are defined in the [plug-ins README.md file](https://github.com/intervalia/gulp-component-assembler/tree/master/plugins/README.md)
 
 ### Example of the `assemble()` function
 Here is an example of how to use the `assemble()` function:
@@ -62,8 +76,6 @@ gulp.task('assemble', function() {
     .pipe(gulp.dest('./dist'))
 });
 ```
-
-
 
 ---
 ## Options for `assemble()` function
@@ -80,7 +92,7 @@ compasm.assemble({
 Here is the list of options and their description and usage:
 
 | Key | Example | Use |
-| --- | ------- | --- |
+|-----|---------|-----|
 | **defaultLocale** | `defaultLocale:"en"` | Set the locale that your project will use as the default locale. If you do not provide the `defaultLocale` option then the default locale is set to `"en"`. `defaultLocale` is also the locale that is used if the user attempts to request a non-supported locale. |
 | **exposeLang** | `exposeLang:true/false` | If set to `true` then the language strings are also placed into a global object for access outside of the IIFE. The language strings will be added to `[globalObj].[assemblyName].lang` where `assemblyName` is the name of the assembly that is being created.<br/><br/>**See `globalObj`.** |
 | **externalLibName** | `externalLibName:"filename"` | Name for the external lib file. The default is `assembly-lib.js` and `assembly-lib-min.js`.<br/><br/>**See `useExternalLib`.** |
@@ -90,7 +102,9 @@ Here is the list of options and their description and usage:
 | **supportTransKeys** | `supportTransKeys:true/false` | If set to `true` this creates a set ot translation test values.<br/><br/>**See *Option: supportTransKeys* below.** |
 | **tagMissingStrings** | `tagMissingStrings:true/false` | If set to `true` then any string that was in the locale file for the default locale that is not found in one of the other locale files is marked so the user can see the lack of translation easily. If set to `false` then the missing translations are set to the key for that string. |
 | **useExternalLib** | `useExternalLib:true/false` | If set to `true` then a single file `assambly-lib.js` is created with the common code used for each assembly. If it is set to `false` then each assembly contains copies of the common code needed for the assembly to work. If you choose to use the external libraries then you must include that file before including your own. |
+| **useOldDest** | `useOldDest:true/false` | *New in 2.0.0* - If set to `true` then the output directory structure is used (Before ver. 2.0.0) If set to `false` then the output files are stored one level higher that the pre 2.0.0 locations. __This is deprecated and provided for backward compatibility only. `useOldDest` will be removed in version 3.x__ |
 | **useStrict** | `useStrict:true/false` | If set to `true` then `"use strict";` is added just inside the IIFE.<br/><br/>**See *Option: useStrict* below.** |
+
 
 _**Option names are case sensitive. `defaultLocale` is correct but `DefaultLocale` is not.**_
 
@@ -199,7 +213,7 @@ The built-in properties of the assembly.json file:
 | `localeFileName` | string | The root of the locale file names. The default is `strings` or the name of the containing folder. |
 | `localePath` | string | A relative path indicating where to load the locale files. The default path is `./locales`. |
 
-Note: _Additional properties can be placed in the `assembly.json` file to be used by plug-ins. All additional properties will be ignored by the main `assemble()` function. **But, since we have no idea wat features might be added we also don't know what possible properties may be used by the `assemble()` function in the future. For more information please see the section **"Your own properties in the `assembly.json` file"** in the [plug-ins README.md file](https://github.com/intervalia/gulp-component-assembler/tree/master/plugins/README.md)_
+Note: _Additional properties can be placed in the `assembly.json` file to be used by plug-ins. All additional properties will be ignored by the main `assemble()` function. **But, since we have no idea what features might be added we also don't know what possible properties may be used by the `assemble()` function in the future. For more information please see the section **"Your own properties in the `assembly.json` file"** in the [plug-ins README.md file](https://github.com/intervalia/gulp-component-assembler/tree/master/plugins/README.md)_
 
 
 ---
@@ -231,7 +245,16 @@ window.globalVar = localVar; // This is now accessible throughout the app/web pa
 
 >If there are both templates and locale files then calling `getTemplate()` or `getTemplateStr()` will auto-populate translations in the data returned from those functions.
 
+>Template files allow you to wrap HTML content into your assembly. These templates can be used by your code to create DOM on the fly.
+
+>Angular directives often need templates. Using a provided template system from `gulp-component-assembler` allows the developer to create the templates as stand-alone HTML files and import them into the directives.
+
 >___TODO: Provide more information here___
+
+* Angular example
+* jQuery example
+* Raw JS example
+* Other examples
 
 
 ---
@@ -287,7 +310,7 @@ Then the component output file `myComponent.js` would include the contents of th
 ##### Property: `localeFileName`
 >If the user does not provide a value for `localeFileName` then  `gulp-component-assembler`  attempts to use the value of `'strings'`. If files using that value do not exist then it attempts to use the value of the containing folder.
 
->One locale file is needed per language. _At this time, `2014-12-19`, we only support the two letter ([ISO-639-1](http://en.wikipedia.org/wiki/List_of_ISO_639-1_codes)) locale names, like `'en'`, `'fr'`, `'de'`, etc._
+>One locale file is needed per language. _At this time, `2015-08-03`, we only support the two letter ([ISO-639-1](http://en.wikipedia.org/wiki/List_of_ISO_639-1_codes)) locale names, like `'en'`, `'fr'`, `'de'`, etc._
 
 >___TODO: Provide more information here___
 
@@ -366,20 +389,20 @@ Within a template file you access the locale strings by wrapping them within cur
 
 >___TODO: Provide more information here___
 
-##### Avoiding Conflict with Angular.JS or other systems
-If you are using a system, like Angular.js, that uses double curly-braces then you need to be careful in how you name your locale strings and your Angular scope variables, etc. I recommend that, for example, you use all caps for locale strings and intra-caps for your angular variables. Like this:
+##### Avoiding Conflict with Angular.JS or other systems or frameworks
+If you are using a system or framework, like Angular.js, that uses double curly-braces then you need to be careful in how you name your locale strings and your Angular scope variables, etc. I recommend that, for example, you use all caps for locale strings and intra-caps for your angular variables. Like this:
 
 ```html
 <div>
   <div>
   	<label>{NAME}</label>
-  	<input ng-model="person.name" type="text">
+  	<input ng-model="person.firstName" type="text">
   </div>
-  <div>{YOUR_NAME} {{person.name}}</div>
+  <div>{YOUR_NAME} {{person.firstName}}</div>
 </div>
 ```
 
-In the example above, `NAME` and `YOUR_NAME` would be locale strings and not related to Angular. `person.name` would be an Angular variable and would not be handled as a locale string.
+In the example above, `NAME` and `YOUR_NAME` would be locale strings and not related to Angular. `person.firstName` would be an Angular variable and would not be handled as a locale string.
 
 >___TODO: Provide more information here___
 

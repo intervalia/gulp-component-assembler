@@ -27,7 +27,12 @@ function assemble(options) {
 
     file.contents = new Buffer(assemblies.process(assembly, file.path, options));
     temp = path.dirname(file.path);
-    file.path = path.join(temp, path.basename(temp)+'.js');
+    if (options.useOldDest) {
+      file.path = path.join(temp, path.basename(temp)+'.js');
+    }
+    else {
+      file.path = path.join(path.dirname(temp), path.basename(temp)+'.js');
+    }
     this.push(file);
 
     if (firstTime && options.useExternalLib) {
