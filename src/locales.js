@@ -50,7 +50,7 @@ function processLocales(baseLocalePath, localeFileName, assemblyName, options) {
                   "  locale = '"+options.locale+"';\n"+
                   " }\n";
       if (supportTransKeys) {
-        // We support the special locales of ke[key] and zz[assembly.key]
+        // Support the special locales of ke[key] and zz[assembly.key]
         contents += " switch (locale) {\n"+
                     "  case 'ke':\n"+
                     "  case 'zz':\n"+
@@ -67,7 +67,7 @@ function processLocales(baseLocalePath, localeFileName, assemblyName, options) {
                     " }\n";
       }
       else {
-        // We don't support the two special locales.
+        // Don't support the two special locales.
         contents += " for(i = 0; i < len; i++) {\n"+
                     "  lang[langKeys[i]] = langs[locale][i];\n"+
                     " }\n";

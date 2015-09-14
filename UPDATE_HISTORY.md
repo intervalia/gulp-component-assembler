@@ -1,6 +1,11 @@
 Update History
 ==============
 
+### 2.0.1 - Sep 14, 2015
+* Updated documentation
+* Updated dependancies
+* Corrected code to default to use the project folder name for locale files If the default of `'strings_??.json'` can not be found.
+
 ### 2.0.0 - Aug 03, 2015
 * Converted the output path to not include the pathname where the `assembly.json` file lives. This can be overridden, to produce the output in the same location as previous versions, by setting the option `useOldDest` to true in the `assemble()` command. (See [README.md](README.md) for more information.)
 
@@ -15,7 +20,7 @@ Update History
 * More updated to documentation
 
 ### 1.1.0 - Jan 2, 2015
-Some changes were breaking so I updated the minor number. 
+Some changes were breaking so I updated the minor number.
 * Changed license to MIT
 * Updated main README.md
 * Added README.md in the plugins folder to describe plug-ins, how to write them, and what plug-ins are currently available.  

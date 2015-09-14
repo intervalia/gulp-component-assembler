@@ -4,10 +4,9 @@ function convertOldAssembliesToNewSubs(params) {
   var i, len;
   if (params.assembly.assemblies && !params.assembly.subs) {
     params.assembly.subs = [];
-    len = params.assembly.assemblies.length;
-    for( i = 0; i < len; i++ ) {
-      params.assembly.subs.push(path.join(params.assembly.assemblies[i], "assembly.json"));
-    }
+    params.assembly.assemblies.forEach(function(assembly) {
+      params.assembly.subs.push(path.join(assembly, "assembly.json"));
+    });
 
     delete params.assembly.assemblies;
   }
@@ -16,4 +15,4 @@ function convertOldAssembliesToNewSubs(params) {
 }
 
 module.exports = convertOldAssembliesToNewSubs;
-module.exports.version = "1.0.0";
+module.exports.version = "1.0.1";
