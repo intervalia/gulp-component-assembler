@@ -169,7 +169,7 @@ describe('\n    Testing the file assemblies.js', function () {
         val.should.equal(temp);
         done();
       });
-      
+
       it('should process with option \'minTemplateWS\' set to true', function(done) {
         var options = {
           "locale": "en",
@@ -181,7 +181,7 @@ describe('\n    Testing the file assemblies.js', function () {
         val.should.equal(temp);
         done();
       });
-      
+
       it('should process with option \'useStrict\' set to true', function(done) {
         var options = {
           "locale": "en",
