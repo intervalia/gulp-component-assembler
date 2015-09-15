@@ -11,8 +11,7 @@ function processTemplates(projectPath, templateList, hasTranslations, options) {
   var contents = "", templatesLoaded = false;
 
   if (templateList && templateList.length > 0) {
-    templateList.forEach(function(templateName, index) {
-      var fileName = path.join(projectPath, templateName);
+    templateList.forEach(function(templatePath, index) {
       if (templatesLoaded) {
         contents += ',\n';
       }
@@ -21,7 +20,7 @@ function processTemplates(projectPath, templateList, hasTranslations, options) {
         templatesLoaded = true;
       }
 
-      contents += processOneTemplate(fileName, options);
+      contents += processOneTemplate(projectPath, templatePath, options);
     });
   }
 
@@ -43,11 +42,11 @@ function processTemplates(projectPath, templateList, hasTranslations, options) {
   return contents;
 }
 
-function processOneTemplate(templatePath, options) {
+function processOneTemplate(projectPath, templatePath, options) {
   var modName, ext, templateKey, template, contents = "";
 
   ext = path.extname(templatePath);
-  modName = path.basename(templatePath);
+  modName = path.relative(projectPath, templatePath)
   templateKey = path.basename(templatePath, ext);
 
   if(!validKeyTest.test(templateKey)){

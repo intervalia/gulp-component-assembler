@@ -1,4 +1,5 @@
 var glob = require('glob');
+var path = require('path');
 var minimatch = require("minimatch");
 
 function globArray(patterns, options) {
@@ -11,7 +12,7 @@ function globArray(patterns, options) {
     if (pattern[0] === "!") {
       i = list.length-1;
       while( i > -1) {
-        if (!minimatch(list[i], pattern)) {
+        if (!minimatch(path.relative(options.cwd, list[i]), pattern)) {
           list.splice(i,1);
         }
         i--;
@@ -21,6 +22,8 @@ function globArray(patterns, options) {
     else {
       var newList = glob.sync(pattern, options);
       newList.forEach(function(item){
+        item = path.resolve(options.cwd, item);
+
         if (list.indexOf(item)===-1) {
           list.push(item);
         }
