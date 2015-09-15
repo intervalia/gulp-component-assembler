@@ -24,14 +24,15 @@ describe('\n    Testing the file globArray.js', function () {
       var localePath = path.join(projectPath, "locales");
       var val = globArray("./**/*.js", {cwd: projectPath});
       var temp = [
-        './file_sub1.js',
-        './file_sub2.js'
+        'file_sub1.js',
+        'file_sub2.js'
       ];
+
       val.forEach(function(item) {
-        temp.should.containEql(item);
+        temp.should.containEql(path.relative(projectPath, item));
       });
       temp.forEach(function(item) {
-        val.should.containEql(item);
+        val.should.containEql(path.join(projectPath, item));
       });
       done();
     });
@@ -44,15 +45,15 @@ describe('\n    Testing the file globArray.js', function () {
       var temp = [
         "../file1.js",
         "../file2.js",
-        "../sub1/file_sub1.js",
-        "../sub1/file_sub2.js",
+        "file_sub1.js",
+        "file_sub2.js",
         "../sub2/f1.js"
       ];
       val.forEach(function(item) {
-        temp.should.containEql(item);
+        temp.should.containEql(path.relative(projectPath, item));
       });
       temp.forEach(function(item) {
-        val.should.containEql(item);
+        val.should.containEql(path.join(projectPath, item));
       });
       done();
     });
@@ -65,14 +66,14 @@ describe('\n    Testing the file globArray.js', function () {
       var temp = [
         "../file1.js",
         "../file2.js",
-        "../sub1/file_sub1.js",
-        "../sub1/file_sub2.js"
+        "file_sub1.js",
+        "file_sub2.js"
       ];
       val.forEach(function(item) {
-        temp.should.containEql(item);
+        temp.should.containEql(path.relative(projectPath, item));
       });
       temp.forEach(function(item) {
-        val.should.containEql(item);
+        val.should.containEql(path.join(projectPath, item));
       });
       done();
     });
@@ -88,10 +89,10 @@ describe('\n    Testing the file globArray.js', function () {
         "sub2/f1.js"
       ];
       val.forEach(function(item) {
-        temp.should.containEql(item);
+        temp.should.containEql(path.relative(projectPath, item));
       });
       temp.forEach(function(item) {
-        val.should.containEql(item);
+        val.should.containEql(path.join(projectPath, item));
       });
       done();
     });

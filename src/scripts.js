@@ -23,8 +23,8 @@ function processScripts(projectPath, files, options, hasTranslations, assembly, 
   var newPluginParams;
 
   if (files.length > 0) {
-    files.forEach(function(fileName) {
-      var filePath = path.join(projectPath, fileName);
+    files.forEach(function(filePath) {
+      var fileName = path.basename(filePath);
       newPluginParams = {
         "projectPath": projectPath,
         "hasTranslations": hasTranslations,
@@ -37,7 +37,7 @@ function processScripts(projectPath, files, options, hasTranslations, assembly, 
         "filePath": filePath
       };
 
-      contents += processOneScript(filePath, fileName, options, newPluginParams);
+      contents += processOneScript(filePath, path.relative(projectPath, filePath), options, newPluginParams);
     });
   }
 

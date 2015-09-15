@@ -49,7 +49,7 @@ function getLang(locale) {
 var lang = getLang(window.locale || 'en');
 
 var templateList = {
- // Included template file: border.html
+ // Included template file: templates/border.html
  "border": '<div>\n'+
  '  <div class="header">This is the header</div>\n'+
  '  <span>{YES}</span>\n'+
@@ -61,7 +61,7 @@ var templateList = {
  '    </div>\n'+
  '  </div>\n'+
  '</div>\n',
- // Included template file: frame.html
+ // Included template file: templates/frame.html
  "frame": '<div class="frame">This is the frame template</div>\n'
 };
 
