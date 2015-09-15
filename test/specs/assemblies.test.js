@@ -26,7 +26,7 @@ describe('\n    Testing the file assemblies.js', function () {
       var locale = "en";
       var projectPath = path.join(rootPath, "testdata/main/sub1");
       var localePath = path.join(projectPath, "locales");
-      var val = assemblies.areTranslationsAvailable(projectPath, locale, localePath, "strings");
+      var val = assemblies.areTranslationsAvailable(locale, localePath, "strings");
       val.should.be.true;
       done();
     });
@@ -35,7 +35,7 @@ describe('\n    Testing the file assemblies.js', function () {
       var locale = "en";
       var projectPath = path.join(rootPath, "testdata/main/sub2");
       var localePath = path.join(projectPath, "locales");
-      var val = assemblies.areTranslationsAvailable(projectPath, locale, localePath, "strings");
+      var val = assemblies.areTranslationsAvailable(locale, localePath, "strings");
       val.should.be.false;
       done();
     });
@@ -44,7 +44,7 @@ describe('\n    Testing the file assemblies.js', function () {
       var locale = "en";
       var projectPath = path.join(rootPath, "testdata/notthere");
       var localePath = path.join(projectPath, "locales");
-      var val = assemblies.areTranslationsAvailable(projectPath, locale, localePath, "strings");
+      var val = assemblies.areTranslationsAvailable(locale, localePath, "strings");
       val.should.be.false;
       done();
     });
@@ -53,7 +53,7 @@ describe('\n    Testing the file assemblies.js', function () {
       var locale = "en";
       var projectPath = path.join(rootPath, "testdata/main/sub1");
       var localePath = path.join(projectPath, "locales");
-      var val = assemblies.areTranslationsAvailable(projectPath, locale, localePath, "incorrect");
+      var val = assemblies.areTranslationsAvailable(locale, localePath, "incorrect");
       val.should.be.false;
       done();
     });
@@ -65,6 +65,35 @@ describe('\n    Testing the file assemblies.js', function () {
    *
    */
   describe("testing function 'process'", function() {
+    /*
+     * Testing with assembly: testdata/main/sub1/assembly.json
+     * Which has locales but no templates.
+     */
+    describe("process file \'testdata/main/assembly.json\'", function() {
+      var projectPath;
+      var assemblyFileName;
+      var temp;
+      var assembly;
+
+      beforeEach(function() {
+        projectPath = path.join(rootPath, "testdata/main");
+        assemblyFileName = path.join(projectPath, "assembly.json");
+        temp = fs.readFileSync(assemblyFileName, {"encoding": "utf-8"});
+        assembly = JSON.parse(temp);
+      });
+
+      it('should process with sub assemblies', function(done) {
+        var options = {
+          "locale": "en"
+        };
+        var val = assemblies.process(assembly, assemblyFileName, options);
+        // fs.writeFileSync("./test/data/main.sub-assemblies.js", val);
+        temp = readDataFile("./test/data/main.sub-assemblies.js");
+        val.should.equal(temp);
+        done();
+      });
+    });
+
     /*
      * Testing with assembly: testdata/main/sub1/assembly.json
      * Which has locales but no templates.
@@ -169,7 +198,7 @@ describe('\n    Testing the file assemblies.js', function () {
         val.should.equal(temp);
         done();
       });
-      
+
       it('should process with option \'minTemplateWS\' set to true', function(done) {
         var options = {
           "locale": "en",
@@ -181,7 +210,7 @@ describe('\n    Testing the file assemblies.js', function () {
         val.should.equal(temp);
         done();
       });
-      
+
       it('should process with option \'useStrict\' set to true', function(done) {
         var options = {
           "locale": "en",

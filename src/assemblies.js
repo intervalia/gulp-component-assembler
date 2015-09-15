@@ -10,32 +10,30 @@ var globArray = require("./globArray");
 var DEFAULT_USE_PARAMS = "window,document";
 var DEFAULT_PASS_PARAMS = DEFAULT_USE_PARAMS;
 
-function areTranslationsAvailable(projectPath, locale, localePath, localeFileName) {
-  "use strict";
-  var filePath = path.join(localePath, localeFileName + '_'+locale+'.json');
-  var hasTranslations = fs.existsSync(filePath);
-  if (!hasTranslations && localeFileName === "strings") {
-    localeFileName  = path.basename(projectPath);
-    hasTranslations = fs.existsSync(path.join(localePath, localeFileName + '_'+locale+'.json'));
-  }
-
-  return hasTranslations;
+function areTranslationsAvailable(locale, localePath, localeFileName) {
+ "use strict";
+ var filePath = path.join(localePath, localeFileName + '_'+locale+'.json');
+ return fs.existsSync(filePath);
 }
 
 function processAssembly(assembly, assemblyName, options, isSub) {
-  "use strict";
-  var projectPath = path.dirname(assemblyName);
-  var assemblies, contents;
-  var iifeParams, iifeCount;
-  var pluginParams;
-  var localePath, localeFileName;
-  var locale, hasTranslations;
-  var temp;
+ "use strict";
+ var projectPath = path.dirname(assemblyName);
+ var assemblies, contents;
+ var iifeParams, iifeCount;
+ var pluginParams;
+ var localePath, localeFileName;
+ var locale, hasTranslations;
+ var temp;
 
-  locale = options.locale;
-  localeFileName = assembly.localeFileName || "strings";
-  localePath = path.join(projectPath, (assembly.localePath || "locales"));
-  hasTranslations = areTranslationsAvailable(projectPath, locale, localePath, localeFileName);
+ locale = options.locale;
+ localeFileName = assembly.localeFileName || "strings";
+ localePath = path.join(projectPath, (assembly.localePath || "locales"));
+ hasTranslations = areTranslationsAvailable(locale, localePath, localeFileName);
+ if (!hasTranslations && localeFileName === "strings") {
+   localeFileName  = path.basename(projectPath);
+   hasTranslations = areTranslationsAvailable(locale, localePath, localeFileName);
+ }
 
   // Add comment
   contents = (isSub ? '\n\n// Sub-assembly' : '// Assembly') + ': ' + path.basename(projectPath) + "\n";
@@ -77,11 +75,11 @@ function processAssembly(assembly, assemblyName, options, isSub) {
   }
 
   // Process template files
-  contents += templates.process(projectPath, globArray(assembly.templates || ["./templates/*.html"], {cwd: projectPath}), hasTranslations, options);
+  contents += templates.process(projectPath, globArray(assembly.templates || ["./templates/*.html"], {cwd: projectPath, root: process.cwd()}), hasTranslations, options);
 
   // Process 'files' field
   if (assembly.files) {
-    contents += scripts.process(projectPath, globArray(assembly.files, {cwd: projectPath}), options, hasTranslations, assembly, assemblyName, isSub);
+    contents += scripts.process(projectPath, globArray(assembly.files, {cwd: projectPath, root: process.cwd()}), options, hasTranslations, assembly, assemblyName, isSub);
   }
 
   // Process any INLINE_POST plug-ins
@@ -106,16 +104,17 @@ function processAssembly(assembly, assemblyName, options, isSub) {
 
   // Process sub assemblies
   if (assembly.subs) {
-    var subs = globArray(assembly.subs, {cwd: projectPath});
+    var subs = globArray(assembly.subs, {cwd: projectPath, root: process.cwd()});
+
     if (subs && subs.length > 0) {
-      subs.forEach(function(assemblyName, index) {
-        var assemblyPath, subAssembly, assemblyFileName;
+      subs.forEach(function(assemblyPath, index) {
+        var subAssembly, assemblyName;
 
-        assemblyFileName = path.join(projectPath, assemblyName);
+        assemblyName = path.relative(projectPath, assemblyPath);
 
-        if (fs.existsSync(assemblyFileName)) {
-          subAssembly = JSON.parse(fs.readFileSync(assemblyFileName, {"encoding": "utf-8"}));
-          contents += processAssembly(subAssembly, assemblyFileName, options, true);
+        if (fs.existsSync(assemblyPath)) {
+          subAssembly = JSON.parse(fs.readFileSync(assemblyPath, {"encoding": "utf-8"}));
+          contents += processAssembly(subAssembly, assemblyPath, options, true);
         }
         else {
           throw new PluginError(PLUGIN_NAME, "Sub-assembly not found: '" + assemblyName + "'" );
