@@ -103,7 +103,7 @@ describe('\n    Testing the file plugin.js', function () {
         "name": "testing",
         "passed": true
       };
-      var params2, item;
+      var params2, item, cmp;
       function cb(p) {
         params2 = p;
       }
@@ -146,7 +146,7 @@ describe('\n    Testing the file plugin.js', function () {
         "name": "testing",
         "passed": true
       };
-      var params2, item;
+      var params2, item, cmp;
       function cb(p) {
         params2 = p;
       }

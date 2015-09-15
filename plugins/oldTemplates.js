@@ -13,7 +13,7 @@ function processOneOldTemplate(templatePath, options) {
   if (options.minTemplateWS) {
     contents += " '";
   }
-  template = extractBody(fs.readFileSync(templatePath, {"encoding": "utf-8"}));
+  var template = extractBody(fs.readFileSync(templatePath, {"encoding": "utf-8"}));
   lines = template.split("\n");
   lines.forEach(function(line, index) {
     line = line.trimRight();
