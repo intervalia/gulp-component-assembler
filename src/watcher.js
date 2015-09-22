@@ -12,7 +12,6 @@ var globArray = require("./globArray");
 // the associated assemblies
 var watchedPaths = [];
 var files = {};
-var subAssemblies = {};
 
 var assemblyRegex = /\/assembly.json$/;
 
@@ -80,8 +79,8 @@ function fileChanged(event, file) {
       });
 
       // Touch all super assemblies that this assembly belongs to
-      if (subAssemblies[file]) {
-        subAssemblies[file].forEach(function(assembly) {
+      if (files[file]) {
+        files[file].forEach(function(assembly) {
           // console.log('rebuilding', assembly);
           touch(assembly);
         });
@@ -208,11 +207,11 @@ function addAssembly(assemblyPath, assembly) {
   if (assembly.subs) {
     assembly.subs.forEach(function(subAssembly) {
       var absoluteSubAssemblyPath = path.resolve(assemblyDir, subAssembly);
-      var assemblies = subAssemblies[absoluteSubAssemblyPath];
+      var assemblies = files[absoluteSubAssemblyPath];
 
       // Assembly has not been added
       if (!assemblies) {
-        subAssemblies[absoluteSubAssemblyPath] = [absoluteAssemblyPath];
+        files[absoluteSubAssemblyPath] = [absoluteAssemblyPath];
       }
 
       // Assembly is included in multiple assemblies
@@ -224,7 +223,7 @@ function addAssembly(assemblyPath, assembly) {
 
   // console.log('files:', JSON.stringify(files, null, 2));
   // console.log('watchedPaths:', watchedPaths);
-  // console.log('subAssemblies:', subAssemblies);
+  // console.log('files:', files);
 }
 
 module.exports = {
