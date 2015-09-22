@@ -24,7 +24,7 @@ var assemblyRegex = /\/assembly.json$/;
  * @returns {string[]}
  */
 function getAssemblyFiles(assemblyPath, assembly) {
-  var assembly = assembly || JSON.parse(fs.readFileSync(assemblyPath, 'utf-8'));
+  assembly = assembly || JSON.parse(fs.readFileSync(assemblyPath, 'utf-8'));
 
   var projectPath = path.dirname(assemblyPath);
   var localeFileName = assembly.localeFileName || "strings";
@@ -160,7 +160,7 @@ function addFile(filePath, assemblyPath) {
   // it would cause an infinite loop as it would cause changes to the assembly.json to touch the
   // assembly.json, which would cause it to change, which would cause it to be touched, etc.
   if (!assemblies && !assemblyRegex.test(absoluteFilePath)) {
-    files[absoluteFilePath] = [absoluteAssemblyPath]
+    files[absoluteFilePath] = [absoluteAssemblyPath];
   }
   // File is included in multiple assemblies
   else if (assemblies.indexOf(absoluteAssemblyPath) === -1) {
