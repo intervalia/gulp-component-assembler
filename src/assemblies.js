@@ -4,6 +4,7 @@ var scripts = require("./scripts");
 var templates = require("./templates");
 var locales = require("./locales");
 var plugin = require("./plugin");
+var watcher = require("./watcher");
 var PluginError = require('gulp-util').PluginError;
 var PLUGIN_NAME = require("./pluginName");
 var globArray = require("./globArray");
@@ -52,6 +53,10 @@ function processAssembly(assembly, assemblyName, options, isSub) {
   // *********************
   // Process any PRE plug-ins
   contents += plugin.processPre(pluginParams);
+
+  if (options.watch) {
+    watcher.addAssembly(assemblyName, assembly);
+  }
 
   // *********************
   // OPEN IIFE
