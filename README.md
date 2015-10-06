@@ -111,6 +111,7 @@ Here is the list of options and their description and usage:
 | **useExternalLib** | `useExternalLib:true/false` | If set to `true` then a single file `assambly-lib.js` is created with the common code used for each assembly. If it is set to `false` then each assembly contains copies of the common code needed for the assembly to work. If you choose to use the external libraries then you must include that file before including your own. |
 | **useOldDest** | `useOldDest:true/false` | *New in 2.0.0* - If set to `true` then the output directory structure is used (Before ver. 2.0.0) If set to `false` then the output files are stored one level higher that the pre 2.0.0 locations. __This is deprecated and provided for backward compatibility only. `useOldDest` will be removed in version 3.x__ |
 | **useStrict** | `useStrict:true/false` | If set to `true` then `"use strict";` is added just inside the IIFE.<br/><br/>**See *Option: useStrict* below.** |
+| **watch** | `watch:true/false` | If set to `true` then the dependancies of the assembly file are watched. If any of them change, are added or removed then the `assembly.json` file is `touched` with the current date/time. This allows gulp.watch to monitor only the `assembly.json` files and yet recompile when anything related to the assembly has changed. **It is the developers responsability to use gulp.watch for this to work.** |
 
 
 _**Option names are case sensitive. `defaultLocale` is correct but `DefaultLocale` is not.**_

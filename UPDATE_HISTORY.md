@@ -1,7 +1,7 @@
 Update History
 ==============
-
-### 2.0.1 - Sep 14, 2015
+### 2.1.0 - Oct 10, 2015
+* Added watch ability that will `touch` an assembly if any of its dependancies are changed, added or removed.
 * Updated documentation
 * Updated dependancies
 * Corrected code to default to use the project folder name for locale files If the default of `'strings_??.json'` can not be found.
