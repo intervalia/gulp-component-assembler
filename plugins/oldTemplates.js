@@ -1,5 +1,6 @@
 var fs = require('fs');
 var path = require('path');
+var watcher = require('../src/watcher');
 
 function extractBody(html) {
   return html.replace(/\r*\n/g, "\x1f").replace(/(.*)<body[^>]*>(.*)<\/body>(.*)/gi, "$2").replace(/\x1f/g, "\n").trim();
@@ -47,10 +48,14 @@ function processOneOldTemplate(templatePath, options) {
   return hadData ? contents : "";
 }
 
-function processOldTemplates(templatePath, hasTranslations, options) {
+function processOldTemplates(templatePath, hasTranslations, assemblyPath, options) {
   var contents = "";
   //console.log(" template file:", templatePath);
   if (fs.existsSync(templatePath)) {
+    if (options.watch) {
+      watcher.addFile(templatePath, assemblyPath);
+    }
+
     contents += processOneOldTemplate(templatePath, options);
 
     contents += '\n\nfunction getSnippets() {'+
@@ -68,7 +73,7 @@ function processOldTemplates(templatePath, hasTranslations, options) {
 }
 
 function pluginProcess(params) {
-  return processOldTemplates(path.join(params.projectPath, "template.html"), params.hasTranslations, params.options);
+  return processOldTemplates(path.join(params.projectPath, "template.html"), params.hasTranslations, params.assemblyName, params.options);
 }
 
 module.exports = pluginProcess;
