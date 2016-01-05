@@ -10,6 +10,8 @@ function processLocales(baseLocalePath, localeFileName, assemblyName, options) {
   var translations, strings, localeList = [];
   var supportTransKeys = !!options.supportTransKeys;
 
+  options.localeVar = options.localeVar || "window.locale";
+
   if (supportTransKeys) {
     localeList =["zz","ke"];
   }
@@ -26,7 +28,7 @@ function processLocales(baseLocalePath, localeFileName, assemblyName, options) {
 
       translations.key.forEach(function(key, keyIndex) {
         if (options.tagMissingStrings) {
-          strings.push(translations[locale][key] || "-*"+(translations[options.locale][key] || "Not Found")+" *-");
+          strings.push(translations[locale][key] || "-*"+(translations[options.locale][key] || "Not Found")+"*-");
         }
         else {
           strings.push(translations[locale][key] || translations[options.locale][key] || "");
@@ -75,22 +77,22 @@ function processLocales(baseLocalePath, localeFileName, assemblyName, options) {
 
       // Return the correct lang object
       contents += " return lang;\n"+
-                  "}\n\n"+
-      // set the lang variable
-                  "var lang = getLang(window.locale || '"+options.locale+"');\n";
+                  "}";
     }
     else {
       contents += "function getLang(locale) {\n"+
                   " return __getLangObj(locale, langKeys, validLocales, langs);\n"+
-                  "}\n\n"+
-                  "var lang = getLang(window.locale || '"+options.locale+"');\n";
+                  "}";
     }
+    // set the lang variable
+    contents += "\n\nvar lang = getLang("+options.localeVar+" || '"+options.locale+"');\n";
 
     if (options.exposeLang) {
-      var globalObj = options.globalObj || "components";
-      contents += "window."+globalObj+" = window."+globalObj+" || {};\n";
-      contents += "window."+globalObj+"."+assemblyName+" = window."+globalObj+"."+assemblyName+" || {};\n";
-      contents += "window."+globalObj+"."+assemblyName+".lang = lang;\n";
+      var globalObj = "window."+(options.globalObj || "components");
+      var globalAssembly = globalObj+"."+assemblyName;
+      contents += globalObj      + " = " + globalObj      + " || {};\n";
+      contents += globalAssembly + " = " + globalAssembly + " || {};\n";
+      contents += globalAssembly + ".lang = lang;\n";
     }
   }
 

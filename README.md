@@ -103,15 +103,16 @@ Here is the list of options and their description and usage:
 | **defaultLocale** | `defaultLocale:"en"` | Set the locale that your project will use as the default locale. If you do not provide the `defaultLocale` option then the default locale is set to `"en"`. `defaultLocale` is also the locale that is used if the user attempts to request a non-supported locale. |
 | **exposeLang** | `exposeLang:true/false` | If set to `true` then the language strings are also placed into a global object for access outside of the IIFE. The language strings will be added to `[globalObj].[assemblyName].lang` where `assemblyName` is the name of the assembly that is being created.<br/><br/>**See `globalObj`.** |
 | **externalLibName** | `externalLibName:"filename"` | Name for the external lib file. The default is `assembly-lib.js` and `assembly-lib-min.js`.<br/><br/>**See `useExternalLib`.** |
-| **iifeParams** | `iifeParams:paramsObject` | This is an optional object that contains the list of parameters used by the IIFE and the list of parameters passed into the IIFE. The default values are "window, document".<br/><br/>**See *Option: iifeParams* below.** |
 | **globalObj** | `globalObj:"objectToUse"` | This is an optional string that defines the global object that is used to expose the language string into the global scope. The default value is `"window.components"`.<br/><br/>If you are building servers-side components to run in node.js, then you would set this to `"global.components"` or something similar. _But be aware that this could become a problem if you are working with a server cluster._<br/><br/>Currently this is only used if you set the option `exposeLang` to `true`.  |
+| **iifeParams** | `iifeParams:paramsObject` | This is an optional object that contains the list of parameters used by the IIFE and the list of parameters passed into the IIFE. The default values are "window, document".<br/><br/> **See *Option: iifeParams* below.** |
+| **localeVar** | `localeVar:"window.locale"` | The default value for this options is `window.locale`. If your application uses some other variable to set the locale then you can supply it here like `window.myObj.locale`. If the defined variable name is undefined or does not exist then the locale is set to the value of the option `defaultLocale`.<br><br> **See `defaultLocale` above.** |
 | **minTemplateWS** | `minTemplateWS:true/false` | This controls how white space is processed in the templates. If set to `true` then each set of white space is reduced to a single space to reduce the overall size of the templates while maintaining separation of tags. If set to `false` then all white space is preserved with the exception the white space at the beginning and end of the template which is trimmed and removed. |
 | **supportTransKeys** | `supportTransKeys:true/false` | If set to `true` this creates a set to translation test values.<br/><br/>**See *Option: supportTransKeys* below.** |
 | **tagMissingStrings** | `tagMissingStrings:true/false` | If set to `true` then any string that was in the locale file for the default locale that is not found in one of the other locale files is marked so the user can see the lack of translation easily. If set to `false` then the missing translations are set to the key for that string. |
 | **useExternalLib** | `useExternalLib:true/false` | If set to `true` then a single file `assambly-lib.js` is created with the common code used for each assembly. If it is set to `false` then each assembly contains copies of the common code needed for the assembly to work. If you choose to use the external libraries then you must include that file before including your own. |
-| **useOldDest** | `useOldDest:true/false` | *New in 2.0.0* - If set to `true` then the output directory structure is used (Before ver. 2.0.0) If set to `false` then the output files are stored one level higher that the pre 2.0.0 locations. __This is deprecated and provided for backward compatibility only. `useOldDest` will be removed in version 3.x__ |
+| **useOldDest** | `useOldDest:true/false` | *New in 2.0.0* - If set to `true` then the output directory structure is used. The output files are placed in the same folder as the `assembly.json` file. (Same as before ver. 2.0.0) If set to `false` then the output files are stored one level higher than the pre 2.0.0 locations, the parent folder of where the `assembly.json` file. |
 | **useStrict** | `useStrict:true/false` | If set to `true` then `"use strict";` is added just inside the IIFE.<br/><br/>**See *Option: useStrict* below.** |
-| **watch** | `watch:true/false` | If set to `true` then the dependancies of the assembly file are watched. If any of them change, are added or removed then the `assembly.json` file is `touched` with the current date/time. This allows gulp.watch to monitor only the `assembly.json` files and yet recompile when anything related to the assembly has changed. **It is the developers responsability to use gulp.watch for this to work.** |
+| **watch** | `watch:true/false` | If set to `true` then the dependancies of the assembly file are watched. If any of them change, are added or removed then the `assembly.json` file is `touched` with the current date/time. This allows gulp.watch to monitor only the `assembly.json` files and yet recompile when anything related to the assembly has changed. **It is the developers responsibility to use gulp.watch for this to work.** |
 
 
 _**Option names are case sensitive. `defaultLocale` is correct but `DefaultLocale` is not.**_
@@ -240,12 +241,14 @@ Note: _Additional properties can be placed in the `assembly.json` file to be use
 >All of the code from the files listed in the `files` array is wrapped inside an IIFE. This IIFE is to prevent name collisions between this component and all other JavaScript that you will load. So if you want anything accessible outside of the IIFE then you must provide the code to make it accessible. The simplest, but not best solution, is to create global variable. In the browser this is done by attaching parameters to the `window` object. For example:
 
 ```js
-var localVar = "This will be a provate varaible, protected inside an IIFE";
+var localVar = "This will be a private variable, protected inside an IIFE";
 
 window.globalVar = localVar; // This is now accessible throughout the app/web page
 ```
 
->_Depending on your environment you may expose properties, classes and functions through things like `module.exports`, `define` or an existing global object or function._
+> _**I should warn about making everything public and a member of the `window` object. This can lead to complicated code and hinder reusability. It is better to use some form of a module loading system.**_
+
+>_Depending on your environment you may expose properties, classes and functions through things like `module.exports`, `define` or an existing global object or function. But I leave that to you to research and find the best mechanism for you and your team._
 
 
 ---
@@ -397,7 +400,7 @@ _The value for `window.locale` must be set before loading any component output f
 
 #### Accessing locale strings in your JavaScript
 
-Within a component output file, each assembly and sub-assembly would contain it's own locale strings. These are accesed through the property `lang`. In the examples JSON files above you would acces the strings as `lang.BUTTON_OK`, `lang.BUTTON_CANCEL`, `lang.BUTTON_CLOSE` and `lang.NO_CHANGES`.
+Within a component output file, each assembly and sub-assembly would contain it's own locale strings. These are accessed through the property `lang`. In the examples JSON files above you would access the strings as `lang.BUTTON_OK`, `lang.BUTTON_CANCEL`, `lang.BUTTON_CLOSE` and `lang.NO_CHANGES`.
 
 >___TODO: Provide more information here___
 

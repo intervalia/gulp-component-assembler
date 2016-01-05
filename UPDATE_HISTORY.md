@@ -1,5 +1,10 @@
 Update History
 ==============
+### 2.1.1 - Jan 4, 2016
+* Added option to define the variable that holds the locale to use. The default is still `window.locale` but you can now define it by setting the option `localeVar`.
+* Added tests to validate the locale code is working correctly
+* Spelling corrections and clean-up of documentation.
+
 ### 2.1.0 - Oct 10, 2015
 * Added watch ability that will `touch` an assembly if any of its dependancies are changed, added or removed.
 * Updated documentation
