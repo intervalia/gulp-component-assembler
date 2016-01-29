@@ -31,16 +31,16 @@ function getAssemblyFiles(assemblyPath, assembly) {
   var localePath = path.join(projectPath, localePathName);
   var files = [];
 
-  var localeFiles = files.concat(globArray(["./" + localePathName + "/" + localeFileName + "_*.json"], {cwd: projectPath, root: process.cwd()}));
+  var localeFiles = files.concat(globArray(["./" + localePathName + "/" + localeFileName + "_*.json"], assemblyPath, {cwd: projectPath, root: process.cwd()}));
 
   if (localeFiles.length === 0 && localeFileName === "strings") {
     localeFileName  = path.basename(projectPath);
-    localeFiles = files.concat(globArray(["./" + localePathName + "/" + localeFileName + "_*.json"], {cwd: projectPath, root: process.cwd()}));
+    localeFiles = files.concat(globArray(["./" + localePathName + "/" + localeFileName + "_*.json"], assemblyPath, {cwd: projectPath, root: process.cwd()}));
   }
 
-  files = files.concat(globArray(assembly.files, {cwd: projectPath, root: process.cwd()}));
+  files = files.concat(globArray(assembly.files, assemblyPath, {cwd: projectPath, root: process.cwd()}));
   files = files.concat(localeFiles);
-  files = files.concat(globArray(assembly.templates || ["./templates/*.html"], {cwd: projectPath, root: process.cwd()}));
+  files = files.concat(globArray(assembly.templates || ["./templates/*.html"], assemblyPath, {cwd: projectPath, root: process.cwd()}));
 
   // console.log('assemblyFiles:', files);
 

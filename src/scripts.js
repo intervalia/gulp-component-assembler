@@ -5,13 +5,14 @@ var PluginError = require('gulp-util').PluginError;
 var PLUGIN_NAME = require("./pluginName");
 
 function processOneScript(scriptPath, includeName, options, newPluginParams) {
+  var contents = "\n  /*\n   * Included File: " + includeName + "\n   */\n";
+
   if (!fs.existsSync(scriptPath)) {
-    throw new PluginError(PLUGIN_NAME, 'Script file not found: '+scriptPath+'.');
+    return contents + "  console.warn('" + scriptPath + " does not match any file');\n";
   }
 
-  var contents = "/*\n * Included File: " + includeName + "\n */\n";
   contents += plugin.processFilePre(newPluginParams);
-  contents += fs.readFileSync(scriptPath, {"encoding": "utf-8"}).replace(/\r\n/g, "\n");
+  contents += "  " + fs.readFileSync(scriptPath, {"encoding": "utf-8"}).replace(/[\n\r]/g, "\n  ");
   contents += "\n";
   contents += plugin.processFilePost(newPluginParams);
 
@@ -25,6 +26,8 @@ function processScripts(projectPath, files, options, hasTranslations, assembly, 
   if (files.length > 0) {
     files.forEach(function(filePath) {
       var fileName = path.basename(filePath);
+      var includeName = filePath;
+
       newPluginParams = {
         "projectPath": projectPath,
         "hasTranslations": hasTranslations,
@@ -37,7 +40,12 @@ function processScripts(projectPath, files, options, hasTranslations, assembly, 
         "filePath": filePath
       };
 
-      contents += processOneScript(filePath, path.relative(projectPath, filePath), options, newPluginParams);
+      // glob always returns the absolute path
+      if (filePath[0] === '/') {
+        includeName = path.relative(projectPath, filePath)
+      }
+
+      contents += processOneScript(filePath, includeName, options, newPluginParams);
     });
   }
 

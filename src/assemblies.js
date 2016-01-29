@@ -8,7 +8,7 @@ var watcher = require("./watcher");
 var PluginError = require('gulp-util').PluginError;
 var PLUGIN_NAME = require("./pluginName");
 var globArray = require("./globArray");
-var DEFAULT_USE_PARAMS = "window,document";
+var DEFAULT_USE_PARAMS = "window, document";
 var DEFAULT_PASS_PARAMS = DEFAULT_USE_PARAMS;
 
 function areTranslationsAvailable(locale, localePath, localeFileName) {
@@ -69,7 +69,7 @@ function processAssembly(assembly, assemblyName, options, isSub) {
     temp = iifeParams.split(",");
     iifeCount = temp.length;
   }
-  contents += '\n(function('+iifeParams+',undefined) {\n';
+  contents += '(function('+iifeParams+', undefined) {\n';
   if (options.useStrict) {
     contents += '"use strict";\n';
   }
@@ -86,12 +86,12 @@ function processAssembly(assembly, assemblyName, options, isSub) {
 
   // *********************
   // Process template files
-  contents += templates.process(projectPath, globArray(assembly.templates || ["./templates/*.html"], {cwd: projectPath, root: process.cwd()}), hasTranslations, options);
+  contents += templates.process(projectPath, globArray(assembly.templates || ["./templates/*.html"], assemblyName, {cwd: projectPath, root: process.cwd()}), hasTranslations, options);
 
   // *********************
   // Process 'files' field
   if (assembly.files) {
-    contents += scripts.process(projectPath, globArray(assembly.files, {cwd: projectPath, root: process.cwd()}), options, hasTranslations, assembly, assemblyName, isSub);
+    contents += scripts.process(projectPath, globArray(assembly.files, assemblyName, {cwd: projectPath, root: process.cwd(), strict: true}), options, hasTranslations, assembly, assemblyName, isSub);
   }
 
   // *********************
@@ -120,7 +120,7 @@ function processAssembly(assembly, assemblyName, options, isSub) {
   // *********************
   // Process sub assemblies
   if (assembly.subs) {
-    var subs = globArray(assembly.subs, {cwd: projectPath, root: process.cwd()});
+    var subs = globArray(assembly.subs, assemblyName, {cwd: projectPath, root: process.cwd()});
 
     if (subs && subs.length > 0) {
       subs.forEach(function(assemblyPath, index) {

@@ -2,7 +2,7 @@ var glob = require('glob');
 var path = require('path');
 var minimatch = require("minimatch");
 
-function globArray(patterns, options) {
+function globArray(patterns, assemblyName, options) {
   var i, list = [];
   if (!Array.isArray(patterns)) {
     patterns = [patterns];
@@ -21,6 +21,19 @@ function globArray(patterns, options) {
     }
     else {
       var newList = glob.sync(pattern, options);
+
+      // no files returned
+      if (!newList.length) {
+        if (options.strict) {
+          console.warn(path.relative(options.root, assemblyName) + ':', pattern, 'does not match any file');
+        }
+
+        // don't pass the file to the process script if it's a glob pattern
+        if (!glob.hasMagic(pattern)) {
+          list.push(pattern);
+        }
+      }
+
       newList.forEach(function(item){
         item = path.resolve(options.cwd, item);
 
