@@ -46,7 +46,7 @@ function processOneTemplate(projectPath, templatePath, options) {
   var modName, ext, templateKey, template, contents = "";
 
   ext = path.extname(templatePath);
-  modName = path.relative(projectPath, templatePath)
+  modName = path.relative(projectPath, templatePath);
   templateKey = path.basename(templatePath, ext);
 
   if(!validKeyTest.test(templateKey)){

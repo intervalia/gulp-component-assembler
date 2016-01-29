@@ -4,6 +4,7 @@ var scripts = require("./scripts");
 var templates = require("./templates");
 var locales = require("./locales");
 var plugin = require("./plugin");
+var watcher = require("./watcher");
 var PluginError = require('gulp-util').PluginError;
 var PLUGIN_NAME = require("./pluginName");
 var globArray = require("./globArray");
@@ -11,30 +12,31 @@ var DEFAULT_USE_PARAMS = "window,document";
 var DEFAULT_PASS_PARAMS = DEFAULT_USE_PARAMS;
 
 function areTranslationsAvailable(locale, localePath, localeFileName) {
- "use strict";
- var filePath = path.join(localePath, localeFileName + '_'+locale+'.json');
- return fs.existsSync(filePath);
+  "use strict";
+  var filePath = path.join(localePath, localeFileName + '_'+locale+'.json');
+  return fs.existsSync(filePath);
 }
 
 function processAssembly(assembly, assemblyName, options, isSub) {
- "use strict";
- var projectPath = path.dirname(assemblyName);
- var assemblies, contents;
- var iifeParams, iifeCount;
- var pluginParams;
- var localePath, localeFileName;
- var locale, hasTranslations;
- var temp;
+  "use strict";
+  var projectPath = path.dirname(assemblyName);
+  var assemblies, contents;
+  var iifeParams, iifeCount;
+  var pluginParams;
+  var localePath, localeFileName;
+  var locale, hasTranslations;
+  var temp;
 
- locale = options.locale;
- localeFileName = assembly.localeFileName || "strings";
- localePath = path.join(projectPath, (assembly.localePath || "locales"));
- hasTranslations = areTranslationsAvailable(locale, localePath, localeFileName);
- if (!hasTranslations && localeFileName === "strings") {
-   localeFileName  = path.basename(projectPath);
-   hasTranslations = areTranslationsAvailable(locale, localePath, localeFileName);
- }
+  locale = options.locale;
+  localeFileName = assembly.localeFileName || "strings";
+  localePath = path.join(projectPath, (assembly.localePath || "locales"));
+  hasTranslations = areTranslationsAvailable(locale, localePath, localeFileName);
+  if (!hasTranslations && localeFileName === "strings") {
+    localeFileName  = path.basename(projectPath);
+    hasTranslations = areTranslationsAvailable(locale, localePath, localeFileName);
+  }
 
+  // *********************
   // Add comment
   contents = (isSub ? '\n\n// Sub-assembly' : '// Assembly') + ': ' + path.basename(projectPath) + "\n";
 
@@ -48,9 +50,15 @@ function processAssembly(assembly, assemblyName, options, isSub) {
     "isSub": isSub
   };
 
+  // *********************
   // Process any PRE plug-ins
   contents += plugin.processPre(pluginParams);
 
+  if (options.watch) {
+    watcher.addAssembly(assemblyName, assembly);
+  }
+
+  // *********************
   // OPEN IIFE
   iifeParams = options.iifeParams || DEFAULT_USE_PARAMS;
   if (typeof iifeParams === "object") {
@@ -66,25 +74,31 @@ function processAssembly(assembly, assemblyName, options, isSub) {
     contents += '"use strict";\n';
   }
 
+  // *********************
   // Process any INLINE_PRE plug-ins
   contents += plugin.processInlinePre(pluginParams);
 
+  // *********************
   // Process locale files
   if (hasTranslations) {
     contents += locales.process(localePath, localeFileName, path.basename(projectPath), options);
   }
 
+  // *********************
   // Process template files
   contents += templates.process(projectPath, globArray(assembly.templates || ["./templates/*.html"], {cwd: projectPath, root: process.cwd()}), hasTranslations, options);
 
+  // *********************
   // Process 'files' field
   if (assembly.files) {
     contents += scripts.process(projectPath, globArray(assembly.files, {cwd: projectPath, root: process.cwd()}), options, hasTranslations, assembly, assemblyName, isSub);
   }
 
+  // *********************
   // Process any INLINE_POST plug-ins
   contents += plugin.processInlinePost(pluginParams);
 
+  // *********************
   // Close IIFE
   iifeParams = options.iifeParams || DEFAULT_USE_PARAMS;
   if (typeof iifeParams === "object") {
@@ -99,9 +113,11 @@ function processAssembly(assembly, assemblyName, options, isSub) {
   }
   contents += '\n})(' + iifeParams + ');\n';
 
+  // *********************
   // Process any POST plug-ins
   contents += plugin.processPost(pluginParams);
 
+  // *********************
   // Process sub assemblies
   if (assembly.subs) {
     var subs = globArray(assembly.subs, {cwd: projectPath, root: process.cwd()});

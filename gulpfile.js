@@ -25,3 +25,5 @@ gulp.task("build", function() {
   .pipe(compasm.assemble())
   .pipe(gulp.dest('testdata/prod'));
 });
+
+gulp.task("default", ["test", "build"]);
