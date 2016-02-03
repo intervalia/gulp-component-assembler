@@ -23,9 +23,6 @@ describe('\n    Testing the file globArray.js', function () {
         'file_sub2.js'
       ];
 
-      console.log('val:', val);
-      console.log('temp:', temp);
-
       val.forEach(function(item) {
         temp.should.containEql(path.relative(projectPath, item));
       });

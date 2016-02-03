@@ -23,7 +23,7 @@ function processScripts(projectPath, files, options, hasTranslations, assembly, 
   var newPluginParams;
 
   if (files.length > 0) {
-    files.forEach(function(filePath, index) {
+    files.forEach(function(filePath) {
       var fileName = path.basename(filePath);
       var includeName = filePath;
 
