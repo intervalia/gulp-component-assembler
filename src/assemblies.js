@@ -20,7 +20,7 @@ function areTranslationsAvailable(locale, localePath, localeFileName) {
 function processAssembly(assembly, assemblyName, options, isSub) {
   "use strict";
   var projectPath = path.dirname(assemblyName);
-  var assemblies, contents;
+  var assemblies, contents, assemblyContents;
   var iifeParams, iifeCount;
   var pluginParams;
   var localePath, localeFileName;
@@ -71,32 +71,41 @@ function processAssembly(assembly, assemblyName, options, isSub) {
   }
   contents += '(function('+iifeParams+', undefined) {\n';
   if (options.useStrict) {
-    contents += '"use strict";\n';
+    contents += '"use strict";\n\n';
+  }
+  else {
+    contents += '\n';
   }
 
   // *********************
   // Process any INLINE_PRE plug-ins
-  contents += plugin.processInlinePre(pluginParams);
+  assemblyContents = plugin.processInlinePre(pluginParams);
 
   // *********************
   // Process locale files
   if (hasTranslations) {
-    contents += locales.process(localePath, localeFileName, path.basename(projectPath), options);
+    assemblyContents += locales.process(localePath, localeFileName, path.basename(projectPath), options);
   }
 
   // *********************
   // Process template files
-  contents += templates.process(projectPath, globArray(assembly.templates || ["./templates/*.html"], assemblyName, {cwd: projectPath, root: process.cwd()}), hasTranslations, options);
+  assemblyContents += templates.process(projectPath, globArray(assembly.templates || ["./templates/*.html"], {cwd: projectPath, root: process.cwd()}), hasTranslations, options);
 
   // *********************
   // Process 'files' field
   if (assembly.files) {
-    contents += scripts.process(projectPath, globArray(assembly.files, assemblyName, {cwd: projectPath, root: process.cwd(), strict: true}), options, hasTranslations, assembly, assemblyName, isSub);
+    assemblyContents += scripts.process(projectPath, globArray(assembly.files, {cwd: projectPath, root: process.cwd()}), options, hasTranslations, assembly, assemblyName, isSub);
   }
 
   // *********************
   // Process any INLINE_POST plug-ins
-  contents += plugin.processInlinePost(pluginParams);
+  assemblyContents += plugin.processInlinePost(pluginParams);
+
+  // select all newline characters (except for the last ones) and indent by 1 level for better
+  // code readability of assembly contents
+  contents += "  " + assemblyContents.replace(/[\n\r](.+?)(?=[\n\r])/g, function(match, p1) {
+    return "\n  " + p1;
+  });
 
   // *********************
   // Close IIFE
@@ -111,7 +120,7 @@ function processAssembly(assembly, assemblyName, options, isSub) {
       throw new PluginError(PLUGIN_NAME, "The options `iifeParams.use` and `iifeParams.pass` do not have the same number of parameters." );
     }
   }
-  contents += '\n})(' + iifeParams + ');\n';
+  contents += '})(' + iifeParams + ');\n';
 
   // *********************
   // Process any POST plug-ins
@@ -120,7 +129,7 @@ function processAssembly(assembly, assemblyName, options, isSub) {
   // *********************
   // Process sub assemblies
   if (assembly.subs) {
-    var subs = globArray(assembly.subs, assemblyName, {cwd: projectPath, root: process.cwd()});
+    var subs = globArray(assembly.subs, {cwd: projectPath, root: process.cwd()});
 
     if (subs && subs.length > 0) {
       subs.forEach(function(assemblyPath, index) {

@@ -51,9 +51,9 @@ function processPlugin(pluginList, params) {
     pluginList.forEach(function(plugin, index) {
       if (typeof plugin.process === "function") {
         temp = plugin.process(params);
-        //if (temp !== undefined) {
-          content += temp;
-        //}
+        if (temp) {
+          content += temp + '\n\n';
+        }
       }
     });
   }

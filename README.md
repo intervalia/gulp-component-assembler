@@ -19,9 +19,9 @@ gulp-component-assembler
 
 `gulp-component-assembler` uses the file `assembly.json` to define the list of files to assemble into the component output file. The filename of the component will be the name of the folder that contains the `assembly.json` file. The extension of the component file `.js`.
 
->**Examples:**  
->For a folder named `widget` the component output file will be `widget.js`.  
->For a folder named `MyControl` the component output file will be `MyControl.js`.  
+>**Examples:**
+>For a folder named `widget` the component output file will be `widget.js`.
+>For a folder named `MyControl` the component output file will be `MyControl.js`.
 >_The case of the component filename matches the case of the folder name._
 
 ### Output file location
@@ -100,6 +100,7 @@ Here is the list of options and their description and usage:
 
 | Key | Example | Use |
 |-----|---------|-----|
+| **allowMultiRootTemplates** | `allowMultiRootTemplates:true/false` | *New in 3.0.0* - If set to `true` then templates can have multiple root nodes. |
 | **defaultLocale** | `defaultLocale:"en"` | Set the locale that your project will use as the default locale. If you do not provide the `defaultLocale` option then the default locale is set to `"en"`. `defaultLocale` is also the locale that is used if the user attempts to request a non-supported locale. |
 | **exposeLang** | `exposeLang:true/false` | If set to `true` then the language strings are also placed into a global object for access outside of the IIFE. The language strings will be added to `[globalObj].[assemblyName].lang` where `assemblyName` is the name of the assembly that is being created.<br/><br/>**See `globalObj`.** |
 | **externalLibName** | `externalLibName:"filename"` | Name for the external lib file. The default is `assembly-lib.js` and `assembly-lib-min.js`.<br/><br/>**See `useExternalLib`.** |

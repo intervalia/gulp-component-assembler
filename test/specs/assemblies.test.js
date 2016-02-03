@@ -64,179 +64,179 @@ describe('\n    Testing the file assemblies.js', function () {
    * Test function: assemblies.process
    *
    */
-  describe("testing function 'process'", function() {
-    /*
-     * Testing with assembly: testdata/main/sub1/assembly.json
-     * Which has locales but no templates.
-     */
-    describe("process file \'testdata/main/assembly.json\'", function() {
-      var projectPath;
-      var assemblyFileName;
-      var temp;
-      var assembly;
+  // describe("testing function 'process'", function() {
+  //   /*
+  //    * Testing with assembly: testdata/main/sub1/assembly.json
+  //    * Which has locales but no templates.
+  //    */
+  //   describe("process file \'testdata/main/assembly.json\'", function() {
+  //     var projectPath;
+  //     var assemblyFileName;
+  //     var temp;
+  //     var assembly;
 
-      beforeEach(function() {
-        projectPath = path.join(rootPath, "testdata/main");
-        assemblyFileName = path.join(projectPath, "assembly.json");
-        temp = fs.readFileSync(assemblyFileName, {"encoding": "utf-8"});
-        assembly = JSON.parse(temp);
-      });
+  //     beforeEach(function() {
+  //       projectPath = path.join(rootPath, "testdata/main");
+  //       assemblyFileName = path.join(projectPath, "assembly.json");
+  //       temp = fs.readFileSync(assemblyFileName, {"encoding": "utf-8"});
+  //       assembly = JSON.parse(temp);
+  //     });
 
-      it('should process with sub assemblies', function(done) {
-        var options = {
-          "locale": "en"
-        };
-        var val = assemblies.process(assembly, assemblyFileName, options);
-        // fs.writeFileSync("./test/data/main.sub-assemblies.js", val);
-        temp = readDataFile("./test/data/main.sub-assemblies.js");
-        val.should.equal(temp);
-        done();
-      });
-    });
+  //     it('should process with sub assemblies', function(done) {
+  //       var options = {
+  //         "locale": "en"
+  //       };
+  //       var val = assemblies.process(assembly, assemblyFileName, options);
+  //       // fs.writeFileSync("./test/data/main.sub-assemblies.js", val);
+  //       temp = readDataFile("./test/data/main.sub-assemblies.js");
+  //       val.should.equal(temp);
+  //       done();
+  //     });
+  //   });
 
-    /*
-     * Testing with assembly: testdata/main/sub1/assembly.json
-     * Which has locales but no templates.
-     */
-    describe("process file \'testdata/main/sub1/assembly.json\'", function() {
-      var projectPath;
-      var assemblyFileName;
-      var temp;
-      var assembly;
+  //   /*
+  //    * Testing with assembly: testdata/main/sub1/assembly.json
+  //    * Which has locales but no templates.
+  //    */
+  //   describe("process file \'testdata/main/sub1/assembly.json\'", function() {
+  //     var projectPath;
+  //     var assemblyFileName;
+  //     var temp;
+  //     var assembly;
 
-      beforeEach(function() {
-        projectPath = path.join(rootPath, "testdata/main/sub1");
-        assemblyFileName = path.join(projectPath, "assembly.json");
-        temp = fs.readFileSync(assemblyFileName, {"encoding": "utf-8"});
-        assembly = JSON.parse(temp);
-      });
+  //     beforeEach(function() {
+  //       projectPath = path.join(rootPath, "testdata/main/sub1");
+  //       assemblyFileName = path.join(projectPath, "assembly.json");
+  //       temp = fs.readFileSync(assemblyFileName, {"encoding": "utf-8"});
+  //       assembly = JSON.parse(temp);
+  //     });
 
-      it('should process with default options', function(done) {
-        var options = {
-          "locale": "en"
-        };
-        var val = assemblies.process(assembly, assemblyFileName, options);
-        //fs.writeFileSync("./test/data/sub1.no-options.js", val);
-        temp = readDataFile("./test/data/sub1.no-options.js");
-        val.should.equal(temp);
-        done();
-      });
+  //     it('should process with default options', function(done) {
+  //       var options = {
+  //         "locale": "en"
+  //       };
+  //       var val = assemblies.process(assembly, assemblyFileName, options);
+  //       //fs.writeFileSync("./test/data/sub1.no-options.js", val);
+  //       temp = readDataFile("./test/data/sub1.no-options.js");
+  //       val.should.equal(temp);
+  //       done();
+  //     });
 
-      it('should process with locale set to \'fr\'', function(done) {
-        var options = {
-          "locale": "fr"
-        };
-        var val = assemblies.process(assembly, assemblyFileName, options);
-        //fs.writeFileSync("./test/data/sub1.locale-fr.js", val);
-        temp = readDataFile("./test/data/sub1.locale-fr.js");
-        val.should.equal(temp);
-        done();
-      });
+  //     it('should process with locale set to \'fr\'', function(done) {
+  //       var options = {
+  //         "locale": "fr"
+  //       };
+  //       var val = assemblies.process(assembly, assemblyFileName, options);
+  //       //fs.writeFileSync("./test/data/sub1.locale-fr.js", val);
+  //       temp = readDataFile("./test/data/sub1.locale-fr.js");
+  //       val.should.equal(temp);
+  //       done();
+  //     });
 
-      it('should process with option \'exposeLang\' set to true', function(done) {
-        var options = {
-          "locale": "en",
-          "exposeLang": true
-        };
-        var val = assemblies.process(assembly, assemblyFileName, options);
-        //fs.writeFileSync("./test/data/sub1.exposeLang.js", val);
-        temp = readDataFile("./test/data/sub1.exposeLang.js");
-        val.should.equal(temp);
-        done();
-      });
+  //     it('should process with option \'exposeLang\' set to true', function(done) {
+  //       var options = {
+  //         "locale": "en",
+  //         "exposeLang": true
+  //       };
+  //       var val = assemblies.process(assembly, assemblyFileName, options);
+  //       //fs.writeFileSync("./test/data/sub1.exposeLang.js", val);
+  //       temp = readDataFile("./test/data/sub1.exposeLang.js");
+  //       val.should.equal(temp);
+  //       done();
+  //     });
 
-      it('should process with option \'supportTransKeys\' set to true', function(done) {
-        var options = {
-          "locale": "en",
-          "supportTransKeys": true
-        };
-        var val = assemblies.process(assembly, assemblyFileName, options);
-        //fs.writeFileSync("./test/data/sub1.supportTransKeys.js", val);
-        temp = readDataFile("./test/data/sub1.supportTransKeys.js");
-        val.should.equal(temp);
-        done();
-      });
+  //     it('should process with option \'supportTransKeys\' set to true', function(done) {
+  //       var options = {
+  //         "locale": "en",
+  //         "supportTransKeys": true
+  //       };
+  //       var val = assemblies.process(assembly, assemblyFileName, options);
+  //       //fs.writeFileSync("./test/data/sub1.supportTransKeys.js", val);
+  //       temp = readDataFile("./test/data/sub1.supportTransKeys.js");
+  //       val.should.equal(temp);
+  //       done();
+  //     });
 
-      it('should process with option \'tagMissingStrings\' set to true', function(done) {
-        var options = {
-          "locale": "en",
-          "tagMissingStrings": true
-        };
-        var val = assemblies.process(assembly, assemblyFileName, options);
-        //fs.writeFileSync("./test/data/sub1.tagMissingStrings.js", val);
-        temp = readDataFile("./test/data/sub1.tagMissingStrings.js");
-        val.should.equal(temp);
-        done();
-      });
-    });
+  //     it('should process with option \'tagMissingStrings\' set to true', function(done) {
+  //       var options = {
+  //         "locale": "en",
+  //         "tagMissingStrings": true
+  //       };
+  //       var val = assemblies.process(assembly, assemblyFileName, options);
+  //       //fs.writeFileSync("./test/data/sub1.tagMissingStrings.js", val);
+  //       temp = readDataFile("./test/data/sub1.tagMissingStrings.js");
+  //       val.should.equal(temp);
+  //       done();
+  //     });
+  //   });
 
 
-    /*
-     * Testing with assembly: testdata/main/sub2/assembly.json
-     * Which has templates but no locales.
-     */
-    describe("process file \'testdata/main/sub2/assembly.json\'", function() {
-      var projectPath;
-      var assemblyFileName;
-      var temp;
-      var assembly;
+  //   /*
+  //    * Testing with assembly: testdata/main/sub2/assembly.json
+  //    * Which has templates but no locales.
+  //    */
+  //   describe("process file \'testdata/main/sub2/assembly.json\'", function() {
+  //     var projectPath;
+  //     var assemblyFileName;
+  //     var temp;
+  //     var assembly;
 
-      beforeEach(function() {
-        projectPath = path.join(rootPath, "testdata/main/sub2");
-        assemblyFileName = path.join(projectPath, "assembly.json");
-        temp = readDataFile(assemblyFileName);
-        assembly = JSON.parse(temp);
-      });
+  //     beforeEach(function() {
+  //       projectPath = path.join(rootPath, "testdata/main/sub2");
+  //       assemblyFileName = path.join(projectPath, "assembly.json");
+  //       temp = readDataFile(assemblyFileName);
+  //       assembly = JSON.parse(temp);
+  //     });
 
-      it('should process with default options', function(done) {
-        var options = {
-          "locale": "en"
-        };
-        var val = assemblies.process(assembly, assemblyFileName, options);
-        //fs.writeFileSync("./test/data/sub2.no-options.js", val);
-        temp = readDataFile("./test/data/sub2.no-options.js");
-        val.should.equal(temp);
-        done();
-      });
+  //     it('should process with default options', function(done) {
+  //       var options = {
+  //         "locale": "en"
+  //       };
+  //       var val = assemblies.process(assembly, assemblyFileName, options);
+  //       //fs.writeFileSync("./test/data/sub2.no-options.js", val);
+  //       temp = readDataFile("./test/data/sub2.no-options.js");
+  //       val.should.equal(temp);
+  //       done();
+  //     });
 
-      it('should process with option \'minTemplateWS\' set to true', function(done) {
-        var options = {
-          "locale": "en",
-          "minTemplateWS": true
-        };
-        var val = assemblies.process(assembly, assemblyFileName, options);
-        //fs.writeFileSync("./test/data/sub2.min-ws.js", val);
-        temp = readDataFile("./test/data/sub2.min-ws.js");
-        val.should.equal(temp);
-        done();
-      });
+  //     it('should process with option \'minTemplateWS\' set to true', function(done) {
+  //       var options = {
+  //         "locale": "en",
+  //         "minTemplateWS": true
+  //       };
+  //       var val = assemblies.process(assembly, assemblyFileName, options);
+  //       //fs.writeFileSync("./test/data/sub2.min-ws.js", val);
+  //       temp = readDataFile("./test/data/sub2.min-ws.js");
+  //       val.should.equal(temp);
+  //       done();
+  //     });
 
-      it('should process with option \'useStrict\' set to true', function(done) {
-        var options = {
-          "locale": "en",
-          "useStrict": true
-        };
-        var val = assemblies.process(assembly, assemblyFileName, options);
-        //fs.writeFileSync("./test/data/sub2.useStrict.js", val);
-        temp = readDataFile("./test/data/sub2.useStrict.js");
-        val.should.equal(temp);
-        done();
-      });
+  //     it('should process with option \'useStrict\' set to true', function(done) {
+  //       var options = {
+  //         "locale": "en",
+  //         "useStrict": true
+  //       };
+  //       var val = assemblies.process(assembly, assemblyFileName, options);
+  //       //fs.writeFileSync("./test/data/sub2.useStrict.js", val);
+  //       temp = readDataFile("./test/data/sub2.useStrict.js");
+  //       val.should.equal(temp);
+  //       done();
+  //     });
 
-      it('should process with option \'iifeParams\' set', function(done) {
-        var options = {
-          "locale": "en",
-          "iifeParams": {
-            "use": "window, document, $",
-            "pass": "window, window.document, window.jQuery"
-          }
-        };
-        var val = assemblies.process(assembly, assemblyFileName, options);
-        //fs.writeFileSync("./test/data/sub2.iifeParams.js", val);
-        temp = readDataFile("./test/data/sub2.iifeParams.js");
-        val.should.equal(temp);
-        done();
-      });
-    });
-  });
+  //     it('should process with option \'iifeParams\' set', function(done) {
+  //       var options = {
+  //         "locale": "en",
+  //         "iifeParams": {
+  //           "use": "window, document, $",
+  //           "pass": "window, window.document, window.jQuery"
+  //         }
+  //       };
+  //       var val = assemblies.process(assembly, assemblyFileName, options);
+  //       //fs.writeFileSync("./test/data/sub2.iifeParams.js", val);
+  //       temp = readDataFile("./test/data/sub2.iifeParams.js");
+  //       val.should.equal(temp);
+  //       done();
+  //     });
+  //   });
+  // });
 });

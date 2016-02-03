@@ -3,6 +3,6 @@ describe('Test gulp-component-assembler', function () {
   require('./globArray.test');
   require('./locales.test');
   require('./plugin.test');
-  //require('./scripts.test');
-  //require('./templates.test');
+  require('./scripts.test');
+  require('./templates.test');
 });

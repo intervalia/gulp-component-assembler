@@ -17,13 +17,14 @@ function processLocales(baseLocalePath, localeFileName, assemblyName, options) {
   }
 
   translations = readLocaleFiles(baseLocalePath, localeFileName, options.locale);
+
   if (translations && translations.key) {
     contents += "var langKeys = "+JSON.stringify(translations.key)+";\n";
     // Output the langs table.
     contents += "var langs = {\n";
     translations.langs.sort().forEach(function(locale, index) {
       localeList.push(locale);
-      contents +=  " // Included locale file: " + localeFileName + "_" + locale + ".json\n";
+      contents +=  "  // Included locale file: " + localeFileName + "_" + locale + ".json\n";
       strings = [];
 
       translations.key.forEach(function(key, keyIndex) {
@@ -34,7 +35,7 @@ function processLocales(baseLocalePath, localeFileName, assemblyName, options) {
           strings.push(translations[locale][key] || translations[options.locale][key] || "");
         }
       });
-      contents += ' "'+locale+'": ' + JSON.stringify(strings);
+      contents += '  "'+locale+'": ' + JSON.stringify(strings);
       if (index >= len) {
         contents += "\n";
       } else {
@@ -45,58 +46,65 @@ function processLocales(baseLocalePath, localeFileName, assemblyName, options) {
     // Output the validLocales and the routine to get the desired lang object.
     contents += "var validLocales = "+JSON.stringify(localeList.sort())+";\n\n";
     if(!options.useExternalLib) {
-      contents += "function getLang(locale) {\n"+
-                  " var temp, i, len = langKeys.length, lang = {};\n"+
-                  " locale = (typeof(locale) === 'string' ? locale : locale[0]).split('-')[0];\n"+
-                  " if (validLocales.indexOf(locale)<0) {\n"+
-                  "  locale = '"+options.locale+"';\n"+
-                  " }\n";
+      contents += "function getLang(locales) {\n"+
+                   "  var locale, language, i, len = langKeys.length, lang = {};\n"+
+                   "  locales = (typeof locales === 'string' ? [locales] : locales);\n"+
+                   "  for (i = 0; i < locales.length; i++) {\n"+
+                   "    language = locales[i].split('-')[0];\n"+
+                   "    if (validLocales.indexOf(language) !== -1) {\n"+
+                   "      locale = language;\n"+
+                   "      break;\n"+
+                   "    }\n"+
+                   "  }\n"+
+                   "  locale = locale || '" + options.locale + "';\n";
+
       if (supportTransKeys) {
         // Support the special locales of ke[key] and zz[assembly.key]
-        contents += " switch (locale) {\n"+
-                    "  case 'ke':\n"+
-                    "  case 'zz':\n"+
-                    "   for(i = 0; i < len; i++) {\n"+
-                    "    temp = (locale==='ke'?'['+langKeys[i]+']':'["+assemblyName+".'+langKeys[i]+']');\n"+
-                    "    lang[langKeys[i]] = temp;\n"+
-                    "   }\n"+
-                    "   break;\n"+
-                    "  default:\n"+
-                    "   for(i = 0; i < len; i++) {\n"+
-                    "    lang[langKeys[i]] = langs[locale][i];\n"+
-                    "   }\n"+
-                    "   break;\n"+
-                    " }\n";
+        contents += "  var temp;\n"+
+                    "  switch (locale) {\n"+
+                    "    case 'ke':\n"+
+                    "    case 'zz':\n"+
+                    "      for(i = 0; i < len; i++) {\n"+
+                    "        temp = (locale === 'ke' ? '[' + langKeys[i] + ']' : '["+assemblyName+".' + langKeys[i] + ']');\n"+
+                    "        lang[langKeys[i]] = temp;\n"+
+                    "      }\n"+
+                    "      break;\n\n"+
+                    "    default:\n"+
+                    "      for(i = 0; i < len; i++) {\n"+
+                    "        lang[langKeys[i]] = langs[locale][i];\n"+
+                    "      }\n"+
+                    "      break;\n"+
+                    "  }\n";
       }
       else {
         // Don't support the two special locales.
-        contents += " for(i = 0; i < len; i++) {\n"+
-                    "  lang[langKeys[i]] = langs[locale][i];\n"+
-                    " }\n";
+        contents += "  for(i = 0; i < len; i++) {\n"+
+                    "    lang[langKeys[i]] = langs[locale][i];\n"+
+                    "  }\n";
       }
 
       // Return the correct lang object
-      contents += " return lang;\n"+
+      contents += "  return lang;\n"+
                   "}";
     }
     else {
       contents += "function getLang(locale) {\n"+
-                  " return __getLangObj(locale, langKeys, validLocales, langs);\n"+
+                  "  return __getLangObj(locale, langKeys, validLocales, langs);\n"+
                   "}";
     }
     // set the lang variable
-    contents += "\n\nvar lang = getLang("+options.localeVar+" || '"+options.locale+"');\n";
+    contents += "\n\nvar lang = getLang("+options.localeVar+" || '"+options.locale+"');";
 
     if (options.exposeLang) {
       var globalObj = "window."+(options.globalObj || "components");
       var globalAssembly = globalObj+"."+assemblyName;
       contents += globalObj      + " = " + globalObj      + " || {};\n";
       contents += globalAssembly + " = " + globalAssembly + " || {};\n";
-      contents += globalAssembly + ".lang = lang;\n";
+      contents += globalAssembly + ".lang = lang;";
     }
   }
 
-  return contents;
+  return contents + '\n\n';
 }
 
 function readLocaleFiles(baseLocalePath, baseName, defaultLocale) {

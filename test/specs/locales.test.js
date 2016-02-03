@@ -1,208 +1,294 @@
 /*jshint expr: true*/
+/*jshint -W061 */
+
 var locales = require('../../src/locales');
 var path = require('path');
-var fs = require('fs');
-var gutil = require('gulp-util');
 var should = require('should');
 
 describe('\n    Testing the file locales.js', function () {
-  var rootPath;
-
-  beforeEach(function() {
-    rootPath = path.resolve(".");
-  });
-
+  var rootPath = path.resolve(".");
 
   /*
    * Test function: locales
    *
    */
-  describe("Testing values for 'localeVar' and 'locale'", function() {
-    it('should use "en" and "window.locale"', function(done) {
-      var baseLocalePath = path.join(rootPath, "testdata/localeTests/one");
-      var localeFileName = "test";
-      var assemblyName = "one";
-      var options = {
-        locale: "en",
-        tagMissingStrings: true
-      };
-      var final = 'var langKeys = ["LABEL_PHONE_NUMBER"];\n'+
-        'var langs = {\n'+
-        ' // Included locale file: test_de.json\n'+
-        ' "de": ["Telefonnummer"],\n'+
-        ' // Included locale file: test_en.json\n'+
-        ' "en": ["Phone Number"],\n'+
-        ' // Included locale file: test_eo.json\n'+
-        ' "eo": ["[Þĥöñé Ñûɱƀéŕ----- П國カ내]"],\n'+
-        ' // Included locale file: test_es.json\n'+
-        ' "es": ["Número de teléfono"],\n'+
-        ' // Included locale file: test_fr.json\n'+
-        ' "fr": ["Numéro de téléphone"],\n'+
-        ' // Included locale file: test_it.json\n'+
-        ' "it": ["Numero di telefono"],\n'+
-        ' // Included locale file: test_ja.json\n'+
-        ' "ja": ["電話番号"],\n'+
-        ' // Included locale file: test_ko.json\n'+
-        ' "ko": ["전화번호"],\n'+
-        ' // Included locale file: test_pt.json\n'+
-        ' "pt": ["Número de Telefone"],\n'+
-        ' // Included locale file: test_ru.json\n'+
-        ' "ru": ["Номер телефона"],\n'+
-        ' // Included locale file: test_zh.json\n'+
-        ' "zh": ["電話號碼"],\n'+
-        '};\n'+
-        'var validLocales = ["de","en","eo","es","fr","it","ja","ko","pt","ru","zh"];\n'+
-        '\n'+
-        'function getLang(locale) {\n'+
-        ' var temp, i, len = langKeys.length, lang = {};\n'+
-        ' locale = (typeof(locale) === \'string\' ? locale : locale[0]).split(\'-\')[0];\n'+
-        ' if (validLocales.indexOf(locale)<0) {\n'+
-        '  locale = \'en\';\n'+
-        ' }\n'+
-        ' for(i = 0; i < len; i++) {\n'+
-        '  lang[langKeys[i]] = langs[locale][i];\n'+
-        ' }\n'+
-        ' return lang;\n'+
-        '}\n'+
-        '\n'+
-        'var lang = getLang(window.locale || \'en\');\n';
+  describe("Testing default options", function() {
+    var baseLocalePath = path.join(rootPath, "testdata/localeTests/one");
+    var localeFileName = "test";
+    var assemblyName = "one";
+    var window = {};
+    var options = {
+      locale: "en"  // the default locale set by index.js
+    };
 
-      var content = locales.process(baseLocalePath, localeFileName, assemblyName, options);
-      content.should.eql(final);
-      done();
+    var finaLangKeys = ['LABEL_PHONE_NUMBER'];
+    var finalLangs = {
+     "de": ["Telefonnummer"],
+     "en": ["Phone Number"],
+     "eo": ["[Þĥöñé Ñûɱƀéŕ----- П國カ내]"],
+     "es": ["Número de teléfono"],
+     "fr": ["Numéro de téléphone"],
+     "it": ["Numero di telefono"],
+     "ja": ["電話番号"],
+     "ko": ["전화번호"],
+     "pt": ["Número de Telefone"],
+     "ru": ["Номер телефона"],
+     "zh": ["電話號碼"],
+    };
+    var finalValidLocales = ["de","en","eo","es","fr","it","ja","ko","pt","ru","zh"];
+    var finalLang =  { LABEL_PHONE_NUMBER: "Phone Number" };
+
+
+    it('should create a list of language keys', function() {
+      var langKeys, langs, validLocales, lang, getLang;
+
+      /*
+        will add to scope:
+          variables: langKeys, langs, validLocales, lang
+          functions: getLang()
+      */
+      eval(locales.process(baseLocalePath, localeFileName, assemblyName, options));
+
+      should.deepEqual(finaLangKeys, langKeys);
     });
 
-    it('should use "fr" and "FS.locale"', function(done) {
-      var baseLocalePath = path.join(rootPath, "testdata/localeTests/one");
-      var localeFileName = "test";
-      var assemblyName = "one";
-      var options = {
-        localeVar: "FS.locale",
-        locale: "fr"
-      };
-      var final = 'var langKeys = ["LABEL_PHONE_NUMBER"];\n'+
-        'var langs = {\n'+
-        ' // Included locale file: test_de.json\n'+
-        ' "de": ["Telefonnummer"],\n'+
-        ' // Included locale file: test_en.json\n'+
-        ' "en": ["Phone Number"],\n'+
-        ' // Included locale file: test_eo.json\n'+
-        ' "eo": ["[Þĥöñé Ñûɱƀéŕ----- П國カ내]"],\n'+
-        ' // Included locale file: test_es.json\n'+
-        ' "es": ["Número de teléfono"],\n'+
-        ' // Included locale file: test_fr.json\n'+
-        ' "fr": ["Numéro de téléphone"],\n'+
-        ' // Included locale file: test_it.json\n'+
-        ' "it": ["Numero di telefono"],\n'+
-        ' // Included locale file: test_ja.json\n'+
-        ' "ja": ["電話番号"],\n'+
-        ' // Included locale file: test_ko.json\n'+
-        ' "ko": ["전화번호"],\n'+
-        ' // Included locale file: test_pt.json\n'+
-        ' "pt": ["Número de Telefone"],\n'+
-        ' // Included locale file: test_ru.json\n'+
-        ' "ru": ["Номер телефона"],\n'+
-        ' // Included locale file: test_zh.json\n'+
-        ' "zh": ["電話號碼"],\n'+
-        '};\n'+
-        'var validLocales = ["de","en","eo","es","fr","it","ja","ko","pt","ru","zh"];\n'+
-        '\n'+
-        'function getLang(locale) {\n'+
-        ' var temp, i, len = langKeys.length, lang = {};\n'+
-        ' locale = (typeof(locale) === \'string\' ? locale : locale[0]).split(\'-\')[0];\n'+
-        ' if (validLocales.indexOf(locale)<0) {\n'+
-        '  locale = \'fr\';\n'+
-        ' }\n'+
-        ' for(i = 0; i < len; i++) {\n'+
-        '  lang[langKeys[i]] = langs[locale][i];\n'+
-        ' }\n'+
-        ' return lang;\n'+
-        '}\n'+
-        '\n'+
-        'var lang = getLang(FS.locale || \'fr\');\n';
+    it('should create a list of language values for each language', function() {
+      var langKeys, langs, validLocales, lang, getLang;
 
-      var content = locales.process(baseLocalePath, localeFileName, assemblyName, options);
-      content.should.eql(final);
-      done();
+      /*
+        will add to scope:
+          variables: langKeys, langs, validLocales, lang
+          functions: getLang()
+      */
+      eval(locales.process(baseLocalePath, localeFileName, assemblyName, options));
+
+      should.deepEqual(finalLangs, langs);
+    });
+
+    it('should create a list of supported locales', function() {
+      var langKeys, langs, validLocales, lang, getLang;
+
+      /*
+        will add to scope:
+          variables: langKeys, langs, validLocales, lang
+          functions: getLang()
+      */
+      eval(locales.process(baseLocalePath, localeFileName, assemblyName, options));
+
+      should.deepEqual(finalValidLocales, validLocales);
+    });
+
+    it('should create a function to get the langauge keys/values for a locale', function() {
+      var langKeys, langs, validLocales, lang, getLang;
+
+      var finalGetLangRu = { LABEL_PHONE_NUMBER: "Номер телефона" };
+      var finalGetLangEo = { LABEL_PHONE_NUMBER: "[Þĥöñé Ñûɱƀéŕ----- П國カ내]" };
+      var finalGetLangJa = { LABEL_PHONE_NUMBER: "電話番号" };
+
+      /*
+        will add to scope:
+          variables: langKeys, langs, validLocales, lang
+          functions: getLang()
+      */
+      eval(locales.process(baseLocalePath, localeFileName, assemblyName, options));
+
+      should.deepEqual(finalGetLangRu, getLang('ru'));
+      should.deepEqual(finalGetLangEo, getLang('eo'));
+      should.deepEqual(finalGetLangJa, getLang('ja'));
+    });
+
+    it('should create an object of language keys/values for the current locale', function() {
+      var langKeys, langs, validLocales, lang, getLang;
+
+      /*
+        will add to scope:
+          variables: langKeys, langs, validLocales, lang
+          functions: getLang()
+      */
+      eval(locales.process(baseLocalePath, localeFileName, assemblyName, options));
+
+      should.deepEqual(finalLang, lang);
+    });
+
+    it('getLang() should return the default locale values if the value is not defined in the current locale', function() {
+      var langKeys, langs, validLocales, lang, getLang;
+
+      var baseLocalePath = path.join(rootPath, "testdata/localeTests/two");
+      var finalGetLangEs = {
+        SAMPLE: "This is a sample",
+        LABEL_PHONE_NUMBER: "Número de teléfono"
+      };
+
+      /*
+        will add to scope:
+          variables: langKeys, langs, validLocales, lang
+          functions: getLang()
+      */
+      eval(locales.process(baseLocalePath, localeFileName, assemblyName, options));
+
+      should.deepEqual(finalGetLangEs, getLang('es'));
+    });
+
+    it('getLang() should accept an array of 2 letter language codes and return the first supported', function() {
+      var langKeys, langs, validLocales, lang, getLang;
+
+      var acceptLanguage = ['ca', 'fj', 'de', 'en'];
+
+      /*
+        will add to scope:
+          variables: langKeys, langs, validLocales, lang
+          functions: getLang()
+      */
+      eval(locales.process(baseLocalePath, localeFileName, assemblyName, options));
+
+      should.deepEqual(getLang('de'), getLang(acceptLanguage));
+    });
+
+    it('getLang() should accept an array of 2 letter language, 2 letter locale codes and return the first supported', function() {
+      var langKeys, langs, validLocales, lang, getLang;
+
+      var acceptLanguage = ['ca-de', 'fj-ja', 'en-gb', 'de'];
+
+      /*
+        will add to scope:
+          variables: langKeys, langs, validLocales, lang
+          functions: getLang()
+      */
+      eval(locales.process(baseLocalePath, localeFileName, assemblyName, options));
+
+      should.deepEqual(getLang('en'), getLang(acceptLanguage));
+    });
+
+    it('lang should use "window.locale" if it exists', function() {
+      var langKeys, langs, validLocales, lang, getLang;
+
+      window.locale = 'ru';
+      var finalGetLangRu = { LABEL_PHONE_NUMBER: "Номер телефона" };
+
+      /*
+        will add to scope:
+          variables: langKeys, langs, validLocales, lang
+          functions: getLang()
+      */
+      eval(locales.process(baseLocalePath, localeFileName, assemblyName, options));
+
+      should.deepEqual(finalGetLangRu, lang);
+    });
+
+  });
+
+
+  describe('Testing "localeVar" option', function() {
+    var baseLocalePath = path.join(rootPath, "testdata/localeTests/one");
+    var localeFileName = "test";
+    var assemblyName = "one";
+    var window = {};
+    var options = {
+      locale: "en",  // the default locale set by index.js
+      localeVar: "FS.simpleLocale()"
+    };
+
+    it('lang should use localeVar if passed', function() {
+      var langKeys, langs, validLocales, lang, getLang;
+
+      var FS = {simpleLocale: function() { return 'fr'; } };
+      var finalGetLangFr = { LABEL_PHONE_NUMBER: "Numéro de téléphone" };
+
+      /*
+        will add to scope:
+          variables: langKeys, langs, validLocales, lang
+          functions: getLang()
+      */
+      eval(locales.process(baseLocalePath, localeFileName, assemblyName, options));
+
+      should.deepEqual(finalGetLangFr, lang);
     });
   });
 
-  describe("Testing missing data from locale files", function() {
-    it('should use "en" default for "SAMPLE"', function(done) {
-      var baseLocalePath = path.join(rootPath, "testdata/localeTests/two");
-      var localeFileName = "test";
-      var assemblyName = "two";
-      var options = {
-        localeVar: "window.locale",
-        locale: "en"
-      };
-      var final = 'var langKeys = ["SAMPLE","LABEL_PHONE_NUMBER"];\n'+
-        'var langs = {\n'+
-        ' // Included locale file: test_en.json\n'+
-        ' "en": ["This is a sample","Phone Number"],\n'+
-        ' // Included locale file: test_es.json\n'+
-        ' "es": ["This is a sample","Número de teléfono"],\n'+
-        ' // Included locale file: test_fr.json\n'+
-        ' "fr": ["This is a sample","Numéro de téléphone"],\n'+
-        '};\n'+
-        'var validLocales = ["en","es","fr"];\n'+
-        '\n'+
-        'function getLang(locale) {\n'+
-        ' var temp, i, len = langKeys.length, lang = {};\n'+
-        ' locale = (typeof(locale) === \'string\' ? locale : locale[0]).split(\'-\')[0];\n'+
-        ' if (validLocales.indexOf(locale)<0) {\n'+
-        '  locale = \'en\';\n'+
-        ' }\n'+
-        ' for(i = 0; i < len; i++) {\n'+
-        '  lang[langKeys[i]] = langs[locale][i];\n'+
-        ' }\n'+
-        ' return lang;\n'+
-        '}\n'+
-        '\n'+
-        'var lang = getLang(window.locale || \'en\');\n';
 
-      var content = locales.process(baseLocalePath, localeFileName, assemblyName, options);
-      content.should.eql(final);
-      done();
+  describe('Testing "supportTransKeys" option', function() {
+    var baseLocalePath = path.join(rootPath, "testdata/localeTests/one");
+    var localeFileName = "test";
+    var assemblyName = "one";
+    var window = {};
+    var options = {
+      locale: "en",  // the default locale set by index.js
+      supportTransKeys: true
+    };
+
+    it('getLang() should support locale "ke" to return language keys', function() {
+      var langKeys, langs, validLocales, lang, getLang;
+
+      var finalGetLangKe = { LABEL_PHONE_NUMBER: "[LABEL_PHONE_NUMBER]" };
+
+      /*
+        will add to scope:
+          variables: langKeys, langs, validLocales, lang
+          functions: getLang()
+      */
+      eval(locales.process(baseLocalePath, localeFileName, assemblyName, options));
+
+      should.deepEqual(finalGetLangKe, getLang('ke'));
     });
 
-    it('should use "fr" default for "MONDAY"', function(done) {
-      var baseLocalePath = path.join(rootPath, "testdata/localeTests/two");
-      var localeFileName = "test";
-      var assemblyName = "two";
-      var options = {
-        localeVar: "someFunction()",
-        locale: "fr",
-        tagMissingStrings: true
-      };
-      var final = 'var langKeys = ["MONDAY","LABEL_PHONE_NUMBER"];\n'+
-        'var langs = {\n'+
-        ' // Included locale file: test_en.json\n'+
-        ' "en": ["-*Lundi*-","Phone Number"],\n'+
-        ' // Included locale file: test_es.json\n'+
-        ' "es": ["-*Lundi*-","Número de teléfono"],\n'+
-        ' // Included locale file: test_fr.json\n'+
-        ' "fr": ["Lundi","Numéro de téléphone"],\n'+
-        '};\n'+
-        'var validLocales = ["en","es","fr"];\n'+
-        '\n'+
-        'function getLang(locale) {\n'+
-        ' var temp, i, len = langKeys.length, lang = {};\n'+
-        ' locale = (typeof(locale) === \'string\' ? locale : locale[0]).split(\'-\')[0];\n'+
-        ' if (validLocales.indexOf(locale)<0) {\n'+
-        '  locale = \'fr\';\n'+
-        ' }\n'+
-        ' for(i = 0; i < len; i++) {\n'+
-        '  lang[langKeys[i]] = langs[locale][i];\n'+
-        ' }\n'+
-        ' return lang;\n'+
-        '}\n'+
-        '\n'+
-        'var lang = getLang(someFunction() || \'fr\');\n';
+    it('getLang() should support locale "ke" to return language keys and the assembly they are used in', function() {
+      var langKeys, langs, validLocales, lang, getLang;
 
-      var content = locales.process(baseLocalePath, localeFileName, assemblyName, options);
-      content.should.eql(final);
-      done();
+      var finalGetLangZz = { LABEL_PHONE_NUMBER: "[one.LABEL_PHONE_NUMBER]" };
+
+      /*
+        will add to scope:
+          variables: langKeys, langs, validLocales, lang
+          functions: getLang()
+      */
+      eval(locales.process(baseLocalePath, localeFileName, assemblyName, options));
+
+      should.deepEqual(finalGetLangZz, getLang('zz'));
     });
   });
+
+
+  describe('Testing "exposeLang" option', function() {
+    var baseLocalePath = path.join(rootPath, "testdata/localeTests/one");
+    var localeFileName = "test";
+    var assemblyName = "one";
+    var window = {};
+    var options = {
+      locale: "en",  // the default locale set by index.js
+      exposeLang: true
+    };
+
+    it('should add the lang to the window object name spaced by the assembly name', function() {
+      var langKeys, langs, validLocales, lang, getLang;
+
+      var finalLang =  { LABEL_PHONE_NUMBER: "Phone Number" };
+
+      /*
+        will add to scope:
+          variables: langKeys, langs, validLocales, lang
+          functions: getLang()
+      */
+      eval(locales.process(baseLocalePath, localeFileName, assemblyName, options));
+
+      should.deepEqual(finalLang, window.components.one.lang);
+    });
+
+    it('should use globalObj if passed', function() {
+      var langKeys, langs, validLocales, lang, getLang;
+
+      options.globalObj = 'test';
+      var finalLang =  { LABEL_PHONE_NUMBER: "Phone Number" };
+
+      /*
+        will add to scope:
+          variables: langKeys, langs, validLocales, lang
+          functions: getLang()
+      */
+      eval(locales.process(baseLocalePath, localeFileName, assemblyName, options));
+
+      should.deepEqual(finalLang, window.test.one.lang);
+    });
+
+  });
+
 });

@@ -1,17 +1,12 @@
 /*jshint expr: true*/
+
 var globArray = require('../../src/globArray');
 var path = require('path');
-var fs = require('fs');
-var gutil = require('gulp-util');
 var should = require('should');
 
+
 describe('\n    Testing the file globArray.js', function () {
-  var rootPath;
-
-  beforeEach(function() {
-    rootPath = path.resolve(".");
-  });
-
+  var rootPath = path.resolve(".");
 
   /*
    * Test function: globArray
@@ -28,12 +23,16 @@ describe('\n    Testing the file globArray.js', function () {
         'file_sub2.js'
       ];
 
+      console.log('val:', val);
+      console.log('temp:', temp);
+
       val.forEach(function(item) {
         temp.should.containEql(path.relative(projectPath, item));
       });
       temp.forEach(function(item) {
         val.should.containEql(path.join(projectPath, item));
       });
+
       done();
     });
 
@@ -55,6 +54,7 @@ describe('\n    Testing the file globArray.js', function () {
       temp.forEach(function(item) {
         val.should.containEql(path.join(projectPath, item));
       });
+
       done();
     });
 
@@ -75,6 +75,7 @@ describe('\n    Testing the file globArray.js', function () {
       temp.forEach(function(item) {
         val.should.containEql(path.join(projectPath, item));
       });
+
       done();
     });
 
@@ -94,6 +95,7 @@ describe('\n    Testing the file globArray.js', function () {
       temp.forEach(function(item) {
         val.should.containEql(path.join(projectPath, item));
       });
+
       done();
     });
   });
