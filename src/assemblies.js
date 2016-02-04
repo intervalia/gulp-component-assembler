@@ -20,7 +20,7 @@ function areTranslationsAvailable(locale, localePath, localeFileName) {
 function processAssembly(assembly, assemblyName, options, isSub) {
   "use strict";
   var projectPath = path.dirname(assemblyName);
-  var assemblies, contents, assemblyContents;
+  var assemblies, contents, assemblyContents = "";
   var iifeParams, iifeCount;
   var pluginParams;
   var localePath, localeFileName;
@@ -51,8 +51,11 @@ function processAssembly(assembly, assemblyName, options, isSub) {
   };
 
   // *********************
-  // Process any PRE plug-ins
-  contents += plugin.processPre(pluginParams);
+  // Process any BEFORE plug-ins
+  temp = plugin.process(plugin.types.BEFORE, pluginParams);
+  if (temp) {
+    contents += temp + "\n\n";
+  }
 
   if (options.watch) {
     watcher.addAssembly(assemblyName, assembly);
@@ -78,28 +81,37 @@ function processAssembly(assembly, assemblyName, options, isSub) {
   }
 
   // *********************
-  // Process any INLINE_PRE plug-ins
-  assemblyContents = plugin.processInlinePre(pluginParams);
+  // Process any BEFORE_ASSEMBLY plug-ins
+  temp = plugin.process(plugin.types.BEFORE_ASSEMBLY, pluginParams);
+  if (temp) {
+    assemblyContents += temp + "\n\n";
+  }
 
   // *********************
   // Process locale files
   if (hasTranslations) {
-    assemblyContents += locales.process(localePath, localeFileName, path.basename(projectPath), options);
+    assemblyContents += locales.process(localePath, localeFileName, path.basename(projectPath), options) + "\n\n";
   }
 
   // *********************
   // Process template files
-  assemblyContents += templates.process(projectPath, globArray(assembly.templates || ["./templates/*.html"], {cwd: projectPath, root: process.cwd()}), hasTranslations, options);
+  temp = templates.process(projectPath, globArray(assembly.templates || ["./templates/*.html"], {cwd: projectPath, root: process.cwd()}), hasTranslations, options);
+  if (temp) {
+    assemblyContents += temp + "\n\n";
+  }
 
   // *********************
   // Process 'files' field
   if (assembly.files) {
-    assemblyContents += scripts.process(projectPath, globArray(assembly.files, {cwd: projectPath, root: process.cwd()}), options, hasTranslations, assembly, assemblyName, isSub);
+    assemblyContents += scripts.process(projectPath, globArray(assembly.files, {cwd: projectPath, root: process.cwd()}), options, hasTranslations, assembly, assemblyName, isSub) + "\n\n";
   }
 
   // *********************
-  // Process any INLINE_POST plug-ins
-  assemblyContents += plugin.processInlinePost(pluginParams);
+  // Process any AFTER_ASSEMBLY plug-ins
+  temp = plugin.process(plugin.types.AFTER_ASSEMBLY, pluginParams);
+  if (temp) {
+    assemblyContents += temp + "\n\n";
+  }
 
   // select all newline characters (except for the last ones) and indent by 1 level for better
   // code readability of assembly contents
@@ -124,7 +136,10 @@ function processAssembly(assembly, assemblyName, options, isSub) {
 
   // *********************
   // Process any POST plug-ins
-  contents += plugin.processPost(pluginParams);
+  temp = plugin.process(plugin.types.AFTER, pluginParams);
+  if (temp) {
+    contents += temp + "\n\n";
+  }
 
   // *********************
   // Process sub assemblies

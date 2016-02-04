@@ -104,7 +104,7 @@ function processLocales(baseLocalePath, localeFileName, assemblyName, options) {
     }
   }
 
-  return contents + '\n\n';
+  return contents;
 }
 
 function readLocaleFiles(baseLocalePath, baseName, defaultLocale) {

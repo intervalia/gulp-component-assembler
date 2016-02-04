@@ -4,30 +4,41 @@ var plugin = require("./plugin");
 var PluginError = require('gulp-util').PluginError;
 var PLUGIN_NAME = require("./pluginName");
 
-function processOneScript(scriptPath, includeName, options, newPluginParams) {
+function processOneScript(scriptPath, includeName, options, pluginParams) {
   var contents = "/*\n * Included File: " + includeName + "\n */\n";
+  var temp;
 
   if (!fs.existsSync(scriptPath)) {
     return contents + "console.warn('" + scriptPath + " does not match any file');";
   }
 
-  contents += plugin.processFilePre(newPluginParams);
+  // Process any BEFORE_JS_FILE plug-ins
+  temp = plugin.process(plugin.types.BEFORE_JS_FILE, pluginParams);
+  if (temp) {
+    contents += temp + "\n\n";
+  }
+
   contents += fs.readFileSync(scriptPath, {"encoding": "utf-8"}).replace(/[\n\r]/g, "\n");
-  contents += plugin.processFilePost(newPluginParams);
+
+  // Process any AFTER_JS_FILE plug-ins
+  temp = plugin.process(plugin.types.AFTER_JS_FILE, pluginParams);
+  if (temp) {
+    contents += temp;
+  }
 
   return contents;
 }
 
 function processScripts(projectPath, files, options, hasTranslations, assembly, assemblyName, isSub) {
-  var contents = "";
-  var newPluginParams;
+  var contents = [];
+  var pluginParams;
 
   if (files.length > 0) {
-    files.forEach(function(filePath) {
+    files.forEach(function(filePath, index) {
       var fileName = path.basename(filePath);
       var includeName = filePath;
 
-      newPluginParams = {
+      pluginParams = {
         "projectPath": projectPath,
         "hasTranslations": hasTranslations,
         "options": options,
@@ -44,11 +55,12 @@ function processScripts(projectPath, files, options, hasTranslations, assembly, 
         includeName = path.relative(projectPath, filePath);
       }
 
-      contents += processOneScript(filePath, includeName, options, newPluginParams) + "\n\n";
+      contents.push(processOneScript(filePath, includeName, options, pluginParams));
     });
   }
 
-  return contents;
+  // add space in between plugins
+  return contents.join('\n\n');
 }
 
 module.exports = {

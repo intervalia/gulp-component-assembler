@@ -1,30 +1,17 @@
 var path = require('path');
 var PluginError = require('gulp-util').PluginError;
 
-var preAssemblyCalled = false;
 
 function preAssembly(params) {
-  var output = "";
-  if (!preAssemblyCalled) {
-    preAssemblyCalled = true;
-    output += "var __FILE__;\nvar ";
-  }
-
-  output += "__ASSEMBLY__ = '"+path.basename(params.projectPath)+"';\n";
-  return output;
+  return "var __FILE__;\nvar __ASSEMBLY__ = '"+path.basename(params.projectPath)+"';";
 }
-
 
 function preFile(params) {
-  if (!preAssemblyCalled) {
-    throw new PluginError("fileNameProvider", "You must process `preAssembly` before you can process `preFile`." );
-  }
-
-  return "__FILE__ = '"+params.fileName+"';\n";
+  return "__FILE__ = '"+params.fileName+"';";
 }
 
-module.exports = {
-  version: "1.0.0",
-  preAssembly: preAssembly,
-  preFile: preFile
+module.exports = function(register, types) {
+  register(preAssembly, types.BEFORE_ASSEMBLY, 'fileNameProvider');
+  register(preFile, types.BEFORE_JS_FILE, 'fileNameProvider');
 };
+module.exports.version = "2.0.0";

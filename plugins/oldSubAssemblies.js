@@ -11,8 +11,10 @@ function convertOldAssembliesToNewSubs(params) {
     delete params.assembly.assemblies;
   }
 
-  return "";
+  return;
 }
 
-module.exports = convertOldAssembliesToNewSubs;
-module.exports.version = "1.0.1";
+module.exports = function(register, types) {
+  register(convertOldAssembliesToNewSubs, types.BEFORE, 'oldSubAssemblies');
+};
+module.exports.version = "2.0.0";

@@ -17,7 +17,7 @@ function processTemplates(projectPath, templateList, hasTranslations, options) {
         contents += ',\n';
       }
       else {
-        contents += "\nvar templateList = {\n";
+        contents += "var templateList = {\n";
         templatesLoaded = true;
       }
 
@@ -50,7 +50,7 @@ function processTemplates(projectPath, templateList, hasTranslations, options) {
                   '  return snip.firstChild;\n';
     }
 
-    contents += '}\n';
+    contents += '}';
   }
 
   return contents;

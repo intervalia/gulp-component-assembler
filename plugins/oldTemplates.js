@@ -2,50 +2,42 @@ var fs = require('fs');
 var path = require('path');
 var watcher = require('../src/watcher');
 
+var COMMENTS = /(<!-- exclude START -->[\s\S]*?<!-- exclude END -->)/g;
+
 function extractBody(html) {
   return html.replace(/\r*\n/g, "\x1f").replace(/(.*)<body[^>]*>(.*)<\/body>(.*)/gi, "$2").replace(/\x1f/g, "\n").trim();
 }
 
 function processOneOldTemplate(templatePath, options) {
-  var lines;
+  var lines = [];
   var skipping = false;
   var hadData = false;
-  var contents = "/*\n * Included File: template.html\n */\nvar snippetsRaw =";
-  if (options.minTemplateWS) {
-    contents += " '";
-  }
+  var contents = "/*\n * Included File: template.html\n */\nvar snippetsRaw = '";
+
   var template = extractBody(fs.readFileSync(templatePath, {"encoding": "utf-8"}));
-  lines = template.split("\n");
-  lines.forEach(function(line, index) {
+
+  // remove lines between exclude START and exclude END
+  template = template.replace(COMMENTS, "");
+
+  template.split("\n").forEach(function(line, index) {
     line = line.trimRight();
-    if (line.indexOf('<!-- exclude START -->') > -1) {
-      skipping = true;
-    }
-    if (!skipping && line.trim().length > 0 && line.indexOf("<!-- exclude LINE -->") === -1) {
-      if (!options.minTemplateWS && hadData > 0) {
-        contents += "+\n";
-      }
-      if (options.minTemplateWS) {
-        if (hadData > 0) {
-          line = " "+line;
-        }
-        contents += (line.replace(/'/g, "\\'").replace(/\s+/g, " "));
-      }
-      else {
-        contents += "'" + line.replace(/'/g, "\\'")+"\\n'";
-      }
+
+    if (line.trim().length > 0 && line.indexOf("<!-- exclude LINE -->") === -1) {
+      lines.push(line.replace(/'/g, "\\'"));
       hadData = true;
     }
-    if (line.indexOf('<!-- exclude END -->') > -1) {
-      skipping = false;
-    }
   });
-  if (options.minTemplateWS) {
-    contents += "'";
-  }
-  contents += ";\n";
 
-  return hadData ? contents : "";
+  if (!options.minTemplateWS) {
+    contents += lines.join("\\n' +\n'");
+  }
+  else {
+    contents += lines.join('').replace(/\s+/g, " ");
+  }
+
+  contents += "';\n";
+
+  return hadData ? contents: "";
 }
 
 function processOldTemplates(templatePath, hasTranslations, assemblyPath, options) {
@@ -58,15 +50,15 @@ function processOldTemplates(templatePath, hasTranslations, assemblyPath, option
 
     contents += processOneOldTemplate(templatePath, options);
 
-    contents += '\n\nfunction getSnippets() {'+
-                '\n var snip = document.createElement("div");';
+    contents += '\nfunction getSnippets() {'+
+                '\n  var snip = document.createElement("div");';
     if (hasTranslations) {
-      contents += '\n $(snip).html(snippetsRaw.format(lang));';
+      contents += '\n  snip.innerHTML = snippetsRaw.format(lang);';
     }
     else {
-      contents += '\n $(snip).html(snippetsRaw);';
+      contents += '\n  snip.innerHTML = snippetsRaw;';
     }
-    contents += '\n return snip;\n}\n';
+    contents += '\n  return snip;\n}';
   }
 
   return contents;
@@ -76,5 +68,7 @@ function pluginProcess(params) {
   return processOldTemplates(path.join(params.projectPath, "template.html"), params.hasTranslations, params.assemblyName, params.options);
 }
 
-module.exports = pluginProcess;
-module.exports.version = "1.0.0";
+module.exports = function(register, types) {
+  register(pluginProcess, types.BEFORE_ASSEMBLY, 'oldTemplates');
+};
+module.exports.version = "2.0.0";

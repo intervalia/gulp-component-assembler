@@ -7,45 +7,7 @@ var templates = require('../../src/templates');
 var path = require('path');
 var should = require('should');
 var cheerio = require('cheerio');
-
-// shim DOM Node
-var document = {
-  createElement: function(name) {
-    var $ = cheerio.load('<' + name + '>');
-
-    Object.defineProperties($, {
-      'innerHTML': {
-        set: function(html) {
-          $(name).append(html);
-        }
-      },
-      'children': {
-        get: function() {
-          return $(name).eq(0).children();
-        }
-      },
-      'firstChild': {
-        get: function() {
-          return $(name).eq(0);
-        }
-      }
-    });
-
-    return $;
-  }
-};
-
-// shim String.format
-String.prototype.format = function() {
-  var args = arguments;
-  var text = this;
-
-  text = text.replace(/\{(\d)\}/g, function(match, p1) {
-    return args[p1];
-  });
-
-  return text;
-};
+var document = require('./utils').document;
 
 
 describe('\n    Testing the file templates.js', function () {

@@ -22,10 +22,15 @@ function assemble(options) {
       assembly = JSON.parse(file.contents);
     }
     catch(ex) {
-      throw new PluginError(PLUGIN_NAME, "Unable to parse .json file: " + file.path);
+      this.emit('error', new PluginError(PLUGIN_NAME, "Unable to parse .json file: " + file.path));
     }
 
-    file.contents = new Buffer(assemblies.process(assembly, file.path, options));
+    try {
+      file.contents = new Buffer(assemblies.process(assembly, file.path, options));
+    } catch (err) {
+      this.emit('error', err);
+    }
+
     temp = path.dirname(file.path);
     if (options.useOldDest) {
       file.path = path.join(temp, path.basename(temp)+'.js');
@@ -48,12 +53,14 @@ function assemble(options) {
     callback();
   };
 
+  assemblyStream.on('error', gutil.log);
+
   return assemblyStream;
 }
 
 // exporting the plugin main function
 module.exports = {
   "assemble": assemble,
-  "addPlugin": plugin.addPlugin,
-  "pluginType": plugin.TYPE
+  "loadPlugin": plugin.load,
+  "pluginTypes": plugin.types
 };
