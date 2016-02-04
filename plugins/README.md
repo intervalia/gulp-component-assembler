@@ -44,7 +44,6 @@ var myPlugin = require('path/to/your/plug-in');
 var compasm = require('gulp-component-assembler');
 
 gulp.task('assemble', function() {
-  // Add your plug-in as a PRE-processed plug-in
   compasm.loadPlugin(myPlugin);
 
   return gulp.src('./assembly.json')

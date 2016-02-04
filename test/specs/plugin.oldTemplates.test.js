@@ -9,7 +9,7 @@ var pluginMock = require('./utils').pluginMock;
 var document = require('./utils').document;
 
 
-describe.only('\n    Testing the plugin oldTemplates.js', function () {
+describe('\n    Testing the plugin oldTemplates.js', function () {
   var rootPath = path.resolve(".");
 
   /*
