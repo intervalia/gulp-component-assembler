@@ -148,16 +148,14 @@ function processAssembly(assembly, assemblyName, options, isSub) {
 
     if (subs && subs.length > 0) {
       subs.forEach(function(assemblyPath, index) {
-        var subAssembly, assemblyName;
-
-        assemblyName = path.relative(projectPath, assemblyPath);
+        var subAssembly;
 
         if (fs.existsSync(assemblyPath)) {
           subAssembly = JSON.parse(fs.readFileSync(assemblyPath, {"encoding": "utf-8"}));
           contents += processAssembly(subAssembly, assemblyPath, options, true);
         }
         else {
-          throw new PluginError(PLUGIN_NAME, "Sub-assembly not found: '" + assemblyName + "'" );
+          throw new PluginError(PLUGIN_NAME, "Sub-assembly not found: '" + assemblyPath + "' in assembly " + assemblyName);
         }
       });
     }
