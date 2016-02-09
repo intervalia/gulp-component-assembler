@@ -1,7 +1,11 @@
 {
   "name": "gulp-component-assembler",
-  "version": "2.1.1",
+  "version": "3.0.0",
   "author": "Michael G Collins <intervalia@gmail.com>",
+  "contributors": [
+    { "name" : "Michael G Collins", "email" : "intervalia@gmail.com" },
+    { "name" : "Steven Lambert", "email" : "steven.lambert@familysearch.org" }
+  ],
   "license": "MIT",
   "description": "gulp-component-assembler is a gulp plug-in that assembles JavaScript components. The components are a combination of JavaScript files, HTML Templates and Localization strings.",
   "main": "./src/index.js",
