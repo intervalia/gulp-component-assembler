@@ -1,0 +1,8 @@
+{
+  "files": [
+    "src/*.js"
+  ],
+  "templates": [
+    "src/*.html"
+  ]
+}

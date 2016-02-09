@@ -27,3 +27,15 @@ gulp.task("build", function() {
 });
 
 gulp.task("default", ["test", "build"]);
+
+
+gulp.task("buildPluginExample", function() {
+  compasm.loadPlugin('all');
+  return gulp.src(['sampleAssembly/**/assembly.json'])
+  .pipe(compasm.assemble({
+    useOldDest: true,
+    useExternalLib: true,
+    exposeLang: true
+  }))
+  .pipe(gulp.dest('sampleAssembly/dst/'));
+});

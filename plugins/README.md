@@ -26,8 +26,8 @@ A plug-in must return a string that contains JavaScript compliant code. Your str
 Here is a simple example of a plug-in:
 
 ```js
-function pluginProcess(params) {
-  return "// This is from my plug-in\n"; // This will add the comment into the output file
+function pluginProcess(params, plugInType) {
+  return "// This is from my plug-in of type `"+ plugInType +"`\n"; // This will add the comment into the output file
 }
 
 module.exports = function(register, types) {
@@ -56,12 +56,62 @@ gulp.task('assemble', function() {
 
 | Plug-in Type | Description |
 | ----------- | ----------- |
-| `BEFORE` | BEFORE plug-ins are processed *before* the entire file is processed. |
-| `BEFORE_ASSEMBLY` |  BEFORE_ASSEMBLY plug-ins are processed *before* each assembly file is processed. |
-| `BEFORE_JS_FILE` | BEFORE_JS_FILE plug-ins are processed *before* each JavaScript file is processed. |
-| `AFTER_JS_FILE` | AFTER_JS_FILE plug-ins are processed *after* each JavaScript file is processed. |
-| `AFTER_ASSEMBLY` | AFTER_ASSEMBLY plug-ins are processed *after* each assembly file is processed. |
-| `AFTER` | AFTER plug-ins are processed *after* the entire file is processed. |
+| `BEFORE` | BEFORE plug-ins are processed *before* the entire file is processed. The output is placed at the top of the output file, before any other content. |
+| `beforeASSEMBLY` |  BEFORE\_ASSEMBLY plug-ins are processed *before* each assembly file is processed. Its output is placed just inside the IIFE. |
+| `BEFORE_JS_FILE` | BEFORE\_JS\_FILE plug-ins are processed *before* each JavaScript file is processed. Its output is placed just before the inclusion of a file. |
+| `AFTER_JS_FILE` | AFTER\_JS\_FILE plug-ins are processed *after* each JavaScript file is processed.  Its output is placed just after the inclusion of a file. |
+| `AFTER_ASSEMBLY` | AFTER\_ASSEMBLY plug-ins are processed *after* each assembly file is processed. Its output is placed just before the end of the IIFE. |
+| `AFTER` | AFTER plug-ins are processed *after* the entire file is processed. The output is placed at the bottom of the output file, after all other content. |
+
+> #### Sample output file
+
+> The example output file below shows where each of the plug-in's output in injected:
+
+> ```js
+// Assembly: sampleAssembly
+// Plugin: all.BEFORE
+console.log('plugin code called for `BEFORE`');
+
+> (function(window, document, undefined) {
+
+>   // Plugin: all.BEFORE_ASSEMBLY
+  console.log('plugin code called for `BEFORE_ASSEMBLY`');
+
+>   /*
+   * Included File: src/test1.js
+   */
+  // Plugin: all.BEFORE_JS_FILE
+  console.log('plugin code called for `BEFORE_JS_FILE`');
+
+>  function sampleFunction() {
+    return false;
+  }
+  // Plugin: all.AFTER_JS_FILE
+  console.log('plugin code called for `AFTER_JS_FILE`');
+
+>  /*
+   * Included File: src/test2.js
+   */
+  // Plugin: all.BEFORE_JS_FILE
+  console.log('plugin code called for `BEFORE_JS_FILE`');
+
+>  function fileTest2Js() {
+    return "File: test2.js";
+  }
+  // Plugin: all.AFTER_JS_FILE
+  console.log('plugin code called for `AFTER_JS_FILE`');
+
+>  // Plugin: all.AFTER_ASSEMBLY
+  console.log('plugin code called for `AFTER_ASSEMBLY`');
+
+>})(window, document);
+// Plugin: all.AFTER
+console.log('plugin code called for `AFTER`');
+```
+
+### The `plugInType` object passed into your plug-in function
+
+The `plug-in type`, from above, that indicates when this function was called. _Your function can use or ignore this parameter._
 
 ### The `params` object passed into your plug-in function
 
@@ -77,7 +127,7 @@ The `params` object is passed into your plug-in function and includes the follow
 >The `options` object passed into the `assemble` function in your file `gulpfile.js`.
 
 ##### Property: assembly - *{object}*
->The JSON assembly object that is being processed at this time. This is the object that contains the properties `files`, `templates`, `subs`, etc.
+>The JSON assembly object that is being processed at this time. This is the object that contains all of the properties found in the `assembly.json` file, including `files`, `templates`, `subs`, etc. 
 
 ##### Property: assemblyFileName - *{string}*
 >This is the name of the assembly that is being built minus the `.js` extension. Normally this is the name of the folder that contains the `assembly.json` file.
@@ -85,7 +135,7 @@ The `params` object is passed into your plug-in function and includes the follow
 #### Your own properties in the `assembly.json` file
 You can add your own properties into the `assembly.json` file but *please*, in order to reduce the likelihood of name collisions, use name-spacing on all your variable. To do this, preface your variable names with a name that defines your plug-in.
 
-*For example:* If your plug-in is called "banjo" then all of your properties should start with "banjo_" as in the example below:
+*For example:* If your plug-in is called "banjo" then all of your properties should start with "banjo\_" as in the example below:
 
 ```js
 {
@@ -99,13 +149,15 @@ You access the above properties in your plug-in by reading the variables `params
 
 > **Note:** _If you are not planning to use 3rd party plug-ins and don't plan to make your plug-ins available to others then name-spacing is not as important. **But be aware of the name collision risks of not name-spacing.**_
 
-**TODO: Provide more information here**
+> To simplify access to your properties avoid using non-variable characters in your property names like [\`, !, -, +, =, etc.] otherwise you will need to access your properties like this: `params.assembly['banjo!classes']`
+> 
 
-### Error Handling
+
+### Plug-in Error Handling
 
 When your plug-in encounters an error condition your code has two options:
 
-1 Ignore the error and **return an empty string** which will add nothing to the output
+1 Ignore the error and **return nothing** which will add nothing to the output
 
 ```js
 function pluginProcess(params) {
@@ -113,11 +165,9 @@ function pluginProcess(params) {
 
   // Your logic here
 
-  if (error) {
-    return; // Return nothing
+  if (!error) {
+    return "// Real string to add to output";
   }
-
-  return "// Real string to add to output";
 }
 
 module.exports = function(register, types) {

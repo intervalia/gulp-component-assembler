@@ -14,7 +14,7 @@ function processTemplates(projectPath, templateList, hasTranslations, options) {
   if (templateList && templateList.length > 0) {
     templateList.forEach(function(templatePath, index) {
       if (templatesLoaded) {
-        contents += ',\n';
+        contents += ',\n\n';
       }
       else {
         contents += "var templateList = {\n";
@@ -26,14 +26,32 @@ function processTemplates(projectPath, templateList, hasTranslations, options) {
   }
 
   if (templatesLoaded) {
-    contents += '\n};\n\nfunction getTemplateStr(key) {\n' +
-                '  if (!templateList[key]) {\n' +
-                '    console.warn("No template named \'" + key + "\'");\n' +
-                '  }\n';
-    if (hasTranslations) {
-      contents += '\n  return (templateList[key] || "").format(lang);\n}';
-    } else {
-      contents += '\n  return templateList[key] || "";\n}';
+    if(options.useExternalLib) {
+      contents += '\n};\n\nfunction getTemplateStr(key) {\n' +
+                  '  // Emulate the internal getTemplateStr function by calling the external function\n'+
+                  '  return __gca_getTemplateStr(templateList, key'+(hasTranslations?', lang':'')+');\n' +
+                  '}';
+    }
+    else {
+      contents += '\n};\n\nfunction getTemplateStr(key) {\n' +
+                  '  if (!templateList[key]) {\n' +
+                  '    console.warn("No template named \'" + key + "\'");\n' +
+                  '  }\n';
+      if (hasTranslations) {
+        // __gca_formatStr is Added when locales are added (locales.js)
+        contents += '\n  return __gca_formatStr(templateList[key] || "", lang);\n}\n\n'+
+                    'var __gca_formatStrRe = /\{([^}]+)\}/g;\n'+
+                    'function __gca_formatStr(txt, obj) {\n'+
+                    '  if (typeof obj !== "object") {\n'+
+                    '    obj = Array.prototype.slice.call(arguments, 1);\n'+
+                    '  }\n\n'+
+                    ' return txt.replace(__gca_formatStrRe, function (fullKey, key) {\n'+
+                    '   return obj[key] === undefined ? fullKey : obj[key];\n'+
+                    '  });\n'+
+                    '}';
+      } else {
+        contents += '\n  return templateList[key] || "";\n}';
+      }
     }
     contents += '\n\n' +
                 'function getTemplate(key) {\n'+
@@ -57,7 +75,7 @@ function processTemplates(projectPath, templateList, hasTranslations, options) {
 }
 
 function processOneTemplate(projectPath, templatePath, options) {
-  var modName, ext, templateKey, template, contents = "";
+  var modName, ext, templateKey, template, preSpace = "", contents = "";
 
   ext = path.extname(templatePath);
   modName = path.relative(projectPath, templatePath);
@@ -69,6 +87,11 @@ function processOneTemplate(projectPath, templatePath, options) {
 
   contents = "  // Included template file: " + modName + "\n" +
              '  "'+templateKey+'":';
+  preSpace = "";
+  for(var q = templateKey.length+5; q > 0; q--) {
+    preSpace += " ";
+  }
+
 
   template = fs.readFileSync(templatePath, {"encoding": "utf-8"});
   template = template.replace(CR_LF, "\n");
@@ -90,7 +113,10 @@ function processOneTemplate(projectPath, templatePath, options) {
         contents += "+\n";
       }
 
-      // js escape apostrophes
+      if (!options.minTemplateWS && index > 0) {
+        contents += preSpace;
+      }
+        // js escape apostrophes
       contents += " '" + line.replace(APOS, "\\'");
 
       if (!options.minTemplateWS && index !== array.length - 1) {

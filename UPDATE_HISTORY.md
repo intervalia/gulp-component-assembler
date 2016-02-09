@@ -1,5 +1,29 @@
 Update History
 ==============
+### 3.0.0 - Feb 8, 2016
+* Improved Unit tests to test functionality instead of comparing the output to a fixed, expected, string.
+* Warn when a file in the `files` array is missing. - **POSSIBLE BREAKING from 2.x**
+* Improved the locale detection code to select the first locale that matches the available translations. - **POSSIBLE BREAKING from 2.x**
+* Change unit tests to not use string compare
+* Make assembly output easier to read when not minified
+* Fix getLang to correctly process an array of locales
+* Fix plugins to allow undefined or null as a return value
+* Require templates to be single root node (unless `allowMultiRootTemplates` option is set to true) - **BREAKING from 2.x**
+* add tests for scripts and templates
+* output error message when included file is not found
+* output log when trying to access a template that doesn't exist using getTemplate or getTemplateStr
+* change plugins to use new types - **BREAKING from 2.x**
+* allow plugins to self-register their plugin type - **BREAKING from 2.x**
+* update predefined plugins to self-register them
+* fix errors not being reported by gulp stream
+* create tests for plugin, oldTemplates, and oldSubAssemblies
+* Cleaning up the external library code. - **POSSIBLE BREAKING from 2.x**
+* Added a format function that was missing from previous versions. No longer rely on String.prototype.format which did not exist for most people. - **POSSIBLE BREAKING from 2.x**
+* Adding a sample project that uses the new all plugin to demonstrate where plug-ins are placed.
+* Correctly positioned the BEFORE and AFTER plug-ins to only happen once for an entire assembly and in the correct place.
+* Plug-in functions now get passed in the TYPE of plugin they are so you can create a single function to handle multiple insertion points.
+* Updated some docs for changes and accuracy.
+
 ### 2.1.1 - Jan 4, 2016
 * Added option to define the variable that holds the locale to use. The default is still `window.locale` but you can now define it by setting the option `localeVar`.
 * Added tests to validate the locale code is working correctly

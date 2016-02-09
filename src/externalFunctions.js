@@ -1,61 +1,68 @@
+/* globals __gca_formatStr */
 var fns = {
-"formatFunction":   "String.prototype.format = function() {\n"+
-                    " var text = this;\n"+
-                    "\n"+
-                    " var replaceTokens = function(text, key, value) {\n"+
-                    "  return text.replace(new RegExp('\\{' + key + '\\}', 'gm'), value);\n"+
-                    " };\n"+
-                    "\n"+
-                    " var iterateTokens = function(obj, prefix) {\n"+
-                    "  for(var p in obj) {\n"+
-                    "   if(typeof(obj[p]) === 'object') {\n"+
-                    "    iterateTokens(obj[p], prefix + p + '.');\n"+
-                    "   } else {\n"+
-                    "    text = replaceTokens(text, prefix + p, obj[p]);\n"+
-                    "   }\n"+
-                    "  }\n"+
-                    " }\n"+
-                    "\n"+
-                    " if ((arguments.length > 0) && (typeof arguments[0] === 'object')) { //process name value pairs\n"+
-                    "  iterateTokens(arguments[0], '');\n"+
-                    " }\n"+
-                    " else {\n"+
-                    "  // replacement by argument indexes\n"+
-                    "  var i = arguments.length;\n"+
-                    "  while (i--) {\n"+
-                    "   text = replaceTokens(text, i, arguments[i]);\n"+
-                    "  }\n"+
-                    " }\n"+
-                    "\n"+
-                    " return text;\n"+
-                    "};\n",
+  __gca_formatStr: function(txt, obj) {
+    var re = /\{([^}]+)\}/g;
+    if (typeof obj !== "object") {
+      obj = Array.prototype.slice.call(arguments, 1);
+    }
 
-"getLangFunction":  "window.__getLangObj = function(locale, langKeys, validLocales, langs) {\n"+
-                    " var temp, i, len = langKeys.length, lang = {};\n"+
-                    " locale = (typeof(locale) === 'string' ? locale : locale[0]).split('-')[0];\n"+
-                    " if (validLocales.indexOf(locale)<0) {\n"+
-                    "  locale = '{locale}';\n"+
-                    " }\n"+
-                    " switch (locale) {\n"+
-                    "  case 'ke':\n"+
-                    "  case 'zz':\n"+
-                    "   for(i = 0; i < len; i++) {\n"+
-                    "    temp = (locale==='ke'?'['+langKeys[i]+']':'[sub2.'+langKeys[i]+']');\n"+
-                    "    lang[langKeys[i]] = temp;\n"+
-                    "   };\n"+
-                    "   break;\n"+
-                    "  default:\n"+
-                    "   for(i = 0; i < len; i++) {\n"+
-                    "    lang[langKeys[i]] = langs[locale][i];\n"+
-                    "   };\n"+
-                    "   break;\n"+
-                    " }\n"+
-                    " return lang;\n"+
-                    "}\n"
+    return txt.replace(re, function (fullKey, key) {
+      return obj[key] === undefined ? fullKey : obj[key];
+    });
+  },
+
+  __gca_getTemplateStr: function(templateList, key, lang) {
+    if (!templateList[key]) {
+      console.warn("No template named '" + key + "'");
+    }
+
+    if (lang) {
+      return __gca_formatStr(templateList[key] || "", lang);
+    }
+    else {
+      return (templateList[key] || "");
+    }
+  },
+
+  __gca_getLang: function(locales, langKeys, validLocales, langs, assemblyName, defaultLocale) {
+    var locale = defaultLocale, language, i, len = langKeys.length, lang = {};
+    locales = (typeof locales === 'string' ? [locales] : locales);
+    for (i = 0; i < locales.length; i++) {
+      language = locales[i].split('-')[0];
+      if (validLocales.indexOf(language) !== -1) {
+        locale = language;
+        break;
+      }
+    }
+
+    switch (locale) {
+      case 'ke':
+      case 'zz':
+        for(i = 0; i < len; i++) {
+          lang[langKeys[i]] = (locale==='ke'?'['+langKeys[i]+']':'['+assemblyName+'.'+langKeys[i]+']');
+        }
+        break;
+      default:
+        for(i = 0; i < len; i++) {
+          lang[langKeys[i]] = langs[locale][i];
+        }
+        break;
+    }
+
+    return lang;
+  }
 };
 
 module.exports = {
   "template": function(options) {
-    return (fns.formatFunction + "\n" + fns.getLangFunction).replace(/\{locale\}/gm, options.locale);
+    var content = "// Helper functions for component files built with the gulp-component-assembler\n"+
+                  "// https://github.com/intervalia/gulp-component-assembler\n"+
+                  "// See the option: useExternalLib in the README.md file\n"+
+                  "(function(window){\n";
+    Object.keys(fns).forEach(function(key) {
+      content += "  window."+key+" = "+fns[key].toString() + ";\n\n";
+    });
+
+    return content+"})(window);\n";
   }
 };

@@ -47,16 +47,16 @@ function processLocales(baseLocalePath, localeFileName, assemblyName, options) {
     contents += "var validLocales = "+JSON.stringify(localeList.sort())+";\n\n";
     if(!options.useExternalLib) {
       contents += "function getLang(locales) {\n"+
-                   "  var locale, language, i, len = langKeys.length, lang = {};\n"+
-                   "  locales = (typeof locales === 'string' ? [locales] : locales);\n"+
-                   "  for (i = 0; i < locales.length; i++) {\n"+
-                   "    language = locales[i].split('-')[0];\n"+
-                   "    if (validLocales.indexOf(language) !== -1) {\n"+
-                   "      locale = language;\n"+
-                   "      break;\n"+
-                   "    }\n"+
-                   "  }\n"+
-                   "  locale = locale || '" + options.locale + "';\n";
+                  "  var locale, language, i, len = langKeys.length, lang = {};\n"+
+                  "  locales = (typeof locales === 'string' ? [locales] : locales);\n"+
+                  "  for (i = 0; i < locales.length; i++) {\n"+
+                  "    language = locales[i].split('-')[0];\n"+
+                  "    if (validLocales.indexOf(language) !== -1) {\n"+
+                  "      locale = language;\n"+
+                  "      break;\n"+
+                  "    }\n"+
+                  "  }\n"+
+                  "  locale = locale || '" + options.locale + "';\n";
 
       if (supportTransKeys) {
         // Support the special locales of ke[key] and zz[assembly.key]
@@ -89,7 +89,8 @@ function processLocales(baseLocalePath, localeFileName, assemblyName, options) {
     }
     else {
       contents += "function getLang(locale) {\n"+
-                  "  return __getLangObj(locale, langKeys, validLocales, langs);\n"+
+                  "  // Emulate the internal getLang function by calling the external function\n"+
+                  "  return __gca_getLang(locale, langKeys, validLocales, langs, '"+assemblyName+"', '"+(options.defaultLocale||"en")+"');\n"+
                   "}";
     }
     // set the lang variable
@@ -98,6 +99,7 @@ function processLocales(baseLocalePath, localeFileName, assemblyName, options) {
     if (options.exposeLang) {
       var globalObj = "window."+(options.globalObj || "components");
       var globalAssembly = globalObj+"."+assemblyName;
+      contents += "\n\n";
       contents += globalObj      + " = " + globalObj      + " || {};\n";
       contents += globalAssembly + " = " + globalAssembly + " || {};\n";
       contents += globalAssembly + ".lang = lang;";

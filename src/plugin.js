@@ -71,7 +71,7 @@ function process(type, params) {
   }
 
   plugins[type].forEach(function(plugin, index) {
-    pluginContent = plugin.process(params);
+    pluginContent = plugin.process(params, type);
 
     if (pluginContent) {
       content.push("// Plugin: " + plugin.name + "\n" + pluginContent);

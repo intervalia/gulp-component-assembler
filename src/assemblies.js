@@ -52,9 +52,11 @@ function processAssembly(assembly, assemblyName, options, isSub) {
 
   // *********************
   // Process any BEFORE plug-ins
-  temp = plugin.process(plugin.types.BEFORE, pluginParams);
-  if (temp) {
-    contents += temp + "\n\n";
+  if (!isSub) {
+    temp = plugin.process(plugin.types.BEFORE, pluginParams);
+    if (temp) {
+      contents += temp + "\n\n";
+    }
   }
 
   if (options.watch) {
@@ -135,13 +137,6 @@ function processAssembly(assembly, assemblyName, options, isSub) {
   contents += '})(' + iifeParams + ');\n';
 
   // *********************
-  // Process any POST plug-ins
-  temp = plugin.process(plugin.types.AFTER, pluginParams);
-  if (temp) {
-    contents += temp + "\n\n";
-  }
-
-  // *********************
   // Process sub assemblies
   if (assembly.subs) {
     var subs = globArray(assembly.subs, {cwd: projectPath, root: process.cwd()});
@@ -158,6 +153,15 @@ function processAssembly(assembly, assemblyName, options, isSub) {
           throw new PluginError(PLUGIN_NAME, "Sub-assembly not found: '" + assemblyPath + "' in assembly " + assemblyName);
         }
       });
+    }
+  }
+
+  // *********************
+  // Process any AFTER plug-ins
+  if (!isSub) {
+    temp = plugin.process(plugin.types.AFTER, pluginParams);
+    if (temp) {
+      contents += temp + "\n";
     }
   }
 

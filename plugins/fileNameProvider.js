@@ -11,7 +11,7 @@ function preFile(params) {
 }
 
 module.exports = function(register, types) {
-  register(preAssembly, types.BEFORE_ASSEMBLY, 'fileNameProvider');
-  register(preFile, types.BEFORE_JS_FILE, 'fileNameProvider');
+  register(preAssembly, types.BEFORE_ASSEMBLY, 'fileNameProvider.BEFORE_ASSEMBLY');
+  register(preFile, types.BEFORE_JS_FILE, 'fileNameProvider.BEFORE_JS_FILE');
 };
 module.exports.version = "2.0.0";
