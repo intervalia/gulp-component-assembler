@@ -1,4 +1,5 @@
 describe('Test gulp-component-assembler', function () {
+  require('./externalFunctions.test');
   require('./assemblies.test');
   require('./globArray.test');
   require('./locales.test');

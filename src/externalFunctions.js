@@ -1,7 +1,7 @@
 /* globals __gca_formatStr */
 var fns = {
   __gca_formatStr: function(txt, obj) {
-    var re = /\{([^}]+)\}/g;
+    var re = /\{([^{}]+?)\}/g;
     if (typeof obj !== "object") {
       obj = Array.prototype.slice.call(arguments, 1);
     }
@@ -64,5 +64,6 @@ module.exports = {
     });
 
     return content+"})(window);\n";
-  }
+  },
+  "fns": fns
 };
