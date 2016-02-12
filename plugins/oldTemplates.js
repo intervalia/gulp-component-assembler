@@ -44,7 +44,8 @@ function processOldTemplates(templatePath, hasTranslations, assemblyPath, option
   var contents = "";
   //console.log(" template file:", templatePath);
   if (fs.existsSync(templatePath)) {
-    if (options.watch) {
+    // add the template file to be watched
+    if (watcher.isWatching(assemblyPath)) {
       watcher.addFile(templatePath, assemblyPath);
     }
 

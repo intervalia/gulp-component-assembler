@@ -4,7 +4,6 @@ var scripts = require("./scripts");
 var templates = require("./templates");
 var locales = require("./locales");
 var plugin = require("./plugin");
-var watcher = require("./watcher");
 var PluginError = require('gulp-util').PluginError;
 var PLUGIN_NAME = require("./pluginName");
 var globArray = require("./globArray");
@@ -57,10 +56,6 @@ function processAssembly(assembly, assemblyName, options, isSub) {
     if (temp) {
       contents += temp + "\n\n";
     }
-  }
-
-  if (options.watch) {
-    watcher.addAssembly(assemblyName, assembly);
   }
 
   // *********************
