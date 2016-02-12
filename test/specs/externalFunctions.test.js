@@ -42,6 +42,18 @@ describe('\n    Testing the file externalFunctions.js', function () {
       should.equal(fns.__gca_formatStr(template, 'baz', {baz:'faz'}), final);
     });
 
+    it('should not replace text inside a template binding', function() {
+      var template = 'template binding {{scopeVar}} with translation binding {scopeVar}';
+      var final = 'template binding {{scopeVar}} with translation binding foo';
+
+      should.equal(fns.__gca_formatStr(template, {scopeVar:'foo'}), final);
+
+      template = 'template binding {{{scopeVar}}} with translation binding {scopeVar}';
+      final = 'template binding {{{scopeVar}}} with translation binding foo';
+
+      should.equal(fns.__gca_formatStr(template, {scopeVar:'foo'}), final);
+    });
+
   });
 
 });

@@ -1,3 +1,7 @@
+/*jshint -W079 */
+/*jshint -W083 */
+/*jshint -W041 */
+
 var chokidar = require('chokidar');
 var path = require('path');
 var touch = require("touch");
@@ -78,7 +82,7 @@ function getPluginParameters(assemblyPath, assembly) {
     "assembly": details.assembly,
     "assemblyName": assemblyPath,
     "assemblyFileName": path.basename(details.projectPath),
-  }
+  };
 }
 
 /**
@@ -283,6 +287,7 @@ function addFile(filePath, assemblyPath) {
 function addAssembly(assemblyPath, task) {
   var absoluteAssemblyPath = path.resolve(process.cwd(), assemblyPath);
   var assemblyDir = path.dirname(absoluteAssemblyPath);
+  var assembly;
 
   fileWatcher.add(assemblyDir);
 

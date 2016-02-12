@@ -1,13 +1,26 @@
 /* globals __gca_formatStr */
 var fns = {
   __gca_formatStr: function(txt, obj) {
-    var re = /\{([^{}]+?)\}/g;
+    // Template bindings (Angular, Polymer, etc.) need to be excluded, which requires two
+    // regexs. The first will grab all binding and translation like strings, the second will
+    // exclude any strings that stat with more than one open bracket
+    var potentialSubstitutionsRegex = /\{*?[^{]+\}/g;
+    var trueSubstitutionsRegex = /^\{([^{}]+)\}/;
+
     if (typeof obj !== "object") {
       obj = Array.prototype.slice.call(arguments, 1);
     }
 
-    return txt.replace(re, function (fullKey, key) {
-      return obj[key] === undefined ? fullKey : obj[key];
+    return txt.replace(potentialSubstitutionsRegex, function (fullKey) {
+      // ensure it's a translation binding and not a template binding
+      if (trueSubstitutionsRegex.test(fullKey)) {
+        return fullKey.replace(trueSubstitutionsRegex, function(match, key) {
+          return obj[key] === undefined ? match : obj[key];
+        });
+      }
+      else {
+        return fullKey;
+      }
     });
   },
 

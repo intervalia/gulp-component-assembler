@@ -65,7 +65,7 @@ Please submit **[pull requests](https://github.com/intervalia/gulp-component-ass
 
 The primary usage of the `gulp-component-assembler` is to assemble the component output files. This is done when gulp calls the `assemble()` function. This function uses the information in the `assembly.json` file to assemble the component output file. *The source files does not __need__ to be called `assembly.json`, but it must be a `JSON` file and it must conform to the correct structure of the `assembly.json` file. For simplicity, throughout all documentation, I will call this file `assembly.json`*
 
-You can also call the function `addPlugin()` to add plug-ins into the assembly process. Plug-ins, how to use them and how to write them are defined in the [plug-ins README.md file](https://github.com/intervalia/gulp-component-assembler/tree/master/plugins/README.md)
+You can also call the function `loadPlugin()` to load plug-ins into the assembly process. Plug-ins, how to use them and how to write them are defined in the [plug-ins README.md file](https://github.com/intervalia/gulp-component-assembler/tree/master/plugins/README.md)
 
 ### Example of the `assemble()` function
 
@@ -79,6 +79,16 @@ gulp.task('assemble', function() {
   return gulp.src('./assembly.json')
     .pipe(compasm.assemble())
     .pipe(gulp.dest('./dist'))
+});
+```
+
+## Watching assembly files
+
+`gulp-component-assembler` provides it's own watch function that should be used in place of `gulp.watch`. Pass the function the same parameters you would to `gulp.watch`. **The watch function only works in Gulp 4.**
+
+```js
+gulp.task('watch', function() {
+    compasm.watch('./assembly.json', gulp.series('assemble'));
 });
 ```
 
@@ -416,24 +426,6 @@ Within a template file you access the locale strings by wrapping them within cur
   <button>{BUTTON_OK}</button>
 </div>
 ```
-
->___TODO: Provide more information here___
-
-##### Avoiding Conflict with Angular.JS or other systems or frameworks
-
-If you are using a system or framework, like Angular.js, that uses double curly-braces then you need to be careful in how you name your locale strings and your Angular scope variables, etc. I recommend that, for example, you use all caps for locale strings and intra-caps for your angular variables. Like this:
-
-```html
-<div>
-  <div>
-  	<label>{NAME}</label>
-  	<input ng-model="person.firstName" type="text">
-  </div>
-  <div>{YOUR_NAME} {{person.firstName}}</div>
-</div>
-```
-
-In the example above, `NAME` and `YOUR_NAME` would be locale strings and not related to Angular. `person.firstName` would be an Angular variable and would not be handled as a locale string.
 
 >___TODO: Provide more information here___
 
