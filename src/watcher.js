@@ -282,9 +282,8 @@ function addFile(filePath, assemblyPath) {
 /**
  * Add an assembly to be watched.
  * @param {string} assemblyPath - Path to the assembly file.
- * @param {function} task - Function to call when the assembly changes.
  */
-function addAssembly(assemblyPath, task) {
+function addAssembly(assemblyPath) {
   var absoluteAssemblyPath = path.resolve(process.cwd(), assemblyPath);
   var assemblyDir = path.dirname(absoluteAssemblyPath);
   var assembly;

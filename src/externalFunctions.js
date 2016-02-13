@@ -4,7 +4,7 @@ var fns = {
     // Template bindings (Angular, Polymer, etc.) need to be excluded, which requires two
     // regexs. The first will grab all binding and translation like strings, the second will
     // exclude any strings that stat with more than one open bracket
-    var potentialSubstitutionsRegex = /\{*?[^{]+\}/g;
+    var potentialSubstitutionsRegex = /\{+?[^{\n\r]+\}/g;
     var trueSubstitutionsRegex = /^\{([^{}]+)\}/;
 
     if (typeof obj !== "object") {

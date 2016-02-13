@@ -72,4 +72,4 @@ function pluginProcess(params) {
 module.exports = function(register, types) {
   register(pluginProcess, types.BEFORE_ASSEMBLY, 'oldTemplates');
 };
-module.exports.version = "2.0.0";
+module.exports.version = "3.0.0";
