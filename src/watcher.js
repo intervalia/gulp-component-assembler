@@ -385,7 +385,7 @@ function watch(patterns, opt, task) {
   patterns.forEach(function(pattern, index) {
     glob(pattern, function(err, matches) {
       matches.forEach(function(assemblyPath) {
-        addAssembly(assemblyPath, task);
+        addAssembly(assemblyPath);
         // if (index === patterns.length - 1) {
         // }
       });
