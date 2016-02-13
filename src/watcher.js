@@ -386,8 +386,6 @@ function watch(patterns, opt, task) {
     glob(pattern, function(err, matches) {
       matches.forEach(function(assemblyPath) {
         addAssembly(assemblyPath);
-        // if (index === patterns.length - 1) {
-        // }
       });
     });
   });
