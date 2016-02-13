@@ -44,7 +44,8 @@ function processOldTemplates(templatePath, hasTranslations, assemblyPath, option
   var contents = "";
   //console.log(" template file:", templatePath);
   if (fs.existsSync(templatePath)) {
-    if (options.watch) {
+    // add the template file to be watched
+    if (watcher.isWatching(assemblyPath)) {
       watcher.addFile(templatePath, assemblyPath);
     }
 
@@ -71,4 +72,4 @@ function pluginProcess(params) {
 module.exports = function(register, types) {
   register(pluginProcess, types.BEFORE_ASSEMBLY, 'oldTemplates');
 };
-module.exports.version = "2.0.0";
+module.exports.version = "3.0.0";
