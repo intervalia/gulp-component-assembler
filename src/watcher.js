@@ -105,7 +105,7 @@ function getPluginParameters(assemblyPath, assembly) {
 function getAssemblyFiles(assemblyPath, assembly) {
   var files = [];
 
-  return getAssemblyDetails(assemblyPath, assembly, function(err, details) {;
+  return getAssemblyDetails(assemblyPath, assembly, function(err, details) {
     if (err) {
       return files;
     }
