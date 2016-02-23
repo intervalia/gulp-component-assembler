@@ -41,9 +41,15 @@ var assemblyRegex = /\/assembly.json$/;
  * @private
  * @param {string} assemblyPath - Path to the assembly file.
  * @param {object} [assembly] - Assembly to be watched.
+ * @param {function} callback - Callback function.
  */
-function getAssemblyDetails(assemblyPath, assembly) {
-  assembly = assembly || JSON.parse(fs.readFileSync(assemblyPath, 'utf-8'));
+function getAssemblyDetails(assemblyPath, assembly, callback) {
+  try {
+    assembly = assembly || JSON.parse(fs.readFileSync(assemblyPath, 'utf-8'));
+  }
+  catch (err) {
+    return callback(err);
+  }
 
   var projectPath = path.dirname(assemblyPath);
 
@@ -56,13 +62,13 @@ function getAssemblyDetails(assemblyPath, assembly) {
     localeFiles = globArray(["./" + localePathName + "/" + localeFileName + "_*.json"], {cwd: projectPath, root: process.cwd()});
   }
 
-  return {
+  return callback(null, {
     projectPath: projectPath,
     localeFileName: localeFileName,
     localePathName: localePathName,
     localeFiles: localeFiles,
     assembly: assembly
-  };
+  });
 }
 
 /**
@@ -73,16 +79,20 @@ function getAssemblyDetails(assemblyPath, assembly) {
  * @returns {object}
  */
 function getPluginParameters(assemblyPath, assembly) {
-  var details = getAssemblyDetails(assemblyPath, assembly);
+  return getAssemblyDetails(assemblyPath, assembly, function(err, details) {
+    if (err) {
+      return {};
+    }
 
-  return {
-    "projectPath": details.projectPath,
-    "hasTranslations": details.localeFiles.length > 0,
-    "options": {},
-    "assembly": details.assembly,
-    "assemblyName": assemblyPath,
-    "assemblyFileName": path.basename(details.projectPath),
-  };
+    return {
+      "projectPath": details.projectPath,
+      "hasTranslations": details.localeFiles.length > 0,
+      "options": {},
+      "assembly": details.assembly,
+      "assemblyName": assemblyPath,
+      "assemblyFileName": path.basename(details.projectPath),
+    };
+  });
 }
 
 /**
@@ -93,15 +103,19 @@ function getPluginParameters(assemblyPath, assembly) {
  * @returns {string[]}
  */
 function getAssemblyFiles(assemblyPath, assembly) {
-  var details = getAssemblyDetails(assemblyPath, assembly);
   var files = [];
 
-  files = files.concat(globArray(details.assembly.files, {cwd: details.projectPath, root: process.cwd()}));
-  files = files.concat(details.localeFiles);
-  files = files.concat(globArray(details.assembly.templates || ["./templates/*.html"], {cwd: details.projectPath, root: process.cwd()}));
+  return getAssemblyDetails(assemblyPath, assembly, function(err, details) {;
+    if (err) {
+      return files;
+    }
 
+    files = files.concat(globArray(details.assembly.files, {cwd: details.projectPath, root: process.cwd()}));
+    files = files.concat(details.localeFiles);
+    files = files.concat(globArray(details.assembly.templates || ["./templates/*.html"], {cwd: details.projectPath, root: process.cwd()}));
 
-  return files;
+    return files;
+  });
 }
 
 /**

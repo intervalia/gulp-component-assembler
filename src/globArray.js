@@ -4,6 +4,11 @@ var minimatch = require("minimatch");
 
 function globArray(patterns, options) {
   var i, list = [];
+
+  if (!patterns) {
+    return list;
+  }
+
   if (!Array.isArray(patterns)) {
     patterns = [patterns];
   }
