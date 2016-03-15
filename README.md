@@ -88,7 +88,20 @@ gulp.task('assemble', function() {
 
 ```js
 gulp.task('watch', function() {
-    compasm.watch('./assembly.json', gulp.series('assemble'));
+  compasm.watch('./assembly.json', gulp.series('assemble'));
+});
+```
+
+## Use with gulp-changed for incremental builds
+
+`gulp-component-assembler` provides it's own changed function that should be passed to `gulp-changed` as an option. This will properly detect whether the files in the assembly.json have changed.
+
+```js
+gulp.task('assemble', function() {
+  return gulp.src('./assembly.json')
+    .pipe(changed(dest, {hasChanged: compasm.hasChanged}))
+    .pipe(compasm.assemble())
+    .pipe(gulp.dest('./dist'))
 });
 ```
 

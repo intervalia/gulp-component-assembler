@@ -21,6 +21,13 @@ var fileWatcher;
 // the associated assemblies
 var watchedFiles = {};
 
+// Chokidar will fire a changed event twice for a file sometimes, possibly due to the
+// system creating a backup of the file and touching it. We'll create a cache of when
+// the last time the file was touched and prevent it from firing the 'alltouched' event
+// if the file was changed within the last half second
+// @see https://github.com/paulmillr/chokidar/issues/298
+var lastChanged = {};
+
 // Boolean state that plugins and other files can use to determine if they can add files or
 // assemblies to be watched during the assemble task
 var watchStarted = false;
@@ -128,6 +135,14 @@ function fileChanged(event, file) {
   var fileDir = path.dirname(file);
   var watchedPaths = fileWatcher.getWatched();
   var promises = [];
+
+  // only process files that have changed more than a 0.5 seconds ago
+  if (lastChanged[file] && new Date() - lastChanged[file] < 500) {
+    return;
+  }
+  else {
+    lastChanged[file] = new Date();
+  }
 
   // Assembly.json file was changed
   if (assemblyRegex.test(file)) {
