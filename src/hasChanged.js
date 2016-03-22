@@ -1,5 +1,6 @@
 var fs = require('fs');
 var path = require('path');
+var gutil = require('gulp-util');
 
 function compareLastModifiedTime(stream, cb, basePath, sourceFile, targetPath) {
   if (sourceFile.isNull()) {
@@ -11,7 +12,7 @@ function compareLastModifiedTime(stream, cb, basePath, sourceFile, targetPath) {
     if (err) {
       if (err.code === 'ENOENT') {
         // try reading the file using the oldDest path
-        target = path.join(basePath, path.basename(basePath)+'.js');
+        var target = path.join(basePath, path.basename(basePath)+'.js');
 
         if (target !== targetPath) {
           return compareLastModifiedTime(stream, cb, basePath, sourceFile, target);
@@ -44,8 +45,8 @@ function compareLastModifiedTime(stream, cb, basePath, sourceFile, targetPath) {
  * @see https://github.com/sindresorhus/gulp-changed#haschanged
  */
 module.exports = function (stream, cb, sourceFile, targetPath) {
-  basePath = path.dirname(targetPath);
+  var basePath = path.dirname(targetPath);
   targetPath = path.join(path.dirname(basePath), path.basename(basePath)+'.js');
 
   compareLastModifiedTime(stream, cb, basePath, sourceFile, targetPath);
-}
+};

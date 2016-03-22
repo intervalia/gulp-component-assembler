@@ -8,22 +8,23 @@ function processOneScript(scriptPath, includeName, options, pluginParams) {
   var contents = "/*\n * Included File: " + includeName + "\n */\n";
   var temp;
 
-  if (!fs.existsSync(scriptPath)) {
-    return contents + "console.warn('" + scriptPath + " does not match any file');";
-  }
-
   // Process any BEFORE_JS_FILE plug-ins
   temp = plugin.process(plugin.types.BEFORE_JS_FILE, pluginParams);
   if (temp) {
     contents += temp + "\n\n";
   }
 
-  contents += fs.readFileSync(scriptPath, {"encoding": "utf-8"}).replace(/[\n\r]/g, "\n");
+  if (!fs.existsSync(scriptPath)) {
+    contents += "console.warn('" + scriptPath + " does not match any file');";
+  }
+  else {
+    contents += fs.readFileSync(scriptPath, {"encoding": "utf-8"}).replace(/[\n\r]/g, "\n");
+  }
 
   // Process any AFTER_JS_FILE plug-ins
   temp = plugin.process(plugin.types.AFTER_JS_FILE, pluginParams);
   if (temp) {
-    contents += temp;
+    contents += '\n\n' + temp;
   }
 
   return contents;
