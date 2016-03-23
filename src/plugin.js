@@ -4,7 +4,9 @@ var types = {
   "BEFORE_JS_FILE": "BEFORE_JS_FILE",    // before each js file is processed
   "AFTER_JS_FILE": "AFTER_JS_FILE",      // after each js file is processed
   "AFTER_ASSEMBLY": "AFTER_ASSEMBLY",    // after each assembly file is processed
-  "AFTER": "AFTER"                       // after the entire file is processed
+  "AFTER": "AFTER",                      // after the entire file is processed
+
+  "JS_TRANSPILE": "JS_TRANSPILE"         // for each js file
 };
 
 var plugins = {};

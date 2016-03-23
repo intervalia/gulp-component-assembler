@@ -8,7 +8,6 @@ var externalFuncs = require("./externalFunctions");
 var PluginError = require('gulp-util').PluginError;
 var plugin = require("./plugin");
 var PLUGIN_NAME = require("./pluginName");
-var watcher = require("./watcher");
 
 function assemble(options) {
   "use strict";
@@ -64,5 +63,6 @@ module.exports = {
   "assemble": assemble,
   "loadPlugin": plugin.load,
   "pluginTypes": plugin.types,
-  "watch": watcher.watch
+  "watch": require("./watcher").watch,
+  "hasChanged": require("./hasChanged")
 };
