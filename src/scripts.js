@@ -6,7 +6,7 @@ var PLUGIN_NAME = require("./pluginName");
 
 function processOneScript(scriptPath, includeName, options, pluginParams) {
   var contents = "/*\n * Included File: " + includeName + "\n */\n";
-  var temp;
+  var temp, fileContents;
 
   // Process any BEFORE_JS_FILE plug-ins
   temp = plugin.process(plugin.types.BEFORE_JS_FILE, pluginParams);
@@ -18,7 +18,11 @@ function processOneScript(scriptPath, includeName, options, pluginParams) {
     contents += "console.warn('" + scriptPath + " does not match any file');";
   }
   else {
-    contents += fs.readFileSync(scriptPath, {"encoding": "utf-8"}).replace(/[\n\r]/g, "\n");
+    fileContents = fs.readFileSync(scriptPath, {"encoding": "utf-8"}).replace(/[\n\r]/g, "\n");
+
+    // Process any JS_TRANSPILE plug-ins
+    pluginParams.fileContents = fileContents;
+    contents += plugin.process(plugin.types.JS_TRANSPILE, pluginParams) || fileContents;
   }
 
   // Process any AFTER_JS_FILE plug-ins
