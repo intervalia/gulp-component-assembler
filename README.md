@@ -357,7 +357,7 @@ Then the component output file `myComponent.js` would include the contents of th
 
 >If the user does not provide a value for `localeFileName` then  `gulp-component-assembler`  attempts to use the value of `'strings'`. If files using that value do not exist then it attempts to use the value of the containing folder.
 
->One locale file is needed per language. *At this time, `2015-08-03`, we only support the two letter ([ISO-639-1](http://en.wikipedia.org/wiki/List_of_ISO_639-1_codes)) locale names, like `'en'`, `'fr'`, `'de'`, etc.*
+>One locale file is needed per language. *At this time, `2016-05-17`, we support the two letter ([ISO-639-1](http://en.wikipedia.org/wiki/List_of_ISO_639-1_codes)) locale names, like `'en'`, `'fr'`, `'de'`, etc. We also support four letter codes with fallback to two letter codes. For example, `'zh-cn'` and `'en-us'` are valid codes that fallback to `'zh'` and `'en'`.*
 
 >___TODO: Provide more information here___
 
