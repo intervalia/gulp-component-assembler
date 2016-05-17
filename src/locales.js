@@ -50,10 +50,17 @@ function processLocales(baseLocalePath, localeFileName, assemblyName, options) {
                   "  var locale, language, i, len = langKeys.length, lang = {};\n"+
                   "  locales = (typeof locales === 'string' ? [locales] : locales);\n"+
                   "  for (i = 0; i < locales.length; i++) {\n"+
-                  "    language = locales[i].split('-')[0];\n"+
+                  "    language = locales[i];\n"+
                   "    if (validLocales.indexOf(language) !== -1) {\n"+
                   "      locale = language;\n"+
                   "      break;\n"+
+                  "    } else {\n"+
+                  "      //Check if the first two characters are a valid locale\n"+
+                  "      language = locales[i].split('-')[0];\n"+
+                  "      if (validLocales.indexOf(language) !== -1) {\n"+
+                  "        locale = language;\n"+
+                  "        break;\n"+
+                  "      }\n"+
                   "    }\n"+
                   "  }\n"+
                   "  locale = locale || '" + options.locale + "';\n";
