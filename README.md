@@ -127,6 +127,7 @@ Here is the list of options and their description and usage:
 | **defaultLocale** | `defaultLocale:"en"` | Set the locale that your project will use as the default locale. If you do not provide the `defaultLocale` option then the default locale is set to `"en"`. `defaultLocale` is also the locale that is used if the user attempts to request a non-supported locale. |
 | **exposeLang** | `exposeLang:true/false` | If set to `true` then the language strings are also placed into a global object for access outside of the IIFE. The language strings will be added to `[globalObj].[assemblyName].lang` where `assemblyName` is the name of the assembly that is being created.<br/><br/>**See `globalObj`.** |
 | **externalLibName** | `externalLibName:"filename"` | Name for the external lib file. The default is `assembly-lib.js` and `assembly-lib-min.js`.<br/><br/>**See `useExternalLib`.** |
+| **externalLibPath** | `externalLibPath:"path/to/output/lib"` | Path to output the external lib file. The default is `./`.<br/><br/>**See `useExternalLib`.** |
 | **globalObj** | `globalObj:"objectToUse"` | This is an optional string that defines the global object that is used to expose the language string into the global scope. The default value is `"window.components"`.<br/><br/>If you are building servers-side components to run in node.js, then you would set this to `"global.components"` or something similar. _But be aware that this could become a problem if you are working with a server cluster._<br/><br/>Currently this is only used if you set the option `exposeLang` to `true`.  |
 | **iifeParams** | `iifeParams:paramsObject` | This is an optional object that contains the list of parameters used by the IIFE and the list of parameters passed into the IIFE. The default values are "window, document".<br/><br/> **See *Option: iifeParams* below.** |
 | **localeVar** | `localeVar:"window.locale"` | The default value for this options is `window.locale`. If your application uses some other variable to set the locale then you can supply it here like `window.myObj.locale`. If the defined variable name is undefined or does not exist then the locale is set to the value of the option `defaultLocale`.<br><br> **See `defaultLocale` above.** |
@@ -162,7 +163,8 @@ gulp.task('assemble', function() {
     .pipe(compasm.assemble({
           "defaultLocale": 'fr',
           "minTemplateWS": true,
-          "useExternalLib": true
+          "useExternalLib": true,
+          "externalLibPath": "js/"
         })
     .pipe(gulp.dest('./dist'))
     .pipe(uglify())

@@ -43,9 +43,7 @@ function assemble(options) {
     if (firstTime && options.useExternalLib) {
       firstTime = false;
       var file2 = new gutil.File({
-        "base": file.base,
-        "cwd": file.cwd,
-        "path": path.join(path.dirname(file.path), options.externalLibName || "assembly-lib.js"),
+        "path": path.join(options.externalLibPath || "./", options.externalLibName || "assembly-lib.js"),
         "contents": new Buffer(externalFuncs.template(options))
       });
       this.push(file2);
