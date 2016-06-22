@@ -21,6 +21,13 @@ var fileWatcher;
 // the associated assemblies
 var watchedFiles = {};
 
+// Chokidar will fire a changed event twice for a file sometimes, possibly due to the
+// system creating a backup of the file and touching it. We'll create a cache of when
+// the last time the file was touched and prevent it from firing the 'alltouched' event
+// if the file was changed within the last half second
+// @see https://github.com/paulmillr/chokidar/issues/298
+var lastChanged = {};
+
 // Boolean state that plugins and other files can use to determine if they can add files or
 // assemblies to be watched during the assemble task
 var watchStarted = false;
@@ -128,6 +135,14 @@ function fileChanged(event, file) {
   var fileDir = path.dirname(file);
   var watchedPaths = fileWatcher.getWatched();
   var promises = [];
+
+  // only process files that have changed more than a 0.5 seconds ago
+  if (lastChanged[file] && new Date() - lastChanged[file] < 500) {
+    return;
+  }
+  else {
+    lastChanged[file] = new Date();
+  }
 
   // Assembly.json file was changed
   if (assemblyRegex.test(file)) {
@@ -272,6 +287,8 @@ function fileChanged(event, file) {
  * @param {string} assemblyPath - Path of the assembly the file is associated with.
  */
 function addFile(filePath, assemblyPath) {
+  if (!fileWatcher) return;
+
   var absoluteFilePath = path.resolve(process.cwd(), filePath);
   var absoluteAssemblyPath = path.resolve(process.cwd(), assemblyPath);
 
@@ -298,6 +315,8 @@ function addFile(filePath, assemblyPath) {
  * @param {string} assemblyPath - Path to the assembly file.
  */
 function addAssembly(assemblyPath) {
+  if (!fileWatcher) return;
+
   var absoluteAssemblyPath = path.resolve(process.cwd(), assemblyPath);
   var assemblyDir = path.dirname(absoluteAssemblyPath);
   var assembly;
@@ -405,26 +424,8 @@ function watch(patterns, opt, task) {
   });
 }
 
-/**
- * Return true if the watcher has been turned on and is watching the given assembly.
- * @param {string} assemblyPath - Path to the assembly file.
- * @returns {boolean}
- */
-function isWatching(assemblyPath) {
-  var absoluteAssemblyPath = path.resolve(process.cwd(), assemblyPath);
-  var assemblyDir = path.dirname(absoluteAssemblyPath);
-
-  if (!fileWatcher) {
-    return false;
-  }
-
-  var watchedPaths = fileWatcher.getWatched();
-  return watchStarted && watchedPaths[assemblyDir];
-}
-
 module.exports = {
   "addFile": addFile,
   "addAssembly": addAssembly,
-  "watch": watch,
-  "isWatching": isWatching
+  "watch": watch
 };

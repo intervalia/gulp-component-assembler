@@ -8,7 +8,6 @@ var externalFuncs = require("./externalFunctions");
 var PluginError = require('gulp-util').PluginError;
 var plugin = require("./plugin");
 var PLUGIN_NAME = require("./pluginName");
-var watcher = require("./watcher");
 
 function assemble(options) {
   "use strict";
@@ -44,9 +43,7 @@ function assemble(options) {
     if (firstTime && options.useExternalLib) {
       firstTime = false;
       var file2 = new gutil.File({
-        "base": file.base,
-        "cwd": file.cwd,
-        "path": path.join(path.dirname(file.path), options.externalLibName || "assembly-lib.js"),
+        "path": path.join(options.externalLibPath || "./", options.externalLibName || "assembly-lib.js"),
         "contents": new Buffer(externalFuncs.template(options))
       });
       this.push(file2);
@@ -64,5 +61,6 @@ module.exports = {
   "assemble": assemble,
   "loadPlugin": plugin.load,
   "pluginTypes": plugin.types,
-  "watch": watcher.watch
+  "watch": require("./watcher").watch,
+  "hasChanged": require("./hasChanged")
 };

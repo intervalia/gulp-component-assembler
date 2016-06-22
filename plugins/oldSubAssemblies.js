@@ -15,6 +15,6 @@ function convertOldAssembliesToNewSubs(params) {
 }
 
 module.exports = function(register, types) {
-  register(convertOldAssembliesToNewSubs, types.BEFORE, 'oldSubAssemblies');
+  register(convertOldAssembliesToNewSubs, types.BEFORE_ASSEMBLY, 'oldSubAssemblies');
 };
 module.exports.version = "2.0.0";

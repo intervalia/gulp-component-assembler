@@ -159,6 +159,36 @@ describe('\n    Testing the file locales.js', function () {
       should.deepEqual(getLang('en'), getLang(acceptLanguage));
     });
 
+    it('getLang() should return 4-letter codes when supported', function() {
+      var langKeys, langs, validLocales, lang, getLang;
+
+      var acceptLanguage = ['ca-de', 'fj-ja', 'zh-cn', 'de'];
+
+      /*
+        will add to scope:
+          variables: langKeys, langs, validLocales, lang
+          functions: getLang()
+      */
+      eval(locales.process(baseLocalePath, localeFileName, assemblyName, options));
+
+      should.deepEqual(getLang('zh-cn'), getLang(acceptLanguage));
+    });
+
+    it('getLang() should fallback to a 2-letter code when the 4-letter code is unsupported', function() {
+      var langKeys, langs, validLocales, lang, getLang;
+
+      var acceptLanguage = ['ca-de', 'fj-ja', 'zh', 'de'];
+
+      /*
+        will add to scope:
+          variables: langKeys, langs, validLocales, lang
+          functions: getLang()
+      */
+      eval(locales.process(baseLocalePath, localeFileName, assemblyName, options));
+
+      should.deepEqual(getLang('zh-cn'), getLang(acceptLanguage));
+    });
+
     it('lang should use "window.locale" if it exists', function() {
       var langKeys, langs, validLocales, lang, getLang;
 
