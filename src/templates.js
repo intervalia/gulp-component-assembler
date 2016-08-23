@@ -39,18 +39,9 @@ function processTemplates(projectPath, templateList, hasTranslations, options) {
                   '  }\n';
       if (hasTranslations) {
         // __gca_formatStr is Added when locales are added (locales.js)
-        contents += '\n  return __gca_formatStr(templateList[key] || "", lang);\n}\n\n'+
-                    'var __gca_formatStrRe = /\{([^}]+)\}/g;\n'+
-                    'function __gca_formatStr(txt, obj) {\n'+
-                    '  if (typeof obj !== "object") {\n'+
-                    '    obj = Array.prototype.slice.call(arguments, 1);\n'+
-                    '  }\n\n'+
-                    ' return txt.replace(__gca_formatStrRe, function (fullKey, key) {\n'+
-                    '   return obj[key] === undefined ? fullKey : obj[key];\n'+
-                    '  });\n'+
-                    '}';
+        contents += '\n  return templateList[key].format(lang) || "";\n}';
       } else {
-        contents += '\n  return templateList[key] || "";\n}';
+        contents += '\n  return FS.i18nFormat(templateList[key] || "");\n}';
       }
     }
     contents += '\n\n' +
