@@ -75,5 +75,10 @@ var pluginMock = {
   }
 };
 
+var FSMock = {
+  i18nFormat: function(string) { return string; }
+};
+
 module.exports.document = document;
 module.exports.pluginMock = pluginMock;
+module.exports.FSMock = FSMock;

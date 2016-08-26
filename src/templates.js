@@ -50,7 +50,7 @@ function processTemplates(projectPath, templateList, hasTranslations, options) {
                     '  });\n'+
                     '}';
       } else {
-        contents += '\n  return templateList[key] || "";\n}';
+        contents += '\n  return FS.i18nFormat(templateList[key] || "");\n}';
       }
     }
     contents += '\n\n' +

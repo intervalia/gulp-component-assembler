@@ -7,6 +7,7 @@ var path = require('path');
 var should = require('should');
 var pluginMock = require('./utils').pluginMock;
 var document = require('./utils').document;
+var FS = require('./utils').FSMock;
 
 
 describe('\n    Testing the plugin oldTemplates.js', function () {
