@@ -55,7 +55,7 @@ function processOldTemplates(templatePath, hasTranslations, assemblyPath, option
       contents += '\n  snip.innerHTML = snippetsRaw.format(lang);';
     }
     else {
-      contents += '\n  snip.innerHTML = FS.i18nFormat(snippetsRaw);';
+      contents += '\n  snip.innerHTML = snippetsRaw;';
     }
     contents += '\n  return snip;\n}';
   }

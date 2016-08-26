@@ -8,7 +8,6 @@ var path = require('path');
 var should = require('should');
 var cheerio = require('cheerio');
 var document = require('./utils').document;
-var FS = require('./utils').FSMock;
 
 
 describe('\n    Testing the file templates.js', function () {
