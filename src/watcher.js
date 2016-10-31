@@ -287,7 +287,7 @@ function fileChanged(event, file) {
  * @param {string} assemblyPath - Path of the assembly the file is associated with.
  */
 function addFile(filePath, assemblyPath) {
-  if (!fileWatcher) return;
+  if (!fileWatcher) {return;}
 
   var absoluteFilePath = path.resolve(process.cwd(), filePath);
   var absoluteAssemblyPath = path.resolve(process.cwd(), assemblyPath);
@@ -315,7 +315,7 @@ function addFile(filePath, assemblyPath) {
  * @param {string} assemblyPath - Path to the assembly file.
  */
 function addAssembly(assemblyPath) {
-  if (!fileWatcher) return;
+  if (!fileWatcher) {return;}
 
   var absoluteAssemblyPath = path.resolve(process.cwd(), assemblyPath);
   var assemblyDir = path.dirname(absoluteAssemblyPath);

@@ -320,5 +320,71 @@ describe('\n    Testing the file locales.js', function () {
     });
 
   });
+  
+  describe("testing nested locales", function() {
+    var baseLocalePath = path.join(rootPath, "testdata/localeTests/three");
+    var localeFileName = "test";
+    var assemblyName = "three";
+    var window = {};
+    var options = {
+        locale: "en"
+    };
+    var finalLangs = {
+    "en": [
+        "First Names",
+        "Last Names",
+        "Male",
+        "Female",
+        "Match all terms exactly",
+        "Match first names exactly",
+        "Match last names exactly",
+        "Match birthplace exactly"
+    ],
+    "es": [
+        "Nombre(s)",
+        "Apellido(s)",
+        "Hombre",
+        "Mujer",
+        "Concordar todos los términos de forma exacta",
+        "Concordar los nombres de forma exacta",
+        "Concordar los apellidos de forma exacta",
+        "Concordar el lugar de nacimiento de forma exacta"
+    ],
+    "fr": [
+        "Prénoms",
+        "Noms de famille",
+        "Homme",
+        "Femme",
+        "Recherche exacte de tous les renseignements",
+        "Recherche exacte des prénoms",
+        "Recherche exacte des noms de famille",
+        "Recherche exacte du lieu de naissance"
+    ]};
+     
+    var finalKeys = [
+      "given",
+      "surname",
+      "male",
+      "female",
+      "matchExact.all",
+      "matchExact.givenname",
+      "matchExact.surname",
+      "matchExact.birthPlace"
+    ];
+    
+    it('should support nested locales', function() {
+      var langKeys, langs, validLocales, lang, getLang;
+
+      eval(locales.process(baseLocalePath, localeFileName, assemblyName, options));
+
+      console.log('finalLangs:', finalLangs);
+      console.log('\n\nlangs:', langs);
+      
+      
+      should.deepEqual(finalLangs, langs);
+      should.deepEqual(finalKeys, langKeys);
+    });
+
+  });
 
 });

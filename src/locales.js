@@ -134,6 +134,7 @@ function readLocaleFiles(baseLocalePath, baseName, defaultLocale) {
 
       try {
         data = JSON.parse(fileContents);
+        data = flattenObject(data);
         langs[lang] = data;
         langs.langs.push(lang);
       } catch(e) {
@@ -148,9 +149,29 @@ function readLocaleFiles(baseLocalePath, baseName, defaultLocale) {
       }
     }
   });
-
+ 
   return langs;
 }
+
+var flattenObject = function(ob) {
+  var toReturn = {};
+
+  for (var i in ob) {
+    if (!ob.hasOwnProperty(i)) {continue;}
+
+      if ((typeof ob[i]) === 'object') {
+        var flatObject = flattenObject(ob[i]);
+        for (var x in flatObject) {
+          if (!flatObject.hasOwnProperty(x)) {continue;}
+
+          toReturn[i + '.' + x] = flatObject[x];
+        }
+      } else {
+        toReturn[i] = ob[i];
+      }
+  }
+  return toReturn;
+};
 
 module.exports = {
   "process": processLocales

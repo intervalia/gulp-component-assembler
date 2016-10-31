@@ -1,0 +1,12 @@
+{
+  "given": "First Names",
+  "surname": "Last Names",
+  "male": "Male",
+  "female": "Female",
+  "matchExact": {
+      "all": "Match all terms exactly",
+      "givenname": "Match first names exactly",
+      "surname": "Match last names exactly",
+      "birthPlace": "Match birthplace exactly"
+  } 
+}

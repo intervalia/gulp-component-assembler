@@ -1,0 +1,12 @@
+{
+  "given": "Prénoms",
+  "surname": "Noms de famille",
+  "male": "Homme",
+  "female": "Femme",
+  "matchExact": {
+      "all": "Recherche exacte de tous les renseignements",
+      "givenname": "Recherche exacte des prénoms",
+      "surname": "Recherche exacte des noms de famille",
+      "birthPlace": "Recherche exacte du lieu de naissance"
+  }
+} 

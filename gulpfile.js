@@ -1,7 +1,8 @@
 var gulp = require('gulp');
 var jshint = require('gulp-jshint');
-var Mocha = require('mocha');
 var compasm = require('./src/index');
+var mocha = require('gulp-mocha');
+var istanbul = require('gulp-istanbul');
 
 gulp.task('lint', function () {
   return gulp.src([
@@ -14,10 +15,21 @@ gulp.task('lint', function () {
   .pipe(jshint.reporter('fail'));
 });
 
-gulp.task('test', ['lint'], function (done) {
-  var m = new Mocha();
-  m.addFile(__dirname + '/test/specs/index.js');
-  m.run().on('end', done);
+gulp.task('pre-test', function () {
+  return gulp.src(['src/**/*.js'])
+    // Covering files
+    .pipe(istanbul())
+    // Force `require` to return covered files
+    .pipe(istanbul.hookRequire());
+});
+
+gulp.task('test', ['lint', 'pre-test'], function () {
+  return gulp.src(['test/specs/*.js'])
+    .pipe(mocha())
+    // Creating the reports after tests ran
+    .pipe(istanbul.writeReports({
+      dir: './reports/coverage'
+    }));
 });
 
 gulp.task("build", function() {
@@ -27,7 +39,6 @@ gulp.task("build", function() {
 });
 
 gulp.task("default", ["test", "build"]);
-
 
 gulp.task("buildPluginExample", function() {
   compasm.loadPlugin('all');
