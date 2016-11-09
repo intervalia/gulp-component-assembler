@@ -321,4 +321,50 @@ describe('\n    Testing the file locales.js', function () {
 
   });
 
+  describe("testing nested locales", function() {
+    var baseLocalePath = path.join(rootPath, "testdata/localeTests/three");
+    var localeFileName = "test";
+    var assemblyName = "three";
+    var window = {};
+    var options = {
+        locale: "en"
+    };
+    var finalLangs = {
+    "en": [
+        "First Level",
+        "Second Level",
+        "Third Level",
+        "Fourth Level"
+    ]};
+
+    it('should support first level locale strings on the lang object', function() {
+      var langKeys, langs, validLocales, lang, getLang;
+
+      /*
+        will add to scope:
+          variables: langKeys, langs, validLocales, lang
+          functions: getLang()
+      */
+      eval(locales.process(baseLocalePath, localeFileName, assemblyName, options));
+
+      should.equal(finalLangs.en[0], lang.firstLevel);
+    });
+
+    it('should support nested locale strings on the lang object', function() {
+      var langKeys, langs, validLocales, lang, getLang;
+
+      /*
+        will add to scope:
+          variables: langKeys, langs, validLocales, lang
+          functions: getLang()
+      */
+      eval(locales.process(baseLocalePath, localeFileName, assemblyName, options));
+
+      should.equal(finalLangs.en[1], lang.levelTwo.secondLevel);
+      should.equal(finalLangs.en[2], lang.levelTwo.levelThree.thirdLevel);
+      should.equal(finalLangs.en[3], lang.levelTwo.levelThree.levelFour.fourthLevel);
+    });
+
+  });
+
 });
