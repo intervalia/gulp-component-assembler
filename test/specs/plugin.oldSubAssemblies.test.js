@@ -34,9 +34,9 @@ describe('\n    Testing the plugin oldSubAssemblies.js', function () {
   it('should transform the "assemblies" property to "subs"', function() {
     oldSubAssemblies(pluginMock.register, pluginMock.types);
 
-    pluginMock.process(pluginMock.types.BEFORE_ASSEMBLY, pluginParams);
+    pluginMock.process(pluginMock.types.BEFORE, pluginParams);
 
     should.deepEqual(finalAssembly, assembly);
   });
 
-}); 
+});
