@@ -148,7 +148,7 @@ function readLocaleFiles(baseLocalePath, baseName, defaultLocale) {
       }
     }
   });
-  console.log("langs", langs);
+  
   return langs;
 }
 
