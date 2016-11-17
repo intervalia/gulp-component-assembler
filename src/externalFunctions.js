@@ -13,14 +13,19 @@ var fns = {
 
     return txt.replace(potentialSubstitutionsRegex, function (fullKey) {
       // ensure it's a translation binding and not a template binding
-      if (trueSubstitutionsRegex.test(fullKey)) {
-        return fullKey.replace(trueSubstitutionsRegex, function(match, key) {
-          return obj[key] === undefined ? match : obj[key];
-        });
-      }
-      else {
-        return fullKey;
-      }
+      //if this is looking for a nested object
+      return fullKey.replace(trueSubstitutionsRegex, function(match, key) {
+        var ObjArray = key.split("."); //creates an array of Object keys
+        var len = ObjArray.length; //gets the length of the array
+        var tempObj = obj;
+        for (var i = 0; i < len; i++) {
+          tempObj = tempObj[ObjArray[i]];
+          if (!tempObj) {
+            return match;
+          }
+        }
+        return tempObj;
+      });
     });
   },
 
