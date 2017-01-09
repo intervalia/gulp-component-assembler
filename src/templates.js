@@ -65,7 +65,7 @@ function processTemplates(projectPath, templateList, hasTranslations, options) {
                       '});\n'+
                     '}';
       } else {
-        contents += '\n  return templateList[key] || "";\n}';
+        contents += '\n  return (typeof FS.i18nFormat === "function" ? FS.i18nFormat(templateList[key]) : templateList[key]);\n}';
       }
     }
     contents += '\n\n' +
