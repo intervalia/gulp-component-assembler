@@ -57,6 +57,21 @@ describe('\n    Testing the file assemblies.js', function () {
       val.should.be.false;
       done();
     });
+
+    it('should throw an error for invalid JSON', function(done) {
+      var locale = "en";
+      var projectPath = path.join(rootPath, "testdata/main/sub3");
+      var localePath = path.join(projectPath, "locales");
+
+      try {
+        var val = assemblies.areTranslationsAvailable(locale, localePath, "strings");
+        done('No error was thrown for invalid JSON.parse');
+      }
+      catch (e) {
+        // error thrown as we expected
+        done();
+      }
+    });
   });
 
 

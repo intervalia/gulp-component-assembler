@@ -26,6 +26,14 @@ function areTranslationsAvailable(locale, localePath, localeFileName) {
     return isNotTaasKeyRegex.test(firstKey);
   }
   catch (e) {
+
+    // inform the user of a JSON parse error
+    // node JSON.parse does not give a very helpful error message so we can't tell
+    // where the error occurred, so we need to append the file name to be more helpful
+    if (e.name === 'SyntaxError') {
+      throw new PluginError(PLUGIN_NAME, e.message + ' in ' + filePath);
+    }
+
     return false;
   }
 }
@@ -44,6 +52,7 @@ function processAssembly(assembly, assemblyName, options, isSub) {
   localeFileName = assembly.localeFileName || "strings";
   localePath = path.join(projectPath, (assembly.localePath || "locales"));
   hasTranslations = areTranslationsAvailable(locale, localePath, localeFileName);
+
   if (!hasTranslations && localeFileName === "strings") {
     localeFileName  = path.basename(projectPath);
     hasTranslations = areTranslationsAvailable(locale, localePath, localeFileName);
