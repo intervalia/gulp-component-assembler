@@ -287,6 +287,10 @@ function fileChanged(event, file) {
  * @param {string} assemblyPath - Path of the assembly the file is associated with.
  */
 function addFile(filePath, assemblyPath) {
+  if (!fileWatcher) {
+    return;
+  }
+
   var absoluteFilePath = path.resolve(process.cwd(), filePath);
   var absoluteAssemblyPath = path.resolve(process.cwd(), assemblyPath);
 
@@ -313,6 +317,10 @@ function addFile(filePath, assemblyPath) {
  * @param {string} assemblyPath - Path to the assembly file.
  */
 function addAssembly(assemblyPath) {
+  if (!fileWatcher) {
+    return;
+  }
+
   var absoluteAssemblyPath = path.resolve(process.cwd(), assemblyPath);
   var assemblyDir = path.dirname(absoluteAssemblyPath);
   var assembly;
@@ -420,26 +428,8 @@ function watch(patterns, opt, task) {
   });
 }
 
-/**
- * Return true if the watcher has been turned on and is watching the given assembly.
- * @param {string} assemblyPath - Path to the assembly file.
- * @returns {boolean}
- */
-function isWatching(assemblyPath) {
-  var absoluteAssemblyPath = path.resolve(process.cwd(), assemblyPath);
-  var assemblyDir = path.dirname(absoluteAssemblyPath);
-
-  if (!fileWatcher) {
-    return false;
-  }
-
-  var watchedPaths = fileWatcher.getWatched();
-  return watchStarted && watchedPaths[assemblyDir];
-}
-
 module.exports = {
   "addFile": addFile,
   "addAssembly": addAssembly,
-  "watch": watch,
-  "isWatching": isWatching
+  "watch": watch
 };
