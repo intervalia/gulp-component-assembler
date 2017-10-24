@@ -22,13 +22,13 @@ function assemble(options) {
       assembly = JSON.parse(file.contents);
     }
     catch(ex) {
-      this.emit('error', new PluginError(PLUGIN_NAME, "Unable to parse .json file: " + file.path));
+      callback(new PluginError(PLUGIN_NAME, "Unable to parse .json file: " + file.path));
     }
 
     try {
       file.contents = new Buffer(assemblies.process(assembly, file.path, options));
     } catch (err) {
-      this.emit('error', err);
+      callback(new PluginError(PLUGIN_NAME, err));
     }
 
     temp = path.dirname(file.path);
@@ -50,8 +50,6 @@ function assemble(options) {
     }
     callback();
   };
-
-  assemblyStream.on('error', gutil.log);
 
   return assemblyStream;
 }
