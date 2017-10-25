@@ -10,10 +10,32 @@ var globArray = require("./globArray");
 var DEFAULT_USE_PARAMS = "window, document";
 var DEFAULT_PASS_PARAMS = DEFAULT_USE_PARAMS;
 
+// if the string does not start with "fs.", it is not a taas key
+var isNotTaasKeyRegex = /^(?!fs\.)[A-Za-z0-9_.]+/;
+
 function areTranslationsAvailable(locale, localePath, localeFileName) {
   "use strict";
   var filePath = path.join(localePath, localeFileName + '_'+locale+'.json');
-  return fs.existsSync(filePath);
+
+  // if the first translation key does not start with `fs.`, it is not considered a TaaS key
+  // and we will continue to bundle translations into the assembly
+  try {
+    var localeFile = JSON.parse(fs.readFileSync(filePath, 'utf-8'));
+    var firstKey = Object.keys(localeFile)[0];
+
+    return isNotTaasKeyRegex.test(firstKey);
+  }
+  catch (e) {
+
+    // inform the user of a JSON parse error
+    // node JSON.parse does not give a very helpful error message so we can't tell
+    // where the error occurred, so we need to append the file name to be more helpful
+    if (e.name === 'SyntaxError') {
+      throw new PluginError(PLUGIN_NAME, e.message + ' in ' + filePath);
+    }
+
+    return false;
+  }
 }
 
 function processAssembly(assembly, assemblyName, options, isSub) {
@@ -30,6 +52,7 @@ function processAssembly(assembly, assemblyName, options, isSub) {
   localeFileName = assembly.localeFileName || "strings";
   localePath = path.join(projectPath, (assembly.localePath || "locales"));
   hasTranslations = areTranslationsAvailable(locale, localePath, localeFileName);
+
   if (!hasTranslations && localeFileName === "strings") {
     localeFileName  = path.basename(projectPath);
     hasTranslations = areTranslationsAvailable(locale, localePath, localeFileName);

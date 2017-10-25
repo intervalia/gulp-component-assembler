@@ -42,15 +42,30 @@ function processTemplates(projectPath, templateList, hasTranslations, options) {
         contents += '\n  return __gca_formatStr(templateList[key] || "", lang);\n}\n\n'+
                     'var __gca_formatStrRe = /\{([^}]+)\}/g;\n'+
                     'function __gca_formatStr(txt, obj) {\n'+
-                    '  if (typeof obj !== "object") {\n'+
-                    '    obj = Array.prototype.slice.call(arguments, 1);\n'+
-                    '  }\n\n'+
-                    ' return txt.replace(__gca_formatStrRe, function (fullKey, key) {\n'+
-                    '   return obj[key] === undefined ? fullKey : obj[key];\n'+
-                    '  });\n'+
+                      'var potentialSubstitutionsRegex = /\{+?[^{\\n\\r]+\}/g;\n'+
+                      'var trueSubstitutionsRegex = /^\{([^{}]+)\}/;\n'+
+
+                      'if (typeof obj !== "object") {\n'+
+                        'obj = Array.prototype.slice.call(arguments, 1);\n'+
+                      '}\n'+
+
+                      'return txt.replace(potentialSubstitutionsRegex, function (fullKey) {\n'+
+                        'return fullKey.replace(trueSubstitutionsRegex, function(match, key) {\n'+
+                          'var ObjArray = key.split(".");\n'+
+                          'var len = ObjArray.length;\n'+
+                          'var tempObj = obj;\n'+
+                          'for (var i = 0; i < len; i++) {\n'+
+                            'tempObj = tempObj[ObjArray[i]];\n'+
+                            'if (!tempObj) {\n'+
+                              'return match;\n'+
+                            '}\n'+
+                          '}\n'+
+                          'return tempObj;\n'+
+                        '});\n'+
+                      '});\n'+
                     '}';
       } else {
-        contents += '\n  return templateList[key] || "";\n}';
+        contents += '\n  return (typeof FS.formatStr === "function" ? FS.formatStr(templateList[key]) : templateList[key]);\n}';
       }
     }
     contents += '\n\n' +

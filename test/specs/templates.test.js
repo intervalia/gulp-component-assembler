@@ -8,6 +8,7 @@ var path = require('path');
 var should = require('should');
 var cheerio = require('cheerio');
 var document = require('./utils').document;
+var FS = require('./utils').FSMock;
 
 
 describe('\n    Testing the file templates.js', function () {
@@ -17,6 +18,91 @@ describe('\n    Testing the file templates.js', function () {
    * Test function: templates
    *
    */
+   describe('testing nested strings', function() {
+     var projectPath = path.join(rootPath, "testdata/templateTest/two");
+     var _templateList = [
+       path.join(projectPath, 'nestedKeyOne.html'),
+       path.join(projectPath, 'nestedKeyTwo.html'),
+       path.join(projectPath, 'invalid.html'),
+       path.join(projectPath, 'missingTranslation.html')
+     ];
+     var hasTranslations = true;
+     var options = {};
+
+     var finalTemplateList = {
+       "nestedKeyOne": '<button>Something</button>\n',
+       "nestedKeyTwo": '<button>Something Else</button>\n',
+       "invalid": '<button>{button.something.somethingElse}</button>\n',
+       "missingTranslation": '<button>{button.something.somethingElse}</button><span>Something Else</span>\n'
+     };
+
+     it('should support nested strings one level deep', function() {
+       var templateList, getTemplate, getTemplateStr;
+       var lang = {button: {
+                    something: 'Something'
+                  }};
+       /*
+         will add to scope:
+           variables: templateList
+           functions: getTemplate(), getTemplateStr()
+       */
+       eval(templates.process(projectPath, _templateList, hasTranslations, options));
+
+       should.equal(finalTemplateList.nestedKeyOne, getTemplateStr('nestedKeyOne'));
+     });
+
+     it('should support nested strings multiple levels deep', function() {
+       var templateList, getTemplate, getTemplateStr;
+       var lang = {button: {
+                    something: {
+                      somethingElse: "Something Else"
+                    }
+                  }};
+       /*
+         will add to scope:
+           variables: templateList
+           functions: getTemplate(), getTemplateStr()
+       */
+       eval(templates.process(projectPath, _templateList, hasTranslations, options));
+
+       should.equal(finalTemplateList.nestedKeyTwo, getTemplateStr('nestedKeyTwo'));
+     });
+
+     it('should return original text if key does not exist', function() {
+       var templateList, getTemplate, getTemplateStr;
+       var lang = {button: {
+                    anything: {
+                      somethingElse: "Something Else"
+                    }
+                  }};
+       /*
+         will add to scope:
+           variables: templateList
+           functions: getTemplate(), getTemplateStr()
+       */
+       eval(templates.process(projectPath, _templateList, hasTranslations, options));
+
+       should.equal(finalTemplateList.invalid, getTemplateStr('invalid'));
+     });
+
+     it('should replace all translations even when translations are missing', function() {
+       var templateList, getTemplate, getTemplateStr;
+       var lang = {button: {
+                    anything: {
+                      somethingElse: "Something Else"
+                    }
+                  }};
+       /*
+         will add to scope:
+           variables: templateList
+           functions: getTemplate(), getTemplateStr()
+       */
+       eval(templates.process(projectPath, _templateList, hasTranslations, options));
+
+       should.equal(finalTemplateList.missingTranslation, getTemplateStr('missingTranslation'));
+     });
+
+   });
   describe('Testing default options', function() {
     var projectPath = path.join(rootPath, "testdata/templateTest/one");
     var _templateList = [

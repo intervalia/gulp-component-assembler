@@ -12,7 +12,35 @@ describe('\n    Testing the file externalFunctions.js', function () {
    * Test function: externalFunctions
    *
    */
-  describe("Testing the function '__gca_formatStr'", function() {
+  describe("Testing the function '__gca_Str'", function() {
+
+    it('should support nested strings one level deep', function() {
+      var template = '<button>{button.something}</button>';
+      var final = '<button>Something</button>';
+
+      should.equal(fns.__gca_formatStr(template, {button: {something: 'Something'}}), final);
+    });
+
+    it('should support nested strings multiple levels deep', function() {
+      var template = '<button>{button.something.somethingElse}</button>';
+      var final = '<button>Something Else</button>';
+
+      should.equal(fns.__gca_formatStr(template, {button: {something: {somethingElse: 'Something Else'}}}), final);
+    });
+
+    it('should return original text if key does not exist', function() {
+      var template = '<button>{button.something.somethingElse}</button>';
+      var final = '<button>{button.something.somethingElse}</button>';
+
+      should.equal(fns.__gca_formatStr(template, {button: {anything: {somethingElse: 'Something Else'}}}), final);
+    });
+
+    it('should replace all translations even when translations are missing', function() {
+      var template = '<button>{button.something.somethingElse}</button><span>{button.anything.somethingElse}</span>';
+      var final = '<button>{button.something.somethingElse}</button><span>Something Else</span>';
+
+      should.equal(fns.__gca_formatStr(template, {button: {anything: {somethingElse: 'Something Else'}}}), final);
+    });
 
     it('should replace text with the passed in parameters', function() {
       var template = '{foo: {0}, bar: {1}}';
