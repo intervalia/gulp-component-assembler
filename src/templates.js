@@ -1,6 +1,6 @@
 var fs = require('fs');
 var path = require('path');
-var PluginError = require('gulp-util').PluginError;
+var PluginError = require('plugin-error');
 var PLUGIN_NAME = require("./pluginName");
 var validKeyTest = /^[a-zA-Z_][0-9a-zA-Z_]*$/;
 var CR_LF = /[\r\n]+/g;

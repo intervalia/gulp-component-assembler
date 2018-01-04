@@ -1,6 +1,6 @@
 var fs = require('fs');
 var path = require('path');
-var gutil = require('gulp-util');
+var PluginError = require('plugin-error');
 
 function compareLastModifiedTime(stream, cb, basePath, sourceFile, targetPath) {
   if (sourceFile.isNull()) {
@@ -22,7 +22,7 @@ function compareLastModifiedTime(stream, cb, basePath, sourceFile, targetPath) {
         }
       }
       else {
-        stream.emit('error', new gutil.PluginError('gulp-changed', err, {
+        stream.emit('error', new PluginError('gulp-changed', err, {
           fileName: sourceFile.path
         }));
 

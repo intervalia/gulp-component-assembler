@@ -1,6 +1,6 @@
 var fs = require('fs');
 var path = require('path');
-var PluginError = require('gulp-util').PluginError;
+var PluginError = require('plugin-error');
 var PLUGIN_NAME = require("./pluginName");
 
 function processLocales(baseLocalePath, localeFileName, assemblyName, options) {

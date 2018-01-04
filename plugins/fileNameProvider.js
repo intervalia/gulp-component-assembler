@@ -1,5 +1,4 @@
 var path = require('path');
-var PluginError = require('gulp-util').PluginError;
 
 
 function preAssembly(params) {

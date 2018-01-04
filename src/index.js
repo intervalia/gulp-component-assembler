@@ -1,11 +1,11 @@
 var through = require('through2');
-var gutil = require('gulp-util');
+var Vinyl = require('vinyl');
 var fs = require('fs');
 var path = require('path');
 var stream = require("stream");
 var assemblies = require("./assemblies");
 var externalFuncs = require("./externalFunctions");
-var PluginError = require('gulp-util').PluginError;
+var PluginError = require('plugin-error');
 var plugin = require("./plugin");
 var PLUGIN_NAME = require("./pluginName");
 
@@ -42,7 +42,7 @@ function assemble(options) {
 
     if (firstTime && options.useExternalLib) {
       firstTime = false;
-      var file2 = new gutil.File({
+      var file2 = new Vinyl({
         "path": path.join(options.externalLibPath || "./", options.externalLibName || "assembly-lib.js"),
         "contents": new Buffer(externalFuncs.template(options))
       });

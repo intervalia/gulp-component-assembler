@@ -1,6 +1,6 @@
 {
   "name": "gulp-component-assembler",
-  "version": "4.3.2",
+  "version": "4.3.3",
   "author": "Michael G Collins <intervalia@gmail.com>",
   "contributors": [
     {
@@ -10,6 +10,10 @@
     {
       "name": "Steven Lambert",
       "email": "steven.lambert@familysearch.org"
+    },
+    {
+      "name": "Joey Cozza",
+      "email": "joeycozza@familysearch.org"
     }
   ],
   "license": "MIT",
@@ -41,11 +45,12 @@
   "dependencies": {
     "chokidar": "^1.4.2",
     "glob": "^4.5.3",
-    "gulp-util": "^3.0.7",
     "minimatch": "^1.0.0",
     "native-promise-only": "^0.8.1",
+    "plugin-error": "^0.1.2",
     "through2": "^0.6.5",
-    "touch": "^1.0.0"
+    "touch": "^1.0.0",
+    "vinyl": "^2.1.0"
   },
   "engines": {
     "node": ">= 0.4.0"

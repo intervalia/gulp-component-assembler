@@ -178,7 +178,7 @@ module.exports = function(register, types) {
 2 The error is catastrophic so you should **throw an exception** which will terminate your gulp process. You must throw an instance of the `PluginError` object.
 
 ```js
-var PluginError = require('gulp-util').PluginError;
+var PluginError = require('plugin-error');
 
 function pluginProcess(params) {
   if (!params.assembly.files || params.assembly.files.length < 1) {
