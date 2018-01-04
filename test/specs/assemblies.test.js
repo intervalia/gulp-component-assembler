@@ -2,7 +2,6 @@
 var assemblies = require('../../src/assemblies');
 var path = require('path');
 var fs = require('fs');
-var gutil = require('gulp-util');
 var should = require('should');
 
 function readDataFile(path) {

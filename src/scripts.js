@@ -1,7 +1,6 @@
 var fs = require('fs');
 var path = require('path');
 var plugin = require("./plugin");
-var PluginError = require('gulp-util').PluginError;
 var PLUGIN_NAME = require("./pluginName");
 
 function processOneScript(scriptPath, includeName, options, pluginParams) {
